@@ -21,6 +21,10 @@ namespace AuditLogApp.Common.Identity
 			return new CustomerId(id);
 		}
 
+		public static CustomerId FromString(string rawValue)
+		{
+			return new CustomerId((int)Convert.ChangeType(rawValue, typeof(int)));
+		}
 
 		public override bool Equals(object obj)
 		{
@@ -84,6 +88,10 @@ namespace AuditLogApp.Common.Identity
 			return new UserId(id);
 		}
 
+		public static UserId FromString(string rawValue)
+		{
+			return new UserId((int)Convert.ChangeType(rawValue, typeof(int)));
+		}
 
 		public override bool Equals(object obj)
 		{
@@ -126,6 +134,207 @@ namespace AuditLogApp.Common.Identity
 		public override string ToString()
 		{
 			return $"UserId[{RawValue}]";
+		}
+	}
+
+
+	public class CustomerAuthenticationId : IIdentity<Guid>
+	{	
+		[Obsolete("Serialization use only", true)]
+		public CustomerAuthenticationId() { }
+
+		public CustomerAuthenticationId(Guid id)
+		{
+			RawValue = id;
+		}
+
+		public Guid RawValue { get; set; }
+
+		public static implicit operator CustomerAuthenticationId(Guid id)
+		{
+			return new CustomerAuthenticationId(id);
+		}
+
+		public static CustomerAuthenticationId FromString(string rawValue)
+		{
+			return new CustomerAuthenticationId((Guid)Convert.ChangeType(rawValue, typeof(Guid)));
+		}
+
+		public override bool Equals(object obj)
+		{
+			if(obj is CustomerAuthenticationId)
+			{
+				return RawValue.Equals(((CustomerAuthenticationId)obj).RawValue);
+			}
+			else
+			{
+				return base.Equals(obj);
+			}
+		}
+
+		public static bool operator ==(CustomerAuthenticationId a, CustomerAuthenticationId b)
+		{
+			if(System.Object.ReferenceEquals(a,b))
+			{
+				return true;
+			}
+
+			if(((object)a == null && (object)b != null) || ((object)a != null && (object)b == null))
+			{
+				return false;
+			}
+
+			return a.RawValue == b.RawValue;
+		}
+
+		public static bool operator !=(CustomerAuthenticationId a, CustomerAuthenticationId b)
+		{
+			return !(a == b);
+		}
+
+		
+        public override int GetHashCode()
+        {
+            return RawValue.GetHashCode();
+        }
+
+		public override string ToString()
+		{
+			return $"CustomerAuthenticationId[{RawValue}]";
+		}
+	}
+
+
+	public class UserAuthenticationId : IIdentity<Guid>
+	{	
+		[Obsolete("Serialization use only", true)]
+		public UserAuthenticationId() { }
+
+		public UserAuthenticationId(Guid id)
+		{
+			RawValue = id;
+		}
+
+		public Guid RawValue { get; set; }
+
+		public static implicit operator UserAuthenticationId(Guid id)
+		{
+			return new UserAuthenticationId(id);
+		}
+
+		public static UserAuthenticationId FromString(string rawValue)
+		{
+			return new UserAuthenticationId((Guid)Convert.ChangeType(rawValue, typeof(Guid)));
+		}
+
+		public override bool Equals(object obj)
+		{
+			if(obj is UserAuthenticationId)
+			{
+				return RawValue.Equals(((UserAuthenticationId)obj).RawValue);
+			}
+			else
+			{
+				return base.Equals(obj);
+			}
+		}
+
+		public static bool operator ==(UserAuthenticationId a, UserAuthenticationId b)
+		{
+			if(System.Object.ReferenceEquals(a,b))
+			{
+				return true;
+			}
+
+			if(((object)a == null && (object)b != null) || ((object)a != null && (object)b == null))
+			{
+				return false;
+			}
+
+			return a.RawValue == b.RawValue;
+		}
+
+		public static bool operator !=(UserAuthenticationId a, UserAuthenticationId b)
+		{
+			return !(a == b);
+		}
+
+		
+        public override int GetHashCode()
+        {
+            return RawValue.GetHashCode();
+        }
+
+		public override string ToString()
+		{
+			return $"UserAuthenticationId[{RawValue}]";
+		}
+	}
+
+
+	public class UserSessionId : IIdentity<Guid>
+	{	
+		[Obsolete("Serialization use only", true)]
+		public UserSessionId() { }
+
+		public UserSessionId(Guid id)
+		{
+			RawValue = id;
+		}
+
+		public Guid RawValue { get; set; }
+
+		public static implicit operator UserSessionId(Guid id)
+		{
+			return new UserSessionId(id);
+		}
+
+		public static UserSessionId FromString(string rawValue)
+		{
+			return new UserSessionId((Guid)Convert.ChangeType(rawValue, typeof(Guid)));
+		}
+
+		public override bool Equals(object obj)
+		{
+			if(obj is UserSessionId)
+			{
+				return RawValue.Equals(((UserSessionId)obj).RawValue);
+			}
+			else
+			{
+				return base.Equals(obj);
+			}
+		}
+
+		public static bool operator ==(UserSessionId a, UserSessionId b)
+		{
+			if(System.Object.ReferenceEquals(a,b))
+			{
+				return true;
+			}
+
+			if(((object)a == null && (object)b != null) || ((object)a != null && (object)b == null))
+			{
+				return false;
+			}
+
+			return a.RawValue == b.RawValue;
+		}
+
+		public static bool operator !=(UserSessionId a, UserSessionId b)
+		{
+			return !(a == b);
+		}
+
+		
+        public override int GetHashCode()
+        {
+            return RawValue.GetHashCode();
+        }
+
+		public override string ToString()
+		{
+			return $"UserSessionId[{RawValue}]";
 		}
 	}
 

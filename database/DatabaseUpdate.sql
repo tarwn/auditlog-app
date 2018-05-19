@@ -1,4 +1,4 @@
-/* SQL Core Updates - Updated 2018-05-19 14:07 */
+/* SQL Core Updates - Updated 2018-05-21 21:27 */
 BEGIN TRY
 BEGIN TRANSACTION
 
@@ -27,10 +27,58 @@ BEGIN
 	INSERT INTO UpdateTracking(Name, Applied) SELECT '0001_AddCustomerandUser', GETUTCDATE();
 END
 
-/* File: TestData.sql */
-IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = 'TestData')
+/* File: 0002_Authentication.sql */
+IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0002_Authentication')
 BEGIN
-	Print 'Applying Update: TestData'
+	Print 'Applying Update: 0002_Authentication'
+	EXEC('
+		
+		-- expand the display name size
+		ALTER TABLE dbo.Users ALTER COLUMN DisplayName varchar(80) NOT NULL;
+		-- add username as unique column
+		ALTER TABLE dbo.Users ADD Username varchar(80) NOT NULL;
+		ALTER TABLE dbo.Users ADD CONSTRAINT AK_Username UNIQUE(Username);
+		-- add email address
+		ALTER TABLE dbo.Users ADD EmailAddress varchar(80) NOT NULL;
+		ALTER TABLE dbo.Users ADD PasswordResetKey uniqueidentifier NULL;
+		ALTER TABLE dbo.Users ADD PasswordResetGoodUntil DateTime2(7) NULL;
+		ALTER TABLE dbo.Users ADD IsEnabled bit NOT NULL;
+		
+		-- add the authentication table for users
+		CREATE TABLE dbo.UserAuthenticationMethods (
+			[Id] uniqueidentifier NOT NULL,
+			[UserId] int NOT NULL,
+			[CredentialType] int NOT NULL,
+			[Secret] varchar(100) NOT NULL,
+			[DisplayName] varchar(80) NOT NULL,
+			[CreationTime] datetime2(7) NOT NULL,
+			[IsRevoked] bit NOT NULL,
+			[RevokeTime] datetime2(7) NULL,
+		
+			CONSTRAINT PK_UserAuthenticationMethods PRIMARY KEY CLUSTERED(Id ASC),
+			CONSTRAINT FK_UserAuthenticationMethods_Users FOREIGN KEY (UserId) REFERENCES dbo.Users(Id)
+				ON DELETE CASCADE
+		);
+		
+		-- add sessions
+		CREATE TABLE dbo.UserSessions (
+			[Id] uniqueidentifier NOT NULL,
+			[UserId] int NOT NULL,
+			[CreationTime] datetime2(7) NOT NULL,
+			[LogoutTime] datetime2(7) NULL,
+		
+			CONSTRAINT PK_UserSessions PRIMARY KEY CLUSTERED(Id ASC),
+			CONSTRAINT FK_UserSessions_Users FOREIGN KEY (UserId) REFERENCES dbo.Users(Id)
+				ON DELETE CASCADE
+		);
+	');
+	INSERT INTO UpdateTracking(Name, Applied) SELECT '0002_Authentication', GETUTCDATE();
+END
+
+/* File: 0003_TestData.sql */
+IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0003_TestData')
+BEGIN
+	Print 'Applying Update: 0003_TestData'
 	EXEC('
 		DELETE FROM dbo.Users;
 		DELETE FROM dbo.CUstomers;
@@ -57,12 +105,12 @@ BEGIN
 			INSERT INTO dbo.Customers(DisplayName) VALUES(''Sample Customer'');
 			SET @CustomerId = SCOPE_IDENTITY();
 		
-			INSERT INTO dbo.Users(CustomerId, DisplayName) VALUES(@CustomerId, ''Sample User'');
+			INSERT INTO dbo.Users(CustomerId, Username, DisplayName, EmailAddress, IsEnabled) VALUES(@CustomerId, ''Sample User'', ''Sample User'', ''Sample@User.Text'', 1);
 			SET @UserId = SCOPE_IDENTITY();
 		
 		END
 	');
-	INSERT INTO UpdateTracking(Name, Applied) SELECT 'TestData', GETUTCDATE();
+	INSERT INTO UpdateTracking(Name, Applied) SELECT '0003_TestData', GETUTCDATE();
 END
 COMMIT TRANSACTION
 END TRY BEGIN CATCH

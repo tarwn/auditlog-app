@@ -4,9 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AuditLogApp.Common.Persistence;
+using AuditLogApp.Membership;
+using AuditLogApp.Membership.Implementation;
 using AuditLogApp.Persistence.SQLServer;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,14 +22,15 @@ namespace AuditLogApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Environment { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options =>
@@ -41,6 +46,55 @@ namespace AuditLogApp
             services.AddSingleton<IPersistenceStore>((s) =>
             {
                 return new PersistenceStore(Configuration["SQL:ConnectionString"]);
+            });
+
+            // add error handling here
+            
+            // Authentication
+            services.AddAuditLogInteractiveAuthentication<PersistedUserMembership>((options) =>
+            {
+                options.InteractiveAuthenticationType = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultPathAfterLogin = "/";
+            });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                /* API Authentication Provider */
+                //.AddAuditLogAPIAuthentication("AL-API-Token", "AuditLog.co")
+                /* 3rd Party Auth Providers */
+                .AddCookie("ExternalProvidersCookie")
+                .AddTwitter("Twitter", options =>
+                {
+                    options.SignInScheme = "ExternalProvidersCookie";
+
+                    options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
+                    options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+                })
+                /* Interactive 'Session' Cookie Provider */
+                .AddCookie((options) =>
+                {
+                    options.LoginPath = new PathString("/account/login");
+                    options.LogoutPath = new PathString("/account/logout");
+                    options.Events = new CookieAuthenticationEvents()
+                    {
+                        OnValidatePrincipal = async (c) =>
+                        {
+                            var membership = c.HttpContext.RequestServices.GetRequiredService<IUserMembership>();
+                            var isValid = await membership.ValidateLoginAsync(c.Principal);
+                            if (!isValid)
+                            {
+                                c.RejectPrincipal();
+                            }
+                        }
+                    };
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("APIAccessOnly", policy =>
+                {
+                    policy.AddAuthenticationSchemes("AL-API-Token");
+                    policy.RequireAuthenticatedUser();
+                });
             });
         }
 

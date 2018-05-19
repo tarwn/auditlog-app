@@ -18,6 +18,40 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             _db = dbUtility;
         }
 
+        public async Task<UserDTO> CreateAsync(UserDTO user)
+        {
+            var sqlParams = new
+            {
+                CustomerId = user.CustomerId.RawValue,
+                user.DisplayName,
+                user.EmailAddress,
+                user.Username,
+                user.IsEnabled,
+                Created = DateTime.UtcNow
+            };
+
+            string sql = @";
+                INSERT INTO dbo.Users(CustomerId, UserName, DisplayName, EmailAddress, IsEnabled)
+                VALUES(@CustomerId, @Username, @DisplayName, @Created, @IsEnabled);
+
+                SELECT U.Id,
+                       U.CustomerId,
+                       U.UserName,
+                       U.DisplayName,
+                       U.EmailAddress,
+                       U.IsEnabled
+                       -- PasswordResetKey,
+                       -- PasswordResetGoodUntil, 
+                FROM dbo.Users U 
+                WHERE Id = SCOPE_IDENTITY();
+            ";
+
+            return await _db.QuerySingle(async (db) => 
+            { 
+                return await db.FetchAsync<UserDTO>(sql, sqlParams);
+            });
+        }
+
         public async Task<UserDTO> GetAsync(CustomerId customerId, UserId id)
         {
             var sqlParams = new
@@ -34,11 +68,56 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                     AND U.Id = @UserId;
             ";
 
-            return await _db.Query(async (db) =>
+            return await _db.QuerySingleOrDefault(async (db) => 
             {
-                var results = await db.FetchAsync<UserDTO>(sql, sqlParams);
-                return results.SingleOrDefault();
+                return await db.FetchAsync<UserDTO>(sql, sqlParams);
             });
+        }
+
+        public async Task<UserDTO> GetAsync(UserId id)
+        {
+            var sqlParams = new
+            {
+                UserId = id.RawValue
+            };
+            string sql = @"
+                SELECT U.Id,
+                       U.CustomerId,
+                       U.DisplayName
+                FROM dbo.Users U
+                WHERE U.Id = @UserId;
+            ";
+
+            return await _db.QuerySingleOrDefault(async (db) =>
+            {
+                return await db.FetchAsync<UserDTO>(sql, sqlParams);
+            });
+        }
+
+        public async Task<UserDTO> GetByUsernameAsync(string username)
+        {
+            var sqlParams = new
+            {
+                Username = username
+            };
+            string sql = @"
+                SELECT U.Id,
+                       U.CustomerId,
+                       U.DisplayName
+                FROM dbo.Users U
+                WHERE U.Username LIKE @Username;
+            ";
+
+            return await _db.QuerySingleOrDefault(async (db) =>
+            {
+                return await db.FetchAsync<UserDTO>(sql, sqlParams);
+            });
+        }
+
+        public async Task<bool> IsUsernameRegisteredAsync(string username)
+        {
+            var user = await GetByUsernameAsync(username);
+            return (user != null);
         }
     }
 }

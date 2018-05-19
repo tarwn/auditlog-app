@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Identities xmlns="http://tempuri.org/IdentitySchema.xsd">
   <Identity Name="CustomerId" Type="int" />
-  <Identity Name="UserId" Type="int" />  
+  <Identity Name="UserId" Type="int" />
+  <Identity Name="CustomerAuthenticationId" Type="Guid" />
+  <Identity Name="UserAuthenticationId" Type="Guid" />
+  <Identity Name="UserSessionId" Type="Guid" />
 </Identities>

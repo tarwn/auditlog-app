@@ -1,0 +1,34 @@
+﻿@model AuditLogApp.Models.Account.LoginModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<div class="box">
+    <h2>Login</h2>
+
+    <a asp-action="LoginWithTwitter" asp-route-returnUrl="@TempData["returnUrl"]" class="btn-white">Login with Twitter</a>
+
+    <div class="horizantal-line"><span>or</span></div>
+
+    <form asp-action="Login" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="UserName" class="control-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Login" />
+        </div>
+    </form>
+    <br />
+    <a asp-action="Register">Register as a new user</a>
+</div>
+
+

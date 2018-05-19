@@ -10,6 +10,38 @@
     <Property Name="Id" Type="UserId"/>
     <Property Name="CustomerId" Type="CustomerId"/>
     <Property Name="DisplayName" Type="string"/>
+    <Property Name="Username" Type="string"/>
+    <Property Name="EmailAddress" Type="string"/>
+    <Property Name="IsEnabled" Type="bool" Default="true" />
+  </DTO>
+
+  <DTO Name="SecretUserDTO">
+    <Property Name="Id" Type="UserId"/>
+    <Property Name="CustomerId" Type="CustomerId"/>
+    <Property Name="DisplayName" Type="string"/>
+    <Property Name="Username" Type="string"/>
+    <Property Name="EmailAddress" Type="string"/>
+    <Property Name="IsEnabled" Type="bool" Default="true" />
+    <Property Name="PasswordResetKey" Type="Guid?" Default="null"/>
+    <Property Name="PasswordResetGoodUntil" Type="DateTime?" Default="null"/>
+  </DTO>
+
+  <DTO Name="UserAuthenticationDTO">
+    <Property Name="Id" Type="UserAuthenticationId"/>
+    <Property Name="UserId" Type="UserId"/>
+    <Property Name="CredentialType" Type="CredentialType"/>
+    <Property Name="Secret" Type="string" />
+    <Property Name="DisplayName" Type="string"/>
+    <Property Name="CreationTime" Type="DateTime"/>
+    <Property Name="IsRevoked" Type="bool" Default="false"/>
+    <Property Name="RevokeTime" Type="DateTime?" Default="null"/>
+  </DTO>
+
+  <DTO Name="UserSessionDTO">
+    <Property Name="Id" Type="UserSessionId"/>
+    <Property Name="UserId" Type="UserId"/>
+    <Property Name="CreationTime" Type="DateTime"/>
+    <Property Name="LogoutTime" Type="DateTime?"/>
   </DTO>
   
 </DTOs>

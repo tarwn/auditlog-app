@@ -9,6 +9,12 @@ namespace AuditLogApp.Common.Persistence
 {
     public interface IUserStore
     {
+        // for auth
+        Task<UserDTO> GetAsync(UserId userId);
+
+        Task<UserDTO> CreateAsync(UserDTO user);
         Task<UserDTO> GetAsync(CustomerId customerId, UserId id);
+        Task<UserDTO> GetByUsernameAsync(string username);
+        Task<bool> IsUsernameRegisteredAsync(string username);
     }
 }

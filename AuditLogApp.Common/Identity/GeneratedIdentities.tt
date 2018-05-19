@@ -39,6 +39,10 @@ foreach(var identity in identities){
 			return new <#=identityName#>(id);
 		}
 
+		public static <#=identityName#> FromString(string rawValue)
+		{
+			return new <#=identityName#>((<#=identityType#>)Convert.ChangeType(rawValue, typeof(<#=identityType#>)));
+		}
 
 		public override bool Equals(object obj)
 		{

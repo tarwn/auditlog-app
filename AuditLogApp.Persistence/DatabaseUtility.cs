@@ -3,6 +3,7 @@ using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +49,18 @@ namespace AuditLogApp.Persistence.SQLServer
 
             return result;
         }
+
+        public async Task<T> QuerySingle<T>(Func<AsyncPoco.Database, Task<List<T>>> query)
+        {
+            var results = await Query(query);
+            return results.Single();
+        }
+
+        public async Task<T> QuerySingleOrDefault<T>(Func<AsyncPoco.Database, Task<List<T>>> query) {
+            var results = await Query(query);
+            return results.SingleOrDefault();
+        }
+
 
         public async Task Execute(Func<AsyncPoco.Database, Task> action)
         {

@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using AuditLogApp.Common.Enums;
 using AuditLogApp.Common.Identity;
 
 namespace AuditLogApp.Common.DTO
