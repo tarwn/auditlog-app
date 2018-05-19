@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuditLogApp", "AuditLogApp\AuditLogApp.csproj", "{0A755107-D849-4D9B-8277-BA9389426EFE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{35EAFE58-40A2-427A-A6A9-FA88CFDB0C46}"
+	ProjectSection(SolutionItems) = preProject
+		.babelrc = .babelrc
+		.eslintignore = .eslintignore
+		.eslintrc = .eslintrc
+		.gitignore = .gitignore
+		GulpFile.js = GulpFile.js
+		package.json = package.json
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail", "Mail", "{00B2D8E9-19C9-45CB-A12D-E4E7C2003EB1}"
+	ProjectSection(SolutionItems) = preProject
+		mail\README.md = mail\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A755107-D849-4D9B-8277-BA9389426EFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A755107-D849-4D9B-8277-BA9389426EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A755107-D849-4D9B-8277-BA9389426EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A755107-D849-4D9B-8277-BA9389426EFE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02FB9410-2ADC-4CAD-94E3-B6AAC155FD99}
+	EndGlobalSection
+EndGlobal

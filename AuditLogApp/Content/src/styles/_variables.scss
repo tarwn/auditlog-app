@@ -1,0 +1,102 @@
+$cs_blue: #5bc0eb;          //      91, 192, 235
+$cs_green: #9bc53d;
+$cs_orange: #f0b83e;
+$cs_red: #c3423f;
+$cs_darkgrey: #404e4d;
+
+$ws_white: #FFFFFF;
+$ws_lightgrey: #dddddd;
+$ws_medgrey: #86807C;
+$ws_darkgrey: #26201C;
+$ws_lightergrey: #fafbfc;
+
+// standards
+$color-primary: $cs_green;
+$color-accent-1: $cs_blue;
+$color-accent-2: $cs_orange;
+
+$color-shaded: #e5f3f8;
+
+$color-background-white: $ws_white;
+$color-background-grey: #f5f5f5;
+$color-background-dark: $cs_darkgrey;
+
+$text-color-normal: $ws_darkgrey;
+$text-color-light: $ws_medgrey;
+$text-color-grey: $cs_darkgrey;
+$text-color-inverse: $ws_white;
+
+// Device regions
+//  https://medium.freecodecamp.org/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862
+@mixin for-phone-only {
+    @media (max-width: 599px) { @content; }
+}
+@mixin for-tablet-portrait-up {
+    @media only screen and (min-width: 600px) { @content; }
+}
+@mixin for-tablet-landscape-up {
+    @media only screen and (min-width: 900px) { @content; }
+}
+@mixin for-desktop-up {
+    @media only screen and (min-width: 1200px) { @content; }
+}
+@mixin for-big-desktop-up {
+    @media only screen and (min-width: 1800px) { @content; }
+}
+
+// Font sizes
+$font-size-small: 11px;
+$font-size-normal: 13px;
+$font-size-larger: 16px;
+
+.small-font-size{
+    font-size: $font-size-small;
+    line-height: 1.6;
+    font-weight: 400;
+
+    @include for-tablet-portrait-up{
+        font-size: $font-size-small + 1;
+    }
+
+    @include for-tablet-landscape-up{
+        font-size: $font-size-small + 2;
+    }
+
+    @include for-desktop-up{
+        font-size: $font-size-small + 2;
+    }
+}
+.normal-font-size{
+    font-size: $font-size-normal;
+    line-height: 1.6;
+    font-weight: 400;
+
+    @include for-tablet-portrait-up{
+        font-size: $font-size-normal + 1;
+    }
+
+    @include for-tablet-landscape-up{
+        font-size: $font-size-normal + 2;
+    }
+
+    @include for-desktop-up{
+        font-size: $font-size-normal + 2;
+    }
+}
+.large-font-size{
+    font-size: $font-size-larger;
+    line-height: 1.6;
+    font-weight: 400;
+
+    @include for-tablet-portrait-up{
+        font-size: $font-size-larger + 1;
+    }
+
+    @include for-tablet-landscape-up{
+        font-size: $font-size-larger + 2;
+    }
+
+    @include for-desktop-up{
+        font-size: $font-size-larger + 2;
+    }
+}

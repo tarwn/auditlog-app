@@ -1,0 +1,17 @@
+{
+    "extends": "airbnb-base",
+    "env":{
+        "browser": true
+    },
+    "globals": {
+        "$": true,
+        "ko": true
+    },
+    "rules": {
+        "indent": ["error", 4, {"SwitchCase": 1}],  "// personal preference": "",
+        "linebreak-style": ["error", "windows"],    "// I use multiple environments": "",
+        "comma-dangle": ["error", "never"],         "// YAGNI": "",
+        "brace-style": ["error", "stroustrup"],     "// personal preference also": "",
+        "no-underscore-dangle": "off",              "// used to denote 'private' properties and functions": ""
+    }
+}
