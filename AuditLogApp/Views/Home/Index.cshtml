@@ -1,6 +1,7 @@
-﻿@{
+﻿@model AuditLogApp.Common.DTO.CustomerDTO
+@{
     ViewData["Title"] = null;
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-Home
+Customer: @Model.DisplayName

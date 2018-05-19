@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="IdentitySchema"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://tempuri.org/DTOSchema.xsd"
+    xmlns="http://tempuri.org/DTOSchema.xsd"
+    attributeFormDefault="unqualified"
+    elementFormDefault="qualified"
+>
+  
+  <xs:element name="DTOs">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="DTO" type="DTOType" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="DTOType">
+    <xs:sequence>
+      <xs:element name="Property" type="PropertyType"  minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+
+  <xs:complexType name="PropertyType">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Type" type="xs:string" />
+    <xs:attribute name="Default" type="xs:string" use="optional" />
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="IdentitySchema"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://tempuri.org/IdentitySchema.xsd"
+    xmlns="http://tempuri.org/IdentitySchema.xsd"
+    attributeFormDefault="unqualified"
+    elementFormDefault="qualified"
+>
+  
+  <xs:element name="Identities">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Identity" type="IdentityType" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="IdentityType">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Type" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

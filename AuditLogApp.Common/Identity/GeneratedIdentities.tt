@@ -1,0 +1,91 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ output extension=".cs" #>
+
+using System;
+namespace AuditLogApp.Common.Identity
+{
+
+<#
+XNamespace ns = "http://tempuri.org/IdentitySchema.xsd";
+var xdoc = XDocument.Load(Host.ResolvePath("Identities.xml"));
+var identities = xdoc.Descendants(ns + "Identity");
+
+foreach(var identity in identities){
+	var identityName = identity.Attribute("Name").Value;
+	var identityType = identity.Attribute("Type").Value;
+#>
+
+	public class <#=identityName#> : IIdentity<<#=identityType#>>
+	{	
+		[Obsolete("Serialization use only", true)]
+		public <#=identityName#>() { }
+
+		public <#=identityName#>(<#=identityType#> id)
+		{
+			RawValue = id;
+		}
+
+		public <#=identityType#> RawValue { get; set; }
+
+		public static implicit operator <#=identityName#>(<#=identityType#> id)
+		{
+			return new <#=identityName#>(id);
+		}
+
+
+		public override bool Equals(object obj)
+		{
+			if(obj is <#=identityName#>)
+			{
+				return RawValue.Equals(((<#=identityName#>)obj).RawValue);
+			}
+			else
+			{
+				return base.Equals(obj);
+			}
+		}
+
+		public static bool operator ==(<#=identityName#> a, <#=identityName#> b)
+		{
+			if(System.Object.ReferenceEquals(a,b))
+			{
+				return true;
+			}
+
+			if(((object)a == null && (object)b != null) || ((object)a != null && (object)b == null))
+			{
+				return false;
+			}
+
+			return a.RawValue == b.RawValue;
+		}
+
+		public static bool operator !=(<#=identityName#> a, <#=identityName#> b)
+		{
+			return !(a == b);
+		}
+
+		
+        public override int GetHashCode()
+        {
+            return RawValue.GetHashCode();
+        }
+
+		public override string ToString()
+		{
+			return $"<#=identityName#>[{RawValue}]";
+		}
+	}
+
+<#
+}
+#>
+
+}

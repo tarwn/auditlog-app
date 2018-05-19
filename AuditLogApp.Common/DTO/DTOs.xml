@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<DTOs xmlns="http://tempuri.org/DTOSchema.xsd">
+
+  <DTO Name="CustomerDTO">
+    <Property Name="Id" Type="CustomerId"/>
+    <Property Name="DisplayName" Type="string"/>
+  </DTO>
+
+  <DTO Name="UserDTO">
+    <Property Name="Id" Type="UserId"/>
+    <Property Name="CustomerId" Type="CustomerId"/>
+    <Property Name="DisplayName" Type="string"/>
+  </DTO>
+  
+</DTOs>

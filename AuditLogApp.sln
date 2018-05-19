@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuditLogApp", "AuditLogApp\AuditLogApp.csproj", "{0A755107-D849-4D9B-8277-BA9389426EFE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5C5D5180-389D-41A1-9A63-C7C5D54235CA} = {5C5D5180-389D-41A1-9A63-C7C5D54235CA}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{35EAFE58-40A2-427A-A6A9-FA88CFDB0C46}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,6 +24,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail", "Mail", "{00B2D8E9-1
 		mail\README.md = mail\README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{3AFB2190-A816-440D-8BD3-87FC513F5FF0}"
+	ProjectSection(SolutionItems) = preProject
+		database\UpdateLocalDB.cmd = database\UpdateLocalDB.cmd
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuditLogApp.Persistence.SQLServer", "AuditLogApp.Persistence\AuditLogApp.Persistence.SQLServer.csproj", "{5C5D5180-389D-41A1-9A63-C7C5D54235CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuditLogApp.Common", "AuditLogApp.Common\AuditLogApp.Common.csproj", "{1857F12F-C83D-4846-8EA8-0CDCE482F750}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuditLogApp.Persistence.SQLServer.Tests", "AuditLogApp.Persistence.SQLServer.Tests\AuditLogApp.Persistence.SQLServer.Tests.csproj", "{BBCE4AFC-7E7B-4CDF-84AB-15C90F4E965E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +45,18 @@ Global
 		{0A755107-D849-4D9B-8277-BA9389426EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A755107-D849-4D9B-8277-BA9389426EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A755107-D849-4D9B-8277-BA9389426EFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C5D5180-389D-41A1-9A63-C7C5D54235CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C5D5180-389D-41A1-9A63-C7C5D54235CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C5D5180-389D-41A1-9A63-C7C5D54235CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C5D5180-389D-41A1-9A63-C7C5D54235CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1857F12F-C83D-4846-8EA8-0CDCE482F750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1857F12F-C83D-4846-8EA8-0CDCE482F750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1857F12F-C83D-4846-8EA8-0CDCE482F750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1857F12F-C83D-4846-8EA8-0CDCE482F750}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBCE4AFC-7E7B-4CDF-84AB-15C90F4E965E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBCE4AFC-7E7B-4CDF-84AB-15C90F4E965E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBCE4AFC-7E7B-4CDF-84AB-15C90F4E965E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBCE4AFC-7E7B-4CDF-84AB-15C90F4E965E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

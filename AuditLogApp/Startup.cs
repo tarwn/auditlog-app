@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AuditLogApp.Common.Persistence;
+using AuditLogApp.Persistence.SQLServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -25,7 +28,20 @@ namespace AuditLogApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.RespectBrowserAcceptHeader = true;
+                // Add XML Content Negotiation
+                options.InputFormatters.Add(new XmlSerializerInputFormatter());
+                options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                // Don't default to JSON when there isn't a good answer
+                options.ReturnHttpNotAcceptable = true;
+            });
+
+            services.AddSingleton<IPersistenceStore>((s) =>
+            {
+                return new PersistenceStore(Configuration["SQL:ConnectionString"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
