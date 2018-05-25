@@ -57,7 +57,7 @@ namespace AuditLogApp.Controllers
         {
             var props = new AuthenticationProperties()
             {
-                RedirectUri = "account/register/twitter/continue"
+                RedirectUri = "/account/register/twitter/continue"
             };
             return Challenge(props, "Twitter");
         }
@@ -167,7 +167,7 @@ namespace AuditLogApp.Controllers
         {
             var props = new AuthenticationProperties()
             {
-                RedirectUri = "account/login/twitter/continue?returnUrl=" + HttpUtility.UrlEncode(returnUrl)
+                RedirectUri = "/account/login/twitter/continue?returnUrl=" + HttpUtility.UrlEncode(returnUrl)
             };
             return Challenge(props, "Twitter");
         }

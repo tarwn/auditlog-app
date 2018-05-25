@@ -41,7 +41,17 @@ foreach(var identity in identities){
 
 		public static <#=identityName#> FromString(string rawValue)
 		{
+			<# if(identityType == "Guid"){ #>
+			return Guid.Parse(rawValue);
+			<# 
+			}
+			else
+			{
+			#>
 			return new <#=identityName#>((<#=identityType#>)Convert.ChangeType(rawValue, typeof(<#=identityType#>)));
+			<#
+			}
+			#>
 		}
 
 		public override bool Equals(object obj)

@@ -48,10 +48,10 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
         {
             var sqlParams = new
             {
-                Id = id
+                Id = id.RawValue
             };
 
-            string sql = @";
+            string sql = @"
                 SELECT Id,
                        UserId,
                        CreationTime,
@@ -70,7 +70,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
         {
             var sqlParams = new
             {
-                Id = id,
+                Id = id.RawValue,
                 LogoutTime = DateTime.UtcNow
             };
 

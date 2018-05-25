@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AuditLogApp.Models.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuditLogApp.Controllers
@@ -9,36 +12,55 @@ namespace AuditLogApp.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        // GET api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [Authorize(Policy = "APIAccessOnly")]
+        [HttpGet("verify/api/ok")]
+        public IActionResult GetApiOk()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(new VerifyModel()
+            {
+                SampleNumber = 42,
+                SampleString = "Hello"
+            });
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [Authorize(Policy = "APIAccessOnly")]
+        [HttpGet("verify/api/exception")]
+        public IActionResult GetApiException()
         {
-            return "value";
+            int[] x = null;
+            return Ok(x.Length);
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [Authorize(Policy = "APIAccessOnly")]
+        [HttpPost("verify/api/400")]
+        public IActionResult PostApiBadRequest(VerifyModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok();
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [Authorize(Policy = "APIAccessOnly")]
+        [HttpGet("verify/api/404")]
+        public IActionResult GetApiNotFound()
         {
+            return NotFound(new ApiError(404, "Sample thing not found"));
         }
+    }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+    public class VerifyModel
+    {
+        public VerifyModel() { }
+
+        [Required]
+        [StringLength(maximumLength: 10, MinimumLength = 3)]
+        public string SampleString { get; set; }
+
+        [Required]
+        public int SampleNumber { get; set; }
+
     }
 }

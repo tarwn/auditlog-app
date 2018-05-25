@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using AuditLogApp.Common.Persistence;
+using AuditLogApp.ErrorNotification;
 using AuditLogApp.Membership;
 using AuditLogApp.Membership.Implementation;
+using AuditLogApp.Models.Error;
 using AuditLogApp.Persistence.SQLServer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -43,13 +47,39 @@ namespace AuditLogApp
                 options.ReturnHttpNotAcceptable = true;
             });
 
-            services.AddSingleton<IPersistenceStore>((s) =>
+            services.AddScoped<IPersistenceStore>((s) =>
             {
                 return new PersistenceStore(Configuration["SQL:ConnectionString"]);
             });
 
-            // add error handling here
-            
+            // Error Handling
+
+            services.AddScoped<SmtpClient>((s) => {
+                if (Configuration["smtp:DeliveryMethod"] == "directory")
+                {
+                    return new SmtpClient()
+                    {
+                        DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
+                        PickupDirectoryLocation = Path.Combine(Environment.ContentRootPath, "..", "mail")
+                    };
+                }
+                else
+                {
+                    return new SmtpClient(Configuration["smtp:Host"], int.Parse(Configuration["smtp:Port"]))
+                    {
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        EnableSsl = bool.Parse(Configuration["smtp:EnableSsl"]),
+                        Credentials = new NetworkCredential(Configuration["smtp:Username"], Configuration["smtp:Password"])
+                    };
+                }
+            });
+
+            services.AddEmailErrorNotifier((options) => {
+                options.EnvironmentName = Environment.EnvironmentName;
+                options.FromAddress = Configuration["EmailAddresses:ErrorsFrom"];
+                options.ToAddress = Configuration["EmailAddresses:ErrorsTo"];
+            });
+
             // Authentication
             services.AddAuditLogInteractiveAuthentication<PersistedUserMembership>((options) =>
             {
@@ -68,6 +98,8 @@ namespace AuditLogApp
 
                     options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
                     options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+
+                    options.CallbackPath = new PathString("/account/3rdparty/twitter/sign-in");
                 })
                 /* Interactive 'Session' Cookie Provider */
                 .AddCookie((options) =>
@@ -78,10 +110,19 @@ namespace AuditLogApp
                     {
                         OnValidatePrincipal = async (c) =>
                         {
-                            var membership = c.HttpContext.RequestServices.GetRequiredService<IUserMembership>();
-                            var isValid = await membership.ValidateLoginAsync(c.Principal);
-                            if (!isValid)
+                            try
                             {
+                                var membership = c.HttpContext.RequestServices.GetRequiredService<IUserMembership>();
+                                var isValid = await membership.ValidateLoginAsync(c.Principal);
+                                if (!isValid)
+                                {
+                                    c.RejectPrincipal();
+                                }
+                            }
+                            catch (Exception exc)
+                            {
+                                var errorService = c.HttpContext.RequestServices.GetRequiredService<IErrorNotifier>();
+                                await errorService.NotifyAsync(new DescriptiveError("Error during validation of session"), exc, c.Request.Path);
                                 c.RejectPrincipal();
                             }
                         }
@@ -101,10 +142,14 @@ namespace AuditLogApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            app.UseExceptionHandler("/error");
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
+
+            app.UseAuthentication();
 
             app.UseStaticFiles(new StaticFileOptions()
             {

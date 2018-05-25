@@ -23,8 +23,8 @@ namespace AuditLogApp.Common.Identity
 
 		public static CustomerId FromString(string rawValue)
 		{
-			return new CustomerId((int)Convert.ChangeType(rawValue, typeof(int)));
-		}
+						return new CustomerId((int)Convert.ChangeType(rawValue, typeof(int)));
+					}
 
 		public override bool Equals(object obj)
 		{
@@ -90,8 +90,8 @@ namespace AuditLogApp.Common.Identity
 
 		public static UserId FromString(string rawValue)
 		{
-			return new UserId((int)Convert.ChangeType(rawValue, typeof(int)));
-		}
+						return new UserId((int)Convert.ChangeType(rawValue, typeof(int)));
+					}
 
 		public override bool Equals(object obj)
 		{
@@ -157,8 +157,8 @@ namespace AuditLogApp.Common.Identity
 
 		public static CustomerAuthenticationId FromString(string rawValue)
 		{
-			return new CustomerAuthenticationId((Guid)Convert.ChangeType(rawValue, typeof(Guid)));
-		}
+						return Guid.Parse(rawValue);
+					}
 
 		public override bool Equals(object obj)
 		{
@@ -224,8 +224,8 @@ namespace AuditLogApp.Common.Identity
 
 		public static UserAuthenticationId FromString(string rawValue)
 		{
-			return new UserAuthenticationId((Guid)Convert.ChangeType(rawValue, typeof(Guid)));
-		}
+						return Guid.Parse(rawValue);
+					}
 
 		public override bool Equals(object obj)
 		{
@@ -291,8 +291,8 @@ namespace AuditLogApp.Common.Identity
 
 		public static UserSessionId FromString(string rawValue)
 		{
-			return new UserSessionId((Guid)Convert.ChangeType(rawValue, typeof(Guid)));
-		}
+						return Guid.Parse(rawValue);
+					}
 
 		public override bool Equals(object obj)
 		{
