@@ -13,6 +13,8 @@
     <script src="/scripts/lib/underscore-min.js"></script>
     <script src="/scripts/lib/jquery-3.3.1.min.js"></script>
     <script src="/scripts/lib/knockout-3.4.2.js"></script>
+    <script src="/scripts/lib/page.js"></script>
+    <script src="/scripts/lib/d3.min.js"></script>
     <script src="/scripts/app/app.min.js"></script>
     <link rel="stylesheet" href="/app.min.css" />
 
@@ -48,35 +50,31 @@
     <nav class="ala-navigation">
         <h1 class="ala-screen-reader-only">Navigation</h1>
         <ul class="ala-navigation-menu">
-            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link active">Home</a></li>
-            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link">Customize</a></li>
-            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link">Account</a></li>
-            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link">API Keys</a></li>
-            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link">Users</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'home' }">Home</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'customize' }">Customize</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'account' }">Account</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'apikeys' }">API Keys</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'users' }">Users</a></li>
         </ul>
     </nav>
     <div class="ala-body">
-        <!-- ko if: currentPageViewModelIsReadyForDisplay -->
-        <div class="ala-page-container" style="display: none;" data-bind="visible: currentPageViewModelIsReadyForDisplay()">
-            <div data-bind="template: { name: currentPageTemplate, data: currentPageViewModel }">
-                <div class="ala-loading">
-                    Loading...
-                </div>
+        <div class="ala-page-container">
+            <div class="ala-loading"  data-bind="visible: !currentPage.readyForDisplay()">
+                Loading...
+            </div>
+            <div style="display: none;" data-bind="visible: currentPage.readyForDisplay(), component: { name: currentPage.componentName, params: currentPage.componentParams }">
             </div>
             @RenderBody()
         </div>
-        <!-- /ko -->
     </div>
 
-    <!-- ko if: siteWide.modal() != null -->
+    <!-- ko if: sitewide.modal() != null -->
     modal component
     <!-- /ko -->
 
     <script type="text/javascript">
         $(document).ready(function () { 
-            var services = new App.createServices(),
-                siteWide = new App.createSiteWideContext(services),
-                viewmodel = new App.createViewModel(services, siteWide);
+            var viewmodel = App.default.create();
 
             // TODO capture JS errors
 

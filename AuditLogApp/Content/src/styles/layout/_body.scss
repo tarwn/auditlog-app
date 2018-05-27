@@ -8,3 +8,12 @@
     right: 0px;
     border-top: 1px solid $color-border;
 }
+
+.ala-loading{
+    font-size: 3em;
+    text-align: center;
+    padding-top: 3em;
+    //background-color: $ws_medgrey;
+    color: $color-accent-1;;
+    opacity: .6;
+}

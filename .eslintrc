@@ -5,7 +5,8 @@
     },
     "globals": {
         "$": true,
-        "ko": true
+        "ko": true,
+        "page": true
     },
     "rules": {
         "indent": ["error", 4, {"SwitchCase": 1}],  "// personal preference": "",

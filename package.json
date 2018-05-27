@@ -25,6 +25,7 @@
     "gulp": "^3.9.1",
     "gulp-connect": "^5.5.0",
     "gulp-exit": "0.0.2",
+    "gulp-knockout-templates": "0.0.4",
     "gulp-postcss": "^7.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^4.0.1",

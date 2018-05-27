@@ -20,6 +20,8 @@ var cssnano = require('cssnano');
 var sass = require('gulp-sass');
 var postcss = require('gulp-postcss');
 
+var includeKnockoutTemplates = require('gulp-knockout-templates');
+
 var configs = {
     outputFolder: './AuditLogApp/Content/build',
     jsLibInput: './AuditLogApp/Content/src/scripts/lib/*.js',
