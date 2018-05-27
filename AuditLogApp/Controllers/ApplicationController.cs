@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AuditLogApp.Common.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuditLogApp.Controllers
 {
     [Route("")]
-    public class HomeController : Controller
+    [Authorize(Policy = "InteractiveAccessOnly")]
+    public class ApplicationController : Controller
     {
         private IPersistenceStore _persistence;
 
-        public HomeController(IPersistenceStore persistence)
+        public ApplicationController(IPersistenceStore persistence)
         {
             _persistence = persistence;
         }
 
         [HttpGet()]
-        public async Task<IActionResult> IndexAsync()
+        public IActionResult Index()
         {
-            var customer = await _persistence.Customers.GetAsync(1);
-
-            return View("Index", customer);
+            return View("Index");
         }
     }
 }

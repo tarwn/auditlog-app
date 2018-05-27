@@ -17,7 +17,7 @@ namespace AuditLogApp.Persistence.SQLServer.Tests.Stores
 
             var result = await database.UserSessions.CreateAsync(ValidUserId, DateTime.UtcNow);
 
-            Assert.AreEqual(TestBase.ValidUser.Id, result.Id);
+            Assert.AreEqual(TestBase.ValidUser.Id, result.UserId);
         }
     }
 }

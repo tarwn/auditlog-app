@@ -25,23 +25,26 @@ var configs = {
     jsLibInput: './AuditLogApp/Content/src/scripts/lib/*.js',
     jsLibOutput: './AuditLogApp/Content/build/scripts/lib/',
     jsInput: './AuditLogApp/Content/src/scripts/app/app.js',
-    jsOutput: 'app.min.js',
-    sassInput: './AuditLogApp/Content/src/styles/app.scss',
-    sassOutput: 'app.min.css',
-    sassWatch: './AuditLogApp/Content/src/styles/*.scss',
-    imagesInput: './AuditLogApp/Content/src/images/*.*',
-    imagesWatch: './AuditLogApp/Content/src/images/*.*',
+    sassInput: ['./AuditLogApp/Content/src/styles/app.scss','./AuditLogApp/Content/src/styles/standalone.scss'],
+    sassWatch: './AuditLogApp/Content/src/styles/**/*.scss',
+    imagesInput: './AuditLogApp/Content/src/images/**/*.*',
+    imagesWatch: './AuditLogApp/Content/src/images/**/*.*',
     imagesOutput: './AuditLogApp/Content/build/images',
     fontsInput: './AuditLogApp/Content/src/font/*',
     fontsOutput: './AuditLogApp/Content/build/font'
 };
+
+function applyMinPath(path) {
+    path.basename = path.basename + '.min';
+}
 
 // JS
 
 function compileJavascript(watch) {
     var bundler = watchify(browserify(configs.jsInput, {
         debug: true,
-        insertGlobals: true
+        insertGlobals: true,
+        standalone: 'App'
     }).transform(babelify));
 
     function rebundle() {
@@ -52,13 +55,13 @@ function compileJavascript(watch) {
                 console.error(err);
                 this.emit('end');
             })
-            .pipe(source('build.js'))
+            .pipe(source('app.js')) // name is meaningless, but it is used as basename for output
             .pipe(buffer())
-            .pipe(rename(configs.jsOutput))
+            .pipe(rename(applyMinPath))
             .pipe(sourcemaps.init({loadMaps: true}))
             .pipe(uglify())
             .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest(configs.outputFolder));
+            .pipe(gulp.dest(configs.outputFolder + '/scripts/app'));
     }
 
     if (watch) {
@@ -97,13 +100,14 @@ gulp.task('sass', function(){
     ];
 
     return gulp.src(configs.sassInput)
-        .pipe(rename(configs.sassOutput))
+        .pipe(rename(applyMinPath))
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(postcss(plugins))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(configs.outputFolder))
 });
+
 
 gulp.task('sass:watch', function(){
     gulp.watch(configs.sassWatch, function () {

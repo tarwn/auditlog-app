@@ -1,0 +1,9 @@
+@import "../variables";
+
+.ala-screen-reader-only{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    left: -5000px;
+}

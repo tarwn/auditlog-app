@@ -1,0 +1,49 @@
+﻿@import "../variables";
+
+.ala-navigation{
+    position: absolute;
+    left: 0px;
+    top: $header-height;
+    bottom: 0px;
+    width: $menu-width;
+
+    background-color: $color-background-grey;
+    border: 1px solid $color-border;
+}
+
+.ala-navigation-menu{
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    padding-top: 1em;
+}
+
+.ala-navigation-link,
+.ala-navigation-link:visited{
+    display: block;
+    padding: 1em 0 1em 2em;
+    border-left: 4px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    color: $text-color-light;
+    text-decoration: none;
+    font-size: 1.1em;
+
+    &.active{
+        border-left: 4px solid $color-accent-2;
+        border-bottom: 1px solid $color-border;
+        border-top: 1px solid $color-border;
+        background-color: white;
+        margin-right: -1px;
+        color: $text-color-normal;
+    }
+
+    &:hover{
+        background-color: $ws_lightergrey;
+        border-left: 4px solid lighten($color-accent-2, 20%);
+        border-bottom: 1px solid $color-border;
+        border-top: 1px solid $color-border;
+        color: $text-color-normal;
+    }
+}
+

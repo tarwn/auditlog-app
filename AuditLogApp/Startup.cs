@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -37,6 +38,12 @@ namespace AuditLogApp
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // things that used to work correctly
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            // MVC
+
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true;
@@ -131,6 +138,12 @@ namespace AuditLogApp
 
             services.AddAuthorization(options =>
             {
+                options.AddPolicy("InteractiveAccessOnly", policy =>
+                {
+                    policy.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+                });
+
                 options.AddPolicy("APIAccessOnly", policy =>
                 {
                     policy.AddAuthenticationSchemes("AL-API-Token");
@@ -142,6 +155,7 @@ namespace AuditLogApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Error Handling
             //if (env.IsDevelopment())
             //{
             //    app.UseDeveloperExceptionPage();
@@ -149,13 +163,26 @@ namespace AuditLogApp
             app.UseExceptionHandler("/error");
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 
+            // Authentication
             app.UseAuthentication();
 
+            // Rewrite SPA routes to index
+            var options = new RewriteOptions();
+            if (!env.IsDevelopment())
+            {
+                options.AddRedirectToHttps();
+            }
+            options.AddRewrite("^company/.*", "/", skipRemainingRules: true)
+                   .AddRewrite("^welcome(/.*)?", "/onboarding", skipRemainingRules: true);
+            app.UseRewriter(options);
+
+            // Static assets
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content/build"))
             });
 
+            // MVC route handling
             app.UseMvc();
         }
     }

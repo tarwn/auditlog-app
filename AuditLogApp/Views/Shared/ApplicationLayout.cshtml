@@ -1,0 +1,87 @@
+﻿@{
+    var pageTitle = ViewData["Title"] ?? "Fast, transparent, safe";
+}<!DOCTYPE html>
+<html lang="en-US" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>AuditLog | @pageTitle</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="cleartype" content="on">
+
+    <script src="/scripts/lib/underscore-min.js"></script>
+    <script src="/scripts/lib/jquery-3.3.1.min.js"></script>
+    <script src="/scripts/lib/knockout-3.4.2.js"></script>
+    <script src="/scripts/app/app.min.js"></script>
+    <link rel="stylesheet" href="/app.min.css" />
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+    <header class="ala-header">
+        <a href="/" title="AuditLog: Home" class="ala-logo">
+            <img src="/images/logo56.png" alt="AuditLog logo" />
+            <span>AuditLog.co</span>
+        </a>
+        <div class="ala-header-nav">
+            @*<a href="javascript: void(0)" title="Get help" class="ala-header-link">Help / Feedback</a>*@
+            <a href="/account/logout" title="Logout" class="ala-header-link">Logout</a>
+        </div>
+    </header>
+    <nav class="ala-navigation">
+        <h1 class="ala-screen-reader-only">Navigation</h1>
+        <ul class="ala-navigation-menu">
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link active">Home</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link">Customize</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link">Account</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link">API Keys</a></li>
+            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link">Users</a></li>
+        </ul>
+    </nav>
+    <div class="ala-body">
+        <!-- ko if: currentPageViewModelIsReadyForDisplay -->
+        <div class="ala-page-container" style="display: none;" data-bind="visible: currentPageViewModelIsReadyForDisplay()">
+            <div data-bind="template: { name: currentPageTemplate, data: currentPageViewModel }">
+                <div class="ala-loading">
+                    Loading...
+                </div>
+            </div>
+            @RenderBody()
+        </div>
+        <!-- /ko -->
+    </div>
+
+    <!-- ko if: siteWide.modal() != null -->
+    modal component
+    <!-- /ko -->
+
+    <script type="text/javascript">
+        $(document).ready(function () { 
+            var services = new App.createServices(),
+                siteWide = new App.createSiteWideContext(services),
+                viewmodel = new App.createViewModel(services, siteWide);
+
+            // TODO capture JS errors
+
+            ko.applyBindings(viewmodel);
+        });
+    </script>
+</body>
+</html>

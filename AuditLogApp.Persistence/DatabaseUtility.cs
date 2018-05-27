@@ -30,6 +30,50 @@ namespace AuditLogApp.Persistence.SQLServer
             }
         }
 
+        public async Task<T> WithTransaction<T>(Func<Task<T>> queryAsync)
+        {
+            // TODO this does not work because DB objects are created fresjh in sub-methods, need to rewrite data handling for transactions
+
+            T result = default(T);
+
+            //await _retryPolicy.ExecuteAsync(async () =>
+            //{
+            //    if (_connection.State != System.Data.ConnectionState.Open)
+            //    {
+            //        await _connection.OpenAsync();
+            //    }
+
+            //    using (var db = new AsyncPoco.Database(_connection))
+            //    using(var trans = await db.GetTransactionAsync())
+            //    {
+                    result = await queryAsync();
+            //        trans.Complete();
+            //    }
+            //});
+
+            return result;
+        }
+
+        public async Task WithTransaction(Func<Task> executeAsync)
+        {
+            // TODO this does not work because DB objects are created fresjh in sub-methods, need to rewrite data handling for transactions
+
+            //await _retryPolicy.ExecuteAsync(async () =>
+            //{
+            //    if (_connection.State != System.Data.ConnectionState.Open)
+            //    {
+            //        await _connection.OpenAsync();
+            //    }
+
+            //    using (var db = new AsyncPoco.Database(_connection))
+            //    using (var trans = await db.GetTransactionAsync())
+            //    {
+                    await executeAsync();
+            //        trans.Complete();
+            //    }
+            //});
+        }
+
         public async Task<T> Query<T>(Func<AsyncPoco.Database, Task<T>> query)
         {
             T result = default(T);
@@ -42,8 +86,9 @@ namespace AuditLogApp.Persistence.SQLServer
                 }
 
                 using (var db = new AsyncPoco.Database(_connection))
+                //using (var trans = await db.GetTransactionAsync())
                 {
-                    result = await query(db);
+                        result = await query(db);
                 }
             });
 
@@ -72,6 +117,7 @@ namespace AuditLogApp.Persistence.SQLServer
                 }
 
                 using (var db = new AsyncPoco.Database(_connection))
+                //using (var trans = await db.GetTransactionAsync())
                 {
                     await action(db);
                 }

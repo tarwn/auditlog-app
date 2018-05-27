@@ -20,11 +20,16 @@ $color-shaded: #e5f3f8;
 $color-background-white: $ws_white;
 $color-background-grey: #f5f5f5;
 $color-background-dark: $cs_darkgrey;
+$color-border: $ws_lightgrey;
 
 $text-color-normal: $ws_darkgrey;
 $text-color-light: $ws_medgrey;
 $text-color-grey: $cs_darkgrey;
 $text-color-inverse: $ws_white;
+
+// Notable dimensions
+$header-height: 80px;
+$menu-width: 200px;
 
 // Device regions
 //  https://medium.freecodecamp.org/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862

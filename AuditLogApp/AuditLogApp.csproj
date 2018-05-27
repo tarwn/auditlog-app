@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="tsconfig.json.nope" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="tsconfig.json.nope" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Content\build\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

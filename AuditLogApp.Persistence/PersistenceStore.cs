@@ -36,12 +36,15 @@ namespace AuditLogApp.Persistence.SQLServer
             _dbUtility.Dispose();
         }
 
-        public async Task RequireTransactionAsync(Func<Task> action)
+        public async Task RequireTransactionAsync(Func<Task> executeAsync)
         {
-            using (var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
-                await action();
-            }
+            // requires updated version of SQLClient - https://github.com/dotnet/corefx/issues/24282
+            // using (var tx = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            //{
+            //    await action();
+            //}
+
+            await _dbUtility.WithTransaction(executeAsync);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AuditLogApp.ErrorNotification;
 using AuditLogApp.Models.Error;
 using AuditLogApp.Models.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +13,7 @@ namespace AuditLogApp.Controllers
 {
 
     [Route("Error")]
+    [AllowAnonymous]
     public class ErrorController : Controller
     {
         private IErrorNotifier _notifier;
