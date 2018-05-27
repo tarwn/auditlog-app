@@ -6,6 +6,18 @@
     <Property Name="DisplayName" Type="string"/>
   </DTO>
 
+  <DTO Name="CustomerAuthenticationDTO">
+    <Property Name="Id" Type="CustomerAuthenticationId"/>
+    <Property Name="CustomerId" Type="CustomerId"/>
+    <Property Name="CredentialType" Type="CredentialType"/>
+    <Property Name="Secret" Type="string" />
+    <Property Name="DisplayName" Type="string"/>
+    <Property Name="CreationTime" Type="DateTime"/>
+    <Property Name="CreatedBy" Type="UserId"/>
+    <Property Name="IsRevoked" Type="bool" Default="false"/>
+    <Property Name="RevokeTime" Type="DateTime?" Default="null"/>
+  </DTO>
+
   <DTO Name="UserDTO">
     <Property Name="Id" Type="UserId"/>
     <Property Name="CustomerId" Type="CustomerId"/>

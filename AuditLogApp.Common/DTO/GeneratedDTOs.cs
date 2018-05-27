@@ -29,6 +29,48 @@ namespace AuditLogApp.Common.DTO
 	}
 
 
+	public partial class CustomerAuthenticationDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public CustomerAuthenticationDTO() { }
+
+		public CustomerAuthenticationDTO(CustomerAuthenticationId id, CustomerId customerid, CredentialType credentialtype, string secret, string displayname, DateTime creationtime, UserId createdby, bool isrevoked = false, DateTime? revoketime = null)
+		{
+		
+			Id = id;
+			CustomerId = customerid;
+			CredentialType = credentialtype;
+			Secret = secret;
+			DisplayName = displayname;
+			CreationTime = creationtime;
+			CreatedBy = createdby;
+			IsRevoked = isrevoked;
+			RevokeTime = revoketime;
+		}
+
+		
+		public CustomerAuthenticationId Id { get; set; }
+			
+		public CustomerId CustomerId { get; set; }
+			
+		public CredentialType CredentialType { get; set; }
+			
+		public string Secret { get; set; }
+			
+		public string DisplayName { get; set; }
+			
+		public DateTime CreationTime { get; set; }
+			
+		public UserId CreatedBy { get; set; }
+			
+		public bool IsRevoked { get; set; }
+			
+		public DateTime? RevokeTime { get; set; }
+			
+		
+	}
+
+
 	public partial class UserDTO
 	{	
 		[Obsolete("Serialization use only", true)]

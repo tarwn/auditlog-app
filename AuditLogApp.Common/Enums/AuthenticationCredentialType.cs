@@ -7,6 +7,7 @@ namespace AuditLogApp.Common.Enums
     public enum CredentialType
     {
         PasswordHash = 1,
-        Twitter = 2
+        Twitter = 2,
+        CustomerAPIKey = 3
     }
 }

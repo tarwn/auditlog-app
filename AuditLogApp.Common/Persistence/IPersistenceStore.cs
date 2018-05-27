@@ -8,6 +8,7 @@ namespace AuditLogApp.Common.Persistence
     public interface IPersistenceStore
     {
         ICustomerStore Customers { get; }
+        ICustomerAuthenticationStore CustomerAuthentications { get; }
         IUserStore Users { get; }
         IUserAuthenticationStore UserAuthentications { get; }
         IUserSessionStore UserSessions { get; }

@@ -1,4 +1,6 @@
-﻿export default class AppViewModel {
+﻿import allComponents from '../components/allComponents';
+
+export default class AppViewModel {
     constructor(services, sitewideContext) {
         this._services = services;
         this._sitewideContext = sitewideContext;
@@ -27,6 +29,10 @@
     }
 
     mount() {
+        allComponents.forEach((component) => {
+            ko.components.register(component.name, component);
+        });
+
         this.routes.forEach((pageDefinition) => {
             ko.components.register(pageDefinition.component.name, pageDefinition.component);
 
