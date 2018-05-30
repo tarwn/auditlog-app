@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using AuditLogApp.Common.Identity;
 using AuditLogApp.Common.Persistence;
 using AuditLogApp.ErrorNotification;
 using AuditLogApp.Membership;
@@ -52,7 +53,12 @@ namespace AuditLogApp
                 options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
                 // Don't default to JSON when there isn't a good answer
                 options.ReturnHttpNotAcceptable = true;
-            });
+            })
+             .AddJsonOptions(options =>
+             {
+                 options.SerializerSettings.Converters.Add(new IdentityJsonConverter<Int32>());
+                 options.SerializerSettings.Converters.Add(new IdentityJsonConverter<Guid>());
+             });
 
             services.AddScoped<IPersistenceStore>((s) =>
             {
@@ -172,7 +178,7 @@ namespace AuditLogApp
             {
                 options.AddRedirectToHttps();
             }
-            options.AddRewrite("^company/.*", "/", skipRemainingRules: true)
+            options.AddRewrite("^configure/.*", "/", skipRemainingRules: true)
                    .AddRewrite("^welcome(/.*)?", "/onboarding", skipRemainingRules: true);
             app.UseRewriter(options);
 

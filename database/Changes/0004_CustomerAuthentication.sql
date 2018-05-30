@@ -1,4 +1,4 @@
-CREATE TABLE dbo.CustomerAuthentications (
+CREATE TABLE dbo.CustomerAuthenticationMethods (
 	[Id] uniqueidentifier NOT NULL,
 	[CustomerId] int NOT NULL,
 	[CredentialType] int NOT NULL,

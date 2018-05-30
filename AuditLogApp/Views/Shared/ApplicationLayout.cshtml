@@ -53,13 +53,13 @@
             <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'home' }">Home</a></li>
             <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'customize' }">Customize</a></li>
             <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'account' }">Account</a></li>
-            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'apikeys' }">API Keys</a></li>
+            <li class="ala-navigation-item"><a href="/configure/apikeys" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'apikeys' }">API Keys</a></li>
             <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'users' }">Users</a></li>
         </ul>
     </nav>
     <div class="ala-body">
         <div class="ala-page-container">
-            <div class="ala-loading"  data-bind="visible: !currentPage.readyForDisplay()">
+            <div class="ala-loading" data-bind="visible: !currentPage.readyForDisplay()">
                 Loading...
             </div>
             <div style="display: none;" data-bind="visible: currentPage.readyForDisplay(), component: { name: currentPage.componentName, params: currentPage.componentParams }">
