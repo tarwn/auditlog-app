@@ -1,0 +1,59 @@
+@import "../variables";
+
+%simple-button-basics {
+    // padding: 0.25em 0.75em;
+    // border-radius: 4px;
+    // border-width: 1px;
+    // border-style: solid;
+    // text-decoration: none;
+    // display: inline-block;
+    // cursor: pointer;
+    display: inline-block;
+        border-radius: 2px;
+        border: 1px solid transparent;
+        padding: 6px 14px 6px 10px;
+        margin: 0px;
+        cursor: pointer;
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: center;
+        vertical-align: middle;
+        transition: all 0.3s ease-out;
+        /* anchor? */
+        text-decoration: none;
+        //font-size: 9pt;
+        line-height: normal;
+}
+
+@mixin simple-button($color, $borderColor, $textColor, $hoverColor, $hoverBorderColor, $hoverTextColor){
+    @extend %simple-button-basics;
+    color: $textColor;
+    background-color: $color;
+    border-color: $borderColor;
+    white-space: nowrap;
+    transition: all 150ms ease-in-out;
+
+    & > [class^="icon-"]:before, 
+    & > [class*=" icon-"]:before {
+        color: $textColor;
+    }
+
+    &:hover{
+        color: $hoverTextColor;
+        background-color: $hoverColor;
+        border-color: $hoverBorderColor;
+
+        & >  [class^="icon-"]:before, 
+        & > [class*=" icon-"]:before {
+            color: $hoverTextColor;
+        }
+    }
+}
+
+.ala-button{
+    @include simple-button($color-accent-1, $color-accent-1, $text-color-inverse, darken($color-accent-1, 10%), $color-accent-1, $text-color-inverse);
+}
+
+.ala-button-red{
+    @include simple-button($ws-lightgrey, $ws-lightgrey, $text-color-normal, $cs-red, $cs-red, $text-color-inverse);
+}

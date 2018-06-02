@@ -49,14 +49,14 @@ export default {
         // }
     },
     template: `
-        <h1>API Keys</h1>
-        <div class="ala-page-description">
-            <p>API Keys grant Read and Write access to the API, critical for sending events from custom or pre-built audit libraries.</p>
+        <h1 class="ala-body-title">API Keys</h1>
+        <div class="ala-body-description">
+            API Keys grant Read and Write access to the API, critical for sending events from custom or pre-built audit libraries.
         </div>
         <div class="ala-table-actions">
-            <a href="/configure/apikeys/create" title="Create API Key" style="ala-button"><i class="icon-plus-circled"></i>Create API Key</a>
+            <a href="/configure/apikeys/create" title="Create API Key" class="ala-button"><i class="icon-plus-circled"></i>Create API Key</a>
         </div>
-        <table>
+        <table class="ala-basic-table">
             <thead>
                 <tr><th>API Key</th><th>Consumer Id</th><th>Created On</th><th></th></tr>
             </thead>
@@ -65,7 +65,7 @@ export default {
                     <td data-bind="text: displayName"></td>
                     <td data-bind="text: id"></td>
                     <td data-bind="text: display.creationTime"></td>
-                    <td><button style="ala-button-red" data-bind="click: $parent.revokeAPIKey.bind($parent), enabled: !$parent.isRevokingKey"><i class="icon-cancel"></i>Revoke</button></td>
+                    <td><button class="ala-button-red" data-bind="click: $parent.revokeAPIKey.bind($parent), enabled: !$parent.isRevokingKey"><i class="icon-cancel"></i>Revoke</button></td>
                 </tr>
             </tbody>
         </table>

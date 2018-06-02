@@ -273,10 +273,10 @@ namespace AuditLogApp
             // MVC route handling
             app.UseMvc();
             app.UseSwagger();
-            app.UseSwaggerUI(o =>
-            {
-                o.SwaggerEndpoint($"/swagger/v1/swagger.json", "v1");
-            });
+            //app.UseSwaggerUI(o =>
+            //{
+            //    o.SwaggerEndpoint($"/swagger/v1/swagger.json", "v1");
+            //});
         }
     }
 }

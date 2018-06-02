@@ -7,6 +7,8 @@
     bottom: 0px;
     right: 0px;
     border-top: 1px solid $color-border;
+
+    padding: 3em;
 }
 
 .ala-loading{
@@ -16,4 +18,12 @@
     //background-color: $ws_medgrey;
     color: $color-accent-1;;
     opacity: .6;
+}
+
+.ala-body-title{
+    margin-bottom: 0;
+}
+.ala-body-description{
+    max-width: 800px;
+    margin-bottom: 2em;
 }

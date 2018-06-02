@@ -1,0 +1,78 @@
+@import "../variables";
+
+// Basic Table
+.ala-basic-table {
+    border-collapse: collapse;
+    //font-size: 11pt;
+    margin: 1em 0;
+}
+
+.ala-basic-table th {
+    border-bottom: 1px solid $color-border;
+    text-align: left;
+    padding: .25em 1em .25em 0.5em;
+    //color: @Color_Text_Default;
+}
+
+.ala-basic-table td {
+    border-top: 1px solid $color-border;
+    text-align: left;
+    padding: .25em 1em .25em 0.5em;
+    //color: @Color_Text_Default;
+}
+
+// Audit Table - subset of drop-in audit table CSS
+
+.ala-audit-table{
+    margin: 0.5em;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 98%;
+}
+
+.ala-audit-headrow th {
+    border-bottom: 1px solid $ws_lightgrey;
+    color: $text-color-light;
+    font-weight: normal;
+    padding: .5em .25em;
+    vertical-align: bottom;
+    text-align: left;
+    position: relative;
+
+    @include for-tablet-landscape-up{
+        padding: .5em 2em .5em .5em;
+    }
+}
+
+.ala-audit-headrow .icon-sort,
+.ala-audit-headrow .icon-sort-down,
+.ala-audit-headrow .icon-sort-up{
+    position: absolute;
+    right: .25em;
+}
+
+.ala-audit-headrow .icon-sort{
+    opacity: .5;
+}
+
+.ala-audit-row:hover{
+    background-color: $color-shaded;
+}
+
+
+$cell-line-height: 20px;
+$total-cell-height: $cell-line-height *2;
+
+.ala-audit-row > td{
+    border-bottom: 1px solid #f5f5f5;
+    padding: .5em .25em;
+    vertical-align:top;
+    white-space: nowrap;
+    font-size: .95em;
+    line-height: $cell-line-height;
+    height: $total-cell-height;
+
+    @include for-tablet-landscape-up{
+        padding: .75em 2em .75em .5em;
+    }
+}
