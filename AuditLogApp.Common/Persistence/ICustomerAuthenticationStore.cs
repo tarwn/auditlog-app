@@ -12,6 +12,7 @@ namespace AuditLogApp.Common.Persistence
     {
         Task<CustomerAuthenticationDTO> CreateAsync(CustomerAuthenticationDTO authMethod);
         Task<CustomerAuthenticationDTO> GetAsync(CustomerId customerId, CustomerAuthenticationId id);
+        Task<CustomerAuthenticationDTO> GetAsync(CustomerAuthenticationId id);
         Task<List<CustomerAuthenticationDTO>> GetByCredentialTypeAsync(CustomerId customerId, CredentialType credentialType);
         Task<CustomerAuthenticationDTO> UpdateAsync(CustomerAuthenticationDTO authMethod);
     }

@@ -33,6 +33,10 @@ namespace AuditLogApp
 {
     public class Startup
     {
+        const string CUSTOMER_API_SCHEME = "APIKey";
+        const string CUSTOMER_API_HEADER = "X-API-KEY";
+        const string CUSTOMER_API_POLICY = "APIAccessOnly";
+
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
@@ -99,13 +103,13 @@ namespace AuditLogApp
                             .Any(v => $"v{v.ToString()}" == docName);
                 });
 
-                o.AddSecurityDefinition("APIKey", new ApiKeyScheme() {
+                o.AddSecurityDefinition(CUSTOMER_API_SCHEME, new ApiKeyScheme() {
                     Type = "apiKey",
-                    Name = "X-API-KEY",
-                    In = "header"
+                    In = "header",
+                    Name = CUSTOMER_API_HEADER
                 });
                 o.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
-                    { "APIKey", new[] { "APIAccessOnly" } }
+                    { CUSTOMER_API_SCHEME, new[] { CUSTOMER_API_POLICY } }
                 });
                 o.OperationFilter<SecurityRequirementsOperationFilter>();
 
@@ -118,13 +122,19 @@ namespace AuditLogApp
             // Authentication
             services.AddAuditLogInteractiveAuthentication<PersistedUserMembership>((options) =>
             {
-                options.InteractiveAuthenticationType = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.InteractiveAuthenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.APIAuthenticationScheme = CUSTOMER_API_SCHEME;
                 options.DefaultPathAfterLogin = "/";
             });
+            services.AddTransient<ICustomerMembership, PersistedUserMembership>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 /* API Authentication Provider */
-                //.AddAuditLogAPIAuthentication("AL-API-Token", "AuditLog.co")
+                .AddCustomerAPIAuth(CUSTOMER_API_SCHEME, (options) =>
+                {
+                    options.WWWAuthenticateRealm = "auditlog.co";
+                    options.HTTPHeader = CUSTOMER_API_HEADER;
+                })
                 /* 3rd Party Auth Providers */
                 .AddCookie("ExternalProvidersCookie")
                 .AddTwitter("Twitter", options =>
@@ -172,9 +182,9 @@ namespace AuditLogApp
                     policy.RequireAuthenticatedUser();
                 });
 
-                options.AddPolicy("APIAccessOnly", policy =>
+                options.AddPolicy(CUSTOMER_API_POLICY, policy =>
                 {
-                    policy.AddAuthenticationSchemes("AL-API-Token");
+                    policy.AddAuthenticationSchemes(CUSTOMER_API_SCHEME);
                     policy.RequireAuthenticatedUser();
                 });
             });

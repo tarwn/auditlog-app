@@ -11,7 +11,7 @@ namespace AuditLogApp.Membership
 {
     public interface IUserMembership
     {
-        UserMembershipOptions Options { get; }
+        MembershipOptions Options { get; }
 
         Task<RegisterResult> RegisterAsync(string username, string email, string password);
         Task<RegisterResult> RegisterExternalAsync(string username, string email, CredentialType credentialType, string identity, string displayName);

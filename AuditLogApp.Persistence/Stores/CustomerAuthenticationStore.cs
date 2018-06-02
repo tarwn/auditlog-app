@@ -72,7 +72,33 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                        RevokeTime
                 FROM dbo.CustomerAuthenticationMethods 
                 WHERE CustomerId = @CustomerId
-                    And Id = @Id;
+                    AND Id = @Id;
+            ";
+
+            return await _db.QuerySingleOrDefault(async (db) =>
+            {
+                return await db.FetchAsync<CustomerAuthenticationDTO>(sql, sqlParams);
+            });
+        }
+
+        public async Task<CustomerAuthenticationDTO> GetAsync(CustomerAuthenticationId id)
+        {
+            var sqlParams = new
+            {
+                Id = id.RawValue
+            };
+            string sql = @";
+                SELECT Id,
+                       CustomerId,
+                       CredentialType,
+                       Secret,
+                       DisplayName,
+                       CreationTime,
+                       CreatedBy,
+                       IsRevoked,
+                       RevokeTime
+                FROM dbo.CustomerAuthenticationMethods 
+                WHERE Id = @Id;
             ";
 
             return await _db.QuerySingleOrDefault(async (db) =>

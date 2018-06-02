@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace AuditLogApp.Membership
 {
-    public static class UserMembershipExtensions
+    public static class MembershipExtensions
     {
-        public static IServiceCollection AddAuditLogInteractiveAuthentication<T>(this IServiceCollection services, Action<UserMembershipOptions> options)
+        public static IServiceCollection AddAuditLogInteractiveAuthentication<T>(this IServiceCollection services, Action<MembershipOptions> options)
             where T : class, IUserMembership
         {
             services.AddTransient<IUserMembership, T>();
-            services.AddTransient<UserMembershipOptions>((s) =>
+            services.AddTransient<MembershipOptions>((s) =>
             {
-                var opts = new UserMembershipOptions();
+                var opts = new MembershipOptions();
                 options(opts);
                 return opts;
             });

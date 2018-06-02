@@ -50,10 +50,12 @@
     }
 }
 
-.ala-button{
+.ala-button,
+.ala-button:visited{
     @include simple-button($color-accent-1, $color-accent-1, $text-color-inverse, darken($color-accent-1, 10%), $color-accent-1, $text-color-inverse);
 }
 
-.ala-button-red{
+.ala-button-red,
+.ala-button-red:visited{
     @include simple-button($ws-lightgrey, $ws-lightgrey, $text-color-normal, $cs-red, $cs-red, $text-color-inverse);
 }

@@ -14,19 +14,21 @@ using Microsoft.AspNetCore.Http;
 
 namespace AuditLogApp.Membership.Implementation
 {
-    public class PersistedUserMembership : IUserMembership
+    public class PersistedUserMembership : IUserMembership, ICustomerMembership
     {
         private IHttpContextAccessor _context;
         private IPersistenceStore _persistence;
 
-        public PersistedUserMembership(IHttpContextAccessor context, UserMembershipOptions options, IPersistenceStore persistence)
+        public PersistedUserMembership(IHttpContextAccessor context, MembershipOptions options, IPersistenceStore persistence)
         {
             _context = context;
             _persistence = persistence;
             Options = options;
         }
 
-        public UserMembershipOptions Options { get; private set; }
+        public MembershipOptions Options { get; private set; }
+
+        #region IUserMembeship 
 
         // Register
 
@@ -142,9 +144,10 @@ namespace AuditLogApp.Membership.Implementation
             // key the login to a server-side session id to make it easy to invalidate later
             var session = await _persistence.UserSessions.CreateAsync(user.Id, DateTime.UtcNow);
 
-            var identity = new ClaimsIdentity(Options.InteractiveAuthenticationType);
-            AddUserIdClaim(identity, session.UserId.RawValue.ToString());
-            AddSessionIdClaim(identity, session.Id.RawValue.ToString());
+            var identity = new ClaimsIdentity(Options.InteractiveAuthenticationScheme);
+            AddUserIdClaim(identity, session.UserId);
+            AddCustomerIdClaim(identity, user.CustomerId);
+            AddSessionIdClaim(identity, session.Id);
             await _context.HttpContext.SignInAsync(new ClaimsPrincipal(identity));
         }
 
@@ -219,6 +222,14 @@ namespace AuditLogApp.Membership.Implementation
                     { "Session.CreationTime", sessionDetails.CreationTime }
                 };
             }
+            else if (IsOneTimeLogin(principal))
+            {
+                return new Dictionary<string, object>() {
+                    { "Login Type", "One Time (API)" },
+                    { "Customer.Id", GetCustomerIdClaim(principal) },
+                    { "CustomerAuth.Id", GetCustomerAuthClaim(principal) }
+                };
+            }
             else
             {
                 return new Dictionary<string, object>() {
@@ -252,11 +263,42 @@ namespace AuditLogApp.Membership.Implementation
             };
         }
 
+        #endregion
+
+        #region ICustomerMembership
+
+        public async Task<ClaimsPrincipal> GetOneTimeLoginAsync(CustomerAuthenticationId id, string secret, CredentialType credentialType)
+        {
+            var customerAuth = await _persistence.CustomerAuthentications.GetAsync(id);
+
+            if (customerAuth == null)
+            {
+                return null;
+            }
+
+            if (customerAuth.CredentialType != credentialType || !customerAuth.Secret.Equals(secret, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return null;
+            }
+
+            if (customerAuth.IsRevoked)
+            {
+                return null;
+            }
+
+            var claimsIdentity = new ClaimsIdentity(Options.APIAuthenticationScheme);
+            AddCustomerIdClaim(claimsIdentity, customerAuth.CustomerId);
+            AddCustomerAuthClaim(claimsIdentity, customerAuth.Id);
+            return new ClaimsPrincipal(claimsIdentity);
+        }
+
+        #endregion
+
         #region Claims
 
-        private void AddSessionIdClaim(ClaimsIdentity identity, string sessionId)
+        private void AddSessionIdClaim(ClaimsIdentity identity, UserSessionId sessionId)
         {
-            identity.AddClaim(new Claim("sessionId", sessionId));
+            identity.AddClaim(new Claim("sessionId", sessionId.RawValue.ToString()));
         }
 
         public string GetSessionId(ClaimsPrincipal principal)
@@ -266,13 +308,20 @@ namespace AuditLogApp.Membership.Implementation
 
         private bool IsSession(ClaimsPrincipal principal)
         {
-            return principal.Identities.Any(i => i.IsAuthenticated && i.AuthenticationType == Options.InteractiveAuthenticationType)
+            return principal.Identities.Any(i => i.IsAuthenticated && i.AuthenticationType == Options.InteractiveAuthenticationScheme)
                 && GetSessionId(principal) != null;
         }
 
-        private void AddUserIdClaim(ClaimsIdentity identity, string userId)
+
+        private bool IsOneTimeLogin(ClaimsPrincipal principal)
         {
-            identity.AddClaim(new Claim("userId", userId));
+            return principal.Identities.Any(i => i.IsAuthenticated && i.AuthenticationType == Options.APIAuthenticationScheme)
+                && GetSessionId(principal) != null;
+        }
+
+        private void AddUserIdClaim(ClaimsIdentity identity, UserId userId)
+        {
+            identity.AddClaim(new Claim("userId", userId.RawValue.ToString()));
         }
 
         private string GetUserId(ClaimsPrincipal principal)
@@ -280,11 +329,30 @@ namespace AuditLogApp.Membership.Implementation
             return principal.FindFirstValue("userId");
         }
 
-        private void AddUserAuthClaim(ClaimsIdentity identity, string userAuthId)
+        private void AddUserAuthClaim(ClaimsIdentity identity, UserAuthenticationId userAuthId)
         {
-            identity.AddClaim(new Claim("userAuthId", userAuthId));
+            identity.AddClaim(new Claim("userAuthId", userAuthId.RawValue.ToString()));
         }
 
+        private void AddCustomerIdClaim(ClaimsIdentity identity, CustomerId customerId)
+        {
+            identity.AddClaim(new Claim("customerId", customerId.RawValue.ToString()));
+        }
+
+        private void AddCustomerAuthClaim(ClaimsIdentity identity, CustomerAuthenticationId customerAuthId)
+        {
+            identity.AddClaim(new Claim("customerAuthId", customerAuthId.RawValue.ToString()));
+        }
+
+        private string GetCustomerIdClaim(ClaimsPrincipal principal)
+        {
+            return principal.FindFirstValue("customerId");
+        }
+
+        private string GetCustomerAuthClaim(ClaimsPrincipal principal)
+        {
+            return principal.FindFirstValue("customerAuthId");
+        }
         #endregion
     }
 }
