@@ -213,8 +213,8 @@ namespace AuditLogApp.Membership.Implementation
                 return new Dictionary<string, object>() {
                     { "Login Type", "Session (Interactive)" },
                     { "User.Id", sessionDetails.User.Id },
-                    { "User.Username", sessionDetails.User.Username },
-                    { "User.EmailAddress", sessionDetails.User.EmailAddress },
+                    { "User.Username", sessionDetails.User.Username ?? "" },
+                    { "User.EmailAddress", sessionDetails.User.EmailAddress ?? "" },
                     { "Session.Id", sessionDetails.Id },
                     { "Session.CreationTime", sessionDetails.CreationTime }
                 };

@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using AuditLogApp.Common.Identity;
 using AuditLogApp.Common.Persistence;
+using AuditLogApp.Documentation;
 using AuditLogApp.ErrorNotification;
 using AuditLogApp.Membership;
 using AuditLogApp.Membership.Implementation;
@@ -16,6 +17,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +26,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AuditLogApp
 {
@@ -47,7 +52,10 @@ namespace AuditLogApp
             RegisterDependencies(services);
 
             // MVC
-
+            services.AddMvcCore().AddVersionedApiExplorer(o => {
+                o.GroupNameFormat = "'v'VVV";
+                o.SubstituteApiVersionInUrl = true;
+            }); 
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true;
@@ -56,17 +64,55 @@ namespace AuditLogApp
                 options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
                 // Don't default to JSON when there isn't a good answer
                 options.ReturnHttpNotAcceptable = true;
+
             })
-             .AddJsonOptions(options =>
-             {
-                 options.SerializerSettings.Converters.Add(new IdentityJsonConverter<Int32>());
-                 options.SerializerSettings.Converters.Add(new IdentityJsonConverter<Guid>());
-             });
+            .AddJsonOptions(options =>
+            {
+                options.SerializerSettings.Converters.Add(new IdentityJsonConverter<Int32>());
+                options.SerializerSettings.Converters.Add(new IdentityJsonConverter<Guid>());
+            });
 
             // API Versioning
 
-            services.AddApiVersioning(o => {
+            services.AddApiVersioning(o =>
+            {
                 o.AssumeDefaultVersionWhenUnspecified = true;
+            });
+
+            // Documentation
+
+            services.AddSwaggerGen(o =>
+            {
+                var provider = services.BuildServiceProvider()
+                                   .GetRequiredService<IApiVersionDescriptionProvider>();
+
+                o.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    // must be opted into documentation and match version/group name
+                    return apiDesc.ControllerAttributes()
+                        .OfType<IncludeInDocumentationAttribute>()
+                        .Any()
+                        &&
+                        apiDesc.ControllerAttributes()
+                            .OfType<ApiVersionAttribute>()
+                            .SelectMany(v => v.Versions)
+                            .Any(v => $"v{v.ToString()}" == docName);
+                });
+
+                o.AddSecurityDefinition("APIKey", new ApiKeyScheme() {
+                    Type = "apiKey",
+                    Name = "X-API-KEY",
+                    In = "header"
+                });
+                o.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "APIKey", new[] { "APIAccessOnly" } }
+                });
+                o.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    o.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+                }
             });
 
             // Authentication
@@ -134,6 +180,26 @@ namespace AuditLogApp
             });
         }
 
+        private Info CreateInfoForApiVersion(ApiVersionDescription description)
+        {
+            var info = new Info()
+            {
+                Title = $"AuditLog.co API {description.ApiVersion}",
+                Version = description.ApiVersion.ToString(),
+                Description = "API for AuditLog.co",
+                Contact = new Contact() { Name = "Eli Weinstock-Herman", Email = "eli@auditlog.co" },
+                //TermsOfService = "Shareware",
+                License = new License() { Name = "Commercial" }
+            };
+
+            if (description.IsDeprecated)
+            {
+                info.Description += " This API version has been deprecated.";
+            }
+
+            return info;
+        }
+
         private void RegisterDependencies(IServiceCollection services)
         {
             // Persistence 
@@ -145,7 +211,8 @@ namespace AuditLogApp
 
             // Error Handling
 
-            services.AddScoped<SmtpClient>((s) => {
+            services.AddScoped<SmtpClient>((s) =>
+            {
                 if (Configuration["smtp:DeliveryMethod"] == "directory")
                 {
                     return new SmtpClient()
@@ -165,7 +232,8 @@ namespace AuditLogApp
                 }
             });
 
-            services.AddEmailErrorNotifier((options) => {
+            services.AddEmailErrorNotifier((options) =>
+            {
                 options.EnvironmentName = Environment.EnvironmentName;
                 options.FromAddress = Configuration["EmailAddresses:ErrorsFrom"];
                 options.ToAddress = Configuration["EmailAddresses:ErrorsTo"];
@@ -173,7 +241,7 @@ namespace AuditLogApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
         {
             // Error Handling
             //if (env.IsDevelopment())
@@ -204,6 +272,11 @@ namespace AuditLogApp
 
             // MVC route handling
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(o =>
+            {
+                o.SwaggerEndpoint($"/swagger/v1/swagger.json", "v1");
+            });
         }
     }
 }

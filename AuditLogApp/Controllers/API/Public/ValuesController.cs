@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using AuditLogApp.Documentation;
 using AuditLogApp.Models.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuditLogApp.Controllers
 {
-    [Route("api/[controller]")]
+    [IncludeInDocumentation]
+    [ApiVersion("1")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ValuesController : Controller
     {
         [Authorize(Policy = "APIAccessOnly")]
         [HttpGet("verify/api/ok")]
+        [ProducesResponseType(typeof(VerifyModel), 200)]
+        [ProducesResponseType(typeof(IDictionary<string, string>), 400)]
+        [ProducesResponseType(typeof(ApiError), 404)]
         public IActionResult GetApiOk()
         {
             return Ok(new VerifyModel()
@@ -25,6 +31,9 @@ namespace AuditLogApp.Controllers
 
         [Authorize(Policy = "APIAccessOnly")]
         [HttpGet("verify/api/exception")]
+        [ProducesResponseType(typeof(int), 200)]
+        [ProducesResponseType(typeof(IDictionary<string, string>), 400)]
+        [ProducesResponseType(typeof(ApiError), 404)]
         public IActionResult GetApiException()
         {
             int[] x = null;
@@ -33,6 +42,7 @@ namespace AuditLogApp.Controllers
 
         [Authorize(Policy = "APIAccessOnly")]
         [HttpPost("verify/api/400")]
+        [ProducesResponseType(typeof(IDictionary<string, string>), 400)]
         public IActionResult PostApiBadRequest(VerifyModel model)
         {
             if (!ModelState.IsValid)
@@ -45,6 +55,7 @@ namespace AuditLogApp.Controllers
 
         [Authorize(Policy = "APIAccessOnly")]
         [HttpGet("verify/api/404")]
+        [ProducesResponseType(typeof(ApiError), 404)]
         public IActionResult GetApiNotFound()
         {
             return NotFound(new ApiError(404, "Sample thing not found"));

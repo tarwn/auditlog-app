@@ -42,7 +42,7 @@ namespace AuditLogApp.ErrorNotification
                 }
                 catch (Exception exc)
                 {
-                    details.Add("Membership Unavailable", "Membership detaisl are unavailable, received an Exception: " + exc.Message);
+                    details.Add("Membership Unavailable", "Membership details are unavailable, received an Exception: " + exc.Message);
 
                     // fallback to just dumping raw claims
                     foreach (var claim in user.Claims)
