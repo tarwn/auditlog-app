@@ -32,9 +32,10 @@ namespace AuditLogApp.Membership.Implementation
 
         // Register
 
-        public async Task<RegisterResult> RegisterAsync(string username, string email, string password)
+        public async Task<RegisterResult> RegisterAsync(string newCustomerName, string username, string email, string password)
         {
-            var user = new UserDTO(null, 1, username, username, email);
+            var customer = new CustomerDTO(null, newCustomerName);
+            var user = new UserDTO(null, null, username, username, email);
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
             var authMethod = new UserAuthenticationDTO(null, null, CredentialType.PasswordHash, passwordHash, "Password", DateTime.UtcNow);
 
@@ -42,6 +43,8 @@ namespace AuditLogApp.Membership.Implementation
             {
                 await _persistence.RequireTransactionAsync(async () =>
                 {
+                    customer = await _persistence.Customers.CreateAsync(customer);
+                    user.CustomerId = customer.Id;
                     user = await _persistence.Users.CreateAsync(user);
                     authMethod.UserId = user.Id;
                     authMethod = await _persistence.UserAuthentications.CreateAsync(authMethod);
@@ -60,14 +63,17 @@ namespace AuditLogApp.Membership.Implementation
             return RegisterResult.GetSuccess();
         }
 
-        public async Task<RegisterResult> RegisterExternalAsync(string username, string email, CredentialType credentialType, string identity, string displayName)
+        public async Task<RegisterResult> RegisterExternalAsync(string newCustomerName, string username, string email, CredentialType credentialType, string identity, string displayName)
         {
-            var user = new UserDTO(null, 1, username, username, email);
+            var customer = new CustomerDTO(null, newCustomerName);
+            var user = new UserDTO(null, null, username, username, email);
             var authMethod = new UserAuthenticationDTO(null, null, credentialType, identity, displayName, DateTime.UtcNow);
             try
             {
                 await _persistence.RequireTransactionAsync(async () =>
                 {
+                    customer = await _persistence.Customers.CreateAsync(customer);
+                    user.CustomerId = customer.Id;
                     user = await _persistence.Users.CreateAsync(user);
                     authMethod.UserId = user.Id;
                     authMethod = await _persistence.UserAuthentications.CreateAsync(authMethod);

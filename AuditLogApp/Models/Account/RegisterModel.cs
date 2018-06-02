@@ -20,5 +20,9 @@ namespace AuditLogApp.Models.Account
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        [StringLength(80)]
+        public string CompanyName { get; set; }
     }
 }

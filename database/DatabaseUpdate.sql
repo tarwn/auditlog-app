@@ -1,4 +1,4 @@
-/* SQL Core Updates - Updated 2018-05-27 16:44 */
+/* SQL Core Updates - Updated 2018-06-02 14:06 */
 BEGIN TRY
 BEGIN TRANSACTION
 
@@ -75,10 +75,45 @@ BEGIN
 	INSERT INTO UpdateTracking(Name, Applied) SELECT '0002_Authentication', GETUTCDATE();
 END
 
-/* File: 0003_TestData.sql */
-IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0003_TestData')
+/* File: 0004_CustomerAuthentication.sql */
+IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0004_CustomerAuthentication')
 BEGIN
-	Print 'Applying Update: 0003_TestData'
+	Print 'Applying Update: 0004_CustomerAuthentication'
+	EXEC('
+		CREATE TABLE dbo.CustomerAuthenticationMethods (
+			[Id] uniqueidentifier NOT NULL,
+			[CustomerId] int NOT NULL,
+			[CredentialType] int NOT NULL,
+			[Secret] varchar(100) NOT NULL,
+			[DisplayName] varchar(80) NOT NULL,
+			[CreationTime] datetime2(7) NOT NULL,
+			[CreatedBy] int NOT NULL,
+			[IsRevoked] bit NOT NULL,
+			[RevokeTime] datetime2(7) NULL,
+		
+			CONSTRAINT PK_CustomerAuthenticationMethods PRIMARY KEY CLUSTERED(Id ASC),
+			CONSTRAINT FK_CustomerAuthenticationMethods_Customers FOREIGN KEY ([CustomerId]) REFERENCES dbo.Customers(Id)
+				ON DELETE CASCADE,
+			CONSTRAINT FK_CustomerAuthenticationMethods_Users FOREIGN KEY ([CreatedBy]) REFERENCES dbo.Users(Id)
+		);
+	');
+	INSERT INTO UpdateTracking(Name, Applied) SELECT '0004_CustomerAuthentication', GETUTCDATE();
+END
+
+/* File: 0005_CustomerCreated.sql */
+IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0005_CustomerCreated')
+BEGIN
+	Print 'Applying Update: 0005_CustomerCreated'
+	EXEC('
+		ALTER TABLE dbo.Customers ADD CreationTime datetime2(7) NOT NULL;
+	');
+	INSERT INTO UpdateTracking(Name, Applied) SELECT '0005_CustomerCreated', GETUTCDATE();
+END
+
+/* File: 0006_TestData.sql */
+IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0006_TestData')
+BEGIN
+	Print 'Applying Update: 0006_TestData'
 	EXEC('
 		TRUNCATE TABLE dbo.UserAuthenticationMethods;
 		DELETE FROM dbo.Users;
@@ -105,7 +140,7 @@ BEGIN
 			DECLARE @CustomerId int,
 					@UserId int;
 		
-			INSERT INTO dbo.Customers(DisplayName) VALUES(''Sample Customer'');
+			INSERT INTO dbo.Customers(DisplayName, CreationTime) VALUES(''Sample Customer'', GetUtcDate());
 			SET @CustomerId = SCOPE_IDENTITY();
 		
 			INSERT INTO dbo.Users(CustomerId, Username, DisplayName, EmailAddress, IsEnabled) VALUES(@CustomerId, ''Sample User'', ''Sample User'', ''Sample@User.Text'', 1);
@@ -116,32 +151,7 @@ BEGIN
 				  (''9E7512C5-CE29-4802-9D95-84CC643C805D'', @UserId, @PasswordHashCredentialType, ''secret 2'', ''display name 2'', GetUtcDate(), 0);
 		END
 	');
-	INSERT INTO UpdateTracking(Name, Applied) SELECT '0003_TestData', GETUTCDATE();
-END
-
-/* File: 0004_CustomerAuthentication.sql */
-IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0004_CustomerAuthentication')
-BEGIN
-	Print 'Applying Update: 0004_CustomerAuthentication'
-	EXEC('
-		CREATE TABLE dbo.CustomerAuthentications (
-			[Id] uniqueidentifier NOT NULL,
-			[CustomerId] int NOT NULL,
-			[CredentialType] int NOT NULL,
-			[Secret] varchar(100) NOT NULL,
-			[DisplayName] varchar(80) NOT NULL,
-			[CreationTime] datetime2(7) NOT NULL,
-			[CreatedBy] int NOT NULL,
-			[IsRevoked] bit NOT NULL,
-			[RevokeTime] datetime2(7) NULL,
-		
-			CONSTRAINT PK_CustomerAuthenticationMethods PRIMARY KEY CLUSTERED(Id ASC),
-			CONSTRAINT FK_CustomerAuthenticationMethods_Customers FOREIGN KEY ([CustomerId]) REFERENCES dbo.Customers(Id)
-				ON DELETE CASCADE,
-			CONSTRAINT FK_CustomerAuthenticationMethods_Users FOREIGN KEY ([CreatedBy]) REFERENCES dbo.Users(Id)
-		);
-	');
-	INSERT INTO UpdateTracking(Name, Applied) SELECT '0004_CustomerAuthentication', GETUTCDATE();
+	INSERT INTO UpdateTracking(Name, Applied) SELECT '0006_TestData', GETUTCDATE();
 END
 COMMIT TRANSACTION
 END TRY BEGIN CATCH

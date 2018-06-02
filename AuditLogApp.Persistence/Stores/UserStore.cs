@@ -26,13 +26,13 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 user.DisplayName,
                 user.EmailAddress,
                 user.Username,
-                user.IsEnabled,
-                Created = DateTime.UtcNow
+                user.IsEnabled//,
+                //Created = DateTime.UtcNow
             };
 
             string sql = @";
                 INSERT INTO dbo.Users(CustomerId, UserName, DisplayName, EmailAddress, IsEnabled)
-                VALUES(@CustomerId, @Username, @DisplayName, @Created, @IsEnabled);
+                VALUES(@CustomerId, @Username, @DisplayName, @EmailAddress, @IsEnabled);
 
                 SELECT U.Id,
                        U.CustomerId,

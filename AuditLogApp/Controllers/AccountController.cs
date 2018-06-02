@@ -41,7 +41,7 @@ namespace AuditLogApp.Controllers
                 return View("Register");
             }
 
-            var result = await _membership.RegisterAsync(model.UserName, model.Email, model.Password);
+            var result = await _membership.RegisterAsync(model.CompanyName, model.UserName, model.Email, model.Password);
             if (result.Failed)
             {
                 ModelState.AddModelError("", result.ErrorMessage);
@@ -116,7 +116,7 @@ namespace AuditLogApp.Controllers
                 return View("RegisterWithTwitterContinue", model);
             }
 
-            var result = await _membership.RegisterExternalAsync(model.UserName, model.Email, CredentialType.Twitter, model.TwitterId, $"Twitter: {model.TwitterUsername}");
+            var result = await _membership.RegisterExternalAsync(model.CompanyName, model.UserName, model.Email, CredentialType.Twitter, model.TwitterId, $"Twitter: {model.TwitterUsername}");
             if (result.Failed)
             {
                 ModelState.AddModelError("", result.ErrorMessage);

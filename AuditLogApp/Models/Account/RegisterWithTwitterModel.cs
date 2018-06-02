@@ -16,6 +16,10 @@ namespace AuditLogApp.Models.Account
         [EmailAddress]
         public string Email { get; set; }
 
+        [Required]
+        [StringLength(80)]
+        public string CompanyName { get; set; }
+
         // Below are set from twitter SSO and should not be modified by user
 
         [Required]

@@ -10,5 +10,6 @@ namespace AuditLogApp.Common.Persistence
     public interface ICustomerStore
     {
         Task<CustomerDTO> GetAsync(CustomerId id);
+        Task<CustomerDTO> CreateAsync(CustomerDTO customer);
     }
 }

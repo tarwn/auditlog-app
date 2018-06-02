@@ -13,8 +13,8 @@ namespace AuditLogApp.Membership
     {
         MembershipOptions Options { get; }
 
-        Task<RegisterResult> RegisterAsync(string username, string email, string password);
-        Task<RegisterResult> RegisterExternalAsync(string username, string email, CredentialType credentialType, string identity, string displayName);
+        Task<RegisterResult> RegisterAsync(string newCustomerName, string username, string email, string password);
+        Task<RegisterResult> RegisterExternalAsync(string newCustomerName, string username, string email, CredentialType credentialType, string identity, string displayName);
         Task<bool> IsUsernameAvailable(string username);
         Task<bool> IsAlreadyRegisteredAsync(CredentialType credentialType, string identity);
 

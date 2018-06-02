@@ -18,6 +18,32 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             _db = dbUtility;
         }
 
+        public async Task<CustomerDTO> CreateAsync(CustomerDTO customer)
+        {
+            var sqlParams = new
+            {
+                customer.DisplayName,
+                CreationTime = DateTime.UtcNow
+            };
+
+            string sql = @";
+                INSERT INTO dbo.Customers(DisplayName, CreationTime)
+                VALUES(@DisplayName, @CreationTime);
+
+                SELECT C.Id,
+                        C.DisplayName,
+                        C.CreationTime
+                FROM dbo.Customers C
+                WHERE Id = SCOPE_IDENTITY();
+            ";
+
+            return await _db.QuerySingle(async (db) =>
+            {
+                return await db.FetchAsync<CustomerDTO>(sql, sqlParams);
+            });
+            
+        }
+
         public async Task<CustomerDTO> GetAsync(CustomerId id)
         {
             var sqlParams = new

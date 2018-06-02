@@ -15,7 +15,7 @@ BEGIN
 	DECLARE @CustomerId int,
 			@UserId int;
 
-	INSERT INTO dbo.Customers(DisplayName) VALUES('Sample Customer');
+	INSERT INTO dbo.Customers(DisplayName, CreationTime) VALUES('Sample Customer', GetUtcDate());
 	SET @CustomerId = SCOPE_IDENTITY();
 
 	INSERT INTO dbo.Users(CustomerId, Username, DisplayName, EmailAddress, IsEnabled) VALUES(@CustomerId, 'Sample User', 'Sample User', 'Sample@User.Text', 1);
