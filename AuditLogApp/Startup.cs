@@ -43,6 +43,9 @@ namespace AuditLogApp
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+            // Dependencies
+            RegisterDependencies(services);
+
             // MVC
 
             services.AddMvc(options =>
@@ -60,37 +63,10 @@ namespace AuditLogApp
                  options.SerializerSettings.Converters.Add(new IdentityJsonConverter<Guid>());
              });
 
-            services.AddScoped<IPersistenceStore>((s) =>
-            {
-                return new PersistenceStore(Configuration["SQL:ConnectionString"]);
-            });
+            // API Versioning
 
-            // Error Handling
-
-            services.AddScoped<SmtpClient>((s) => {
-                if (Configuration["smtp:DeliveryMethod"] == "directory")
-                {
-                    return new SmtpClient()
-                    {
-                        DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
-                        PickupDirectoryLocation = Path.Combine(Environment.ContentRootPath, "..", "mail")
-                    };
-                }
-                else
-                {
-                    return new SmtpClient(Configuration["smtp:Host"], int.Parse(Configuration["smtp:Port"]))
-                    {
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-                        EnableSsl = bool.Parse(Configuration["smtp:EnableSsl"]),
-                        Credentials = new NetworkCredential(Configuration["smtp:Username"], Configuration["smtp:Password"])
-                    };
-                }
-            });
-
-            services.AddEmailErrorNotifier((options) => {
-                options.EnvironmentName = Environment.EnvironmentName;
-                options.FromAddress = Configuration["EmailAddresses:ErrorsFrom"];
-                options.ToAddress = Configuration["EmailAddresses:ErrorsTo"];
+            services.AddApiVersioning(o => {
+                o.AssumeDefaultVersionWhenUnspecified = true;
             });
 
             // Authentication
@@ -155,6 +131,44 @@ namespace AuditLogApp
                     policy.AddAuthenticationSchemes("AL-API-Token");
                     policy.RequireAuthenticatedUser();
                 });
+            });
+        }
+
+        private void RegisterDependencies(IServiceCollection services)
+        {
+            // Persistence 
+
+            services.AddScoped<IPersistenceStore>((s) =>
+            {
+                return new PersistenceStore(Configuration["SQL:ConnectionString"]);
+            });
+
+            // Error Handling
+
+            services.AddScoped<SmtpClient>((s) => {
+                if (Configuration["smtp:DeliveryMethod"] == "directory")
+                {
+                    return new SmtpClient()
+                    {
+                        DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
+                        PickupDirectoryLocation = Path.Combine(Environment.ContentRootPath, "..", "mail")
+                    };
+                }
+                else
+                {
+                    return new SmtpClient(Configuration["smtp:Host"], int.Parse(Configuration["smtp:Port"]))
+                    {
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        EnableSsl = bool.Parse(Configuration["smtp:EnableSsl"]),
+                        Credentials = new NetworkCredential(Configuration["smtp:Username"], Configuration["smtp:Password"])
+                    };
+                }
+            });
+
+            services.AddEmailErrorNotifier((options) => {
+                options.EnvironmentName = Environment.EnvironmentName;
+                options.FromAddress = Configuration["EmailAddresses:ErrorsFrom"];
+                options.ToAddress = Configuration["EmailAddresses:ErrorsTo"];
             });
         }
 

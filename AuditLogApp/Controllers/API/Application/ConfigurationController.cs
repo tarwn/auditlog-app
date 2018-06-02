@@ -15,7 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuditLogApp.Controllers.API.Application
 {
-    [Route("api/appln/v1/configuration")]
+    [ApiVersion("1")]
+    [Route("api/appln/v{version:apiVersion}/configuration")]
     [Authorize(Policy = "InteractiveAccessOnly")]
     public class ConfigurationController : Controller
     {
