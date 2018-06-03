@@ -11,5 +11,6 @@ namespace AuditLogApp.Common.Persistence
         Task<List<EventActorDTO>> GetEventActorsByUUIDAsync(CustomerId customerId, string uuid);
         Task<EventActorDTO> UpdateEventActorAsync(CustomerId customerId, string uuid, string name, string email);
         Task<EventActorDTO> ForgetEventActorAsync(CustomerId customerId, string uuid);
+        Task<EventEntryDTO> GetAsync(CustomerId customerId, EventEntryId entryId);
     }
 }

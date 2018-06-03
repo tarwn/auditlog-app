@@ -17,6 +17,8 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             _db = dbUtility;
         }
 
+        #region Event Entry
+
         public async Task<EventEntryId> CreateAsync(EventEntryDTO eventEntry)
         {
             var sqlParams = new
@@ -80,6 +82,52 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             });
             return new EventEntryId(rawId);
         }
+        
+        public async Task<EventEntryDTO> GetAsync(CustomerId customerId, EventEntryId entryId)
+        {
+            var sqlParams = new {
+                CustomerId = customerId.RawValue,
+                Id = entryId.RawValue
+            };
+
+            string sql = @"
+                SELECT EE.Id, 
+                       EE.CustomerId, 
+                       EE.ReceptionTime, 
+                       EE.UUID, 
+                       EE.Client_Id, 
+                       EE.Client_Name, 
+                       EE.EventTime, 
+                       EE.Action, 
+                       EE.Description, 
+                       EE.URL, 
+                       EE.EventActorId AS Actor_Id, 
+                       EA.UUID AS Actor_UUID,
+                       EA.Name AS Actor_Name,
+                       EA.Email AS Actor_Email,
+                       EE.Context_Client_IP, 
+                       EE.Context_Client_BrowserAgent, 
+                       EE.Context_Server_ServerId, 
+                       EE.Context_Server_Version, 
+                       EE.Target_Type, 
+                       EE.Target_UUID, 
+                       EE.Target_Label, 
+                       EE.Target_URL
+                FROM dbo.EventEntries EE   
+                    INNER JOIN dbo.EventActors EA ON EA.Id = EE.EventActorId
+                WHERE EE.CustomerId = @CustomerId
+                    AND EE.Id = @Id;
+            ";
+
+            return await _db.QuerySingleOrDefault(async (db) =>
+            {
+                return await db.FetchAsync<EventEntryDTO>(sql, sqlParams);
+            });
+        }
+
+        #endregion
+
+        #region Actors
 
         public async Task<List<EventActorDTO>> GetEventActorsByUUIDAsync(CustomerId customerId, string uuid)
         {
@@ -172,5 +220,8 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 return await db.FetchAsync<EventActorDTO>(sql, sqlParams);
             });
         }
+
+        #endregion
+
     }
 }

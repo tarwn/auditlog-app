@@ -79,6 +79,31 @@ namespace AuditLogApp.Controllers.API.Public
             return Ok(results);
         }
 
+        [Authorize(Policy = "APIAccessOnly")]
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(RecordedEvent), 200)]
+        [ProducesResponseType(typeof(ApiError), 400)]
+        [ProducesResponseType(typeof(ApiError), 404)]
+        public async Task<IActionResult> GetEventAsync(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiError(400, ModelState));
+            }
+                       
+            var customerId = _membership.GetCustomerId(User);
+            var entryId = new EventEntryId(id);
+            var entry = await _persistence.EventEntries.GetAsync(customerId, entryId);
+            if (entry == null)
+            {
+                return NotFound(new ApiError(404, "Specified event not found"));
+            }
+
+            var recordedEntry = new RecordedEvent(entry);
+
+            return Ok(recordedEntry);
+        }
+
         private static void EnsureAllowedNullsAreRepresented(EventEntry entry)
         {
             if (entry.Context == null)
