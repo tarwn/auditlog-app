@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AuditLogApp.Controllers.API.Public.Models
+namespace AuditLogApp.Controllers.API.Public.Models.Events
 {
     public class EventEntryContextClient
     {

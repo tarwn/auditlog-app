@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AuditLogApp.Controllers.API.Public.Models
+namespace AuditLogApp.Controllers.API.Public.Models.Events
 {
     public class EventEntry
     {

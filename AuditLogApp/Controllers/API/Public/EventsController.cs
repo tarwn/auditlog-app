@@ -2,6 +2,7 @@
 using AuditLogApp.Common.Identity;
 using AuditLogApp.Common.Persistence;
 using AuditLogApp.Controllers.API.Public.Models;
+using AuditLogApp.Controllers.API.Public.Models.Events;
 using AuditLogApp.Documentation;
 using AuditLogApp.Membership;
 using AuditLogApp.Models.Shared;
@@ -27,8 +28,7 @@ namespace AuditLogApp.Controllers.API.Public
             _persistence = persistence;
             _membership = membership;
         }
-
-
+        
         [Authorize(Policy = "APIAccessOnly")]
         [HttpPost("")]
         [ProducesResponseType(typeof(EventAcceptedResponse), 200)]

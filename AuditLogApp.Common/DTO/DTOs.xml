@@ -82,5 +82,12 @@
     <Property Name="Target_URL" Type="string" />
   </DTO>
 
+  <DTO Name="EventActorDTO">
+    <Property Name="Id" Type="EventActorId" />
+    <Property Name="UUID" Type="string" />
+    <Property Name="Name" Type="string" />
+    <Property Name="Email" Type="string" />
+    <Property Name="IsForgotten" Type="bool" />
+  </DTO>
   
 </DTOs>

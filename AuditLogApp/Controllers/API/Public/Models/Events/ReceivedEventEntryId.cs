@@ -1,7 +1,7 @@
 ﻿using AuditLogApp.Common.Identity;
 using System;
 
-namespace AuditLogApp.Controllers.API.Public.Models
+namespace AuditLogApp.Controllers.API.Public.Models.Events
 {
     public class ReceivedEventEntryId
     {

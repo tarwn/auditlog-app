@@ -55,15 +55,16 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 IF @@ActorId IS NULL
                 BEGIN
                     SET @@ActorId = NewID();
-                    INSERT INTO dbo.EventActors(Id, CustomerId, UUID, Name, Email)
-                    VALUES(@@ActorId, @CustomerId, @Actor_UUID, @Actor_Name, @Actor_Email);
+                    INSERT INTO dbo.EventActors(Id, CustomerId, UUID, Name, Email, IsForgotten)
+                    VALUES(@@ActorId, @CustomerId, @Actor_UUID, @Actor_Name, @Actor_Email, 0);
                 END
                 ELSE
                 BEGIN
                     UPDATE dbo.EventActors
                     SET Name = @Actor_Name,
                         Email = @Actor_Email
-                    WHERE Id = @@ActorId;
+                    WHERE Id = @@ActorId
+                        AND IsForgotten = 0;
                 END
 
                 DECLARE @@Id uniqueidentifier = NewId();
@@ -78,6 +79,98 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 return await db.FetchAsync<Guid>(sql, sqlParams);
             });
             return new EventEntryId(rawId);
+        }
+
+        public async Task<List<EventActorDTO>> GetEventActorsByUUIDAsync(CustomerId customerId, string uuid)
+        {
+            var sqlParams = new
+            {
+                CustomerId = customerId.RawValue,
+                UUID = uuid
+            };
+            string sql = @";
+                SELECT A.Id,
+                       A.CustomerId,
+                       A.UUID,
+                       A.Name,
+                       A.Email,
+                       A.IsForgotten
+                FROM dbo.EventActors A
+                WHERE A.CustomerId = @CustomerId
+                    AND A.UUId = @UUID;
+            ";
+
+            return await _db.Query(async (db) =>
+            {
+                return await db.FetchAsync<EventActorDTO>(sql, sqlParams);
+            });
+        }
+
+
+        public async Task<EventActorDTO> ForgetEventActorAsync(CustomerId customerId, string uuid)
+        {
+            var sqlParams = new
+            {
+                CustomerId = customerId.RawValue,
+                UUID = uuid
+            };
+            string sql = @";
+                UPDATE dbo.EventActors 
+                SET IsForgotten = 1,
+                    Name = '[forgotten]',
+                    Email = '[forgotten]'
+                WHERE CustomerId = @CustomerId
+                    AND UUId = @UUID;
+
+                SELECT TOP 1 A.Id,
+                       A.CustomerId,
+                       A.UUID,
+                       A.Name,
+                       A.Email,
+                       A.IsForgotten
+                FROM dbo.EventActors A
+                WHERE A.CustomerId = @CustomerId
+                    AND A.UUId = @UUID;
+            ";
+
+            return await _db.QuerySingle(async (db) =>
+            {
+                return await db.FetchAsync<EventActorDTO>(sql, sqlParams);
+            });
+        }
+
+        public async Task<EventActorDTO> UpdateEventActorAsync(CustomerId customerId, string uuid, string name, string email)
+        {
+            var sqlParams = new
+            {
+                CustomerId = customerId.RawValue,
+                UUID = uuid,
+                Name = name,
+                Email = email
+            };
+            string sql = @";
+                UPDATE dbo.EventActors 
+                SET Name = @Name,
+                    Email = @Email
+                WHERE CustomerId = @CustomerId
+                    AND UUId = @UUID
+                    AND IsForgotten = 0;
+
+                SELECT TOP 1 A.Id,
+                       A.CustomerId,
+                       A.UUID,
+                       A.Name,
+                       A.Email,
+                       A.IsForgotten
+                FROM dbo.EventActors A
+                WHERE A.CustomerId = @CustomerId
+                    AND A.UUId = @UUID;
+            ";
+
+            return await _db.QuerySingle(async (db) =>
+            {
+                return await db.FetchAsync<EventActorDTO>(sql, sqlParams);
+            });
         }
     }
 }

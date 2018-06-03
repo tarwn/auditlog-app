@@ -1,4 +1,4 @@
-/* SQL Core Updates - Updated 2018-06-02 14:34 */
+/* SQL Core Updates - Updated 2018-06-03 13:34 */
 BEGIN TRY
 BEGIN TRANSACTION
 
@@ -159,6 +159,12 @@ IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0007_AuditEventData')
 BEGIN
 	Print 'Applying Update: 0007_AuditEventData'
 	EXEC('
+		-- NOTE: No constraint on CutsomerId + UUID
+		-- There is not a unique constraint on EventActors by CustomerId/UUID
+		-- because the goal is to ensure actor info is kept seperate from the
+		-- event data and up to date, rather than ensuring perfect uniqueness.
+		-- If there are dupes, they will become consistent over time.
+		
 		CREATE TABLE dbo.EventActors (
 			Id uniqueidentifier NOT NULL,
 			CustomerId int NOT NULL,
@@ -177,6 +183,7 @@ BEGIN
 			ReceptionTime datetime2(7) NOT NULL,
 		
 			-- Their Fields
+			UUID varchar(80) NOT NULL,
 			Client_Id varchar(120) NULL,
 			Client_Name varchar(120) NULL,
 			EventTime datetime2(7) NOT NULL,
@@ -185,7 +192,7 @@ BEGIN
 			[URL] varchar(400) NULL,
 			EventActorId uniqueidentifier NOT NULL,
 			Context_Client_IP varchar(15) NULL,
-			Context_Client_BrowserAgent varchar(240) NULL,
+			Context_Client_BrowserAgent varchar(4096) NULL,
 			Context_Server_ServerId varchar(240) NOT NULL,
 			Context_Server_Version varchar(80) NOT NULL,
 			Target_Type varchar(40) NULL,
@@ -201,6 +208,32 @@ BEGIN
 		);
 	');
 	INSERT INTO UpdateTracking(Name, Applied) SELECT '0007_AuditEventData', GETUTCDATE();
+END
+
+/* File: 0008_ForgettableActors.sql */
+IF NOT EXISTS (SELECT 1 FROM UpdateTracking WHERE Name = '0008_ForgettableActors')
+BEGIN
+	Print 'Applying Update: 0008_ForgettableActors'
+	EXEC('
+		ALTER TABLE dbo.EventActors ADD IsForgotten bit NULL;
+		
+		');
+
+
+
+	EXEC('
+		
+		UPDATE dbo.EventActors SET IsForgotten = 1;
+		
+		');
+
+
+
+	EXEC('
+		
+		ALTER TABLE dbo.EventActors ALTER COLUMN IsForgotten bit NOT NULL;
+	');
+	INSERT INTO UpdateTracking(Name, Applied) SELECT '0008_ForgettableActors', GETUTCDATE();
 END
 COMMIT TRANSACTION
 END TRY BEGIN CATCH

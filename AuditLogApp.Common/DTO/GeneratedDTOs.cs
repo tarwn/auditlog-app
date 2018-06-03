@@ -290,4 +290,34 @@ namespace AuditLogApp.Common.DTO
 	}
 
 
+	public partial class EventActorDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public EventActorDTO() { }
+
+		public EventActorDTO(EventActorId id, string uuid, string name, string email, bool isforgotten)
+		{
+		
+			Id = id;
+			UUID = uuid;
+			Name = name;
+			Email = email;
+			IsForgotten = isforgotten;
+		}
+
+		
+		public EventActorId Id { get; set; }
+			
+		public string UUID { get; set; }
+			
+		public string Name { get; set; }
+			
+		public string Email { get; set; }
+			
+		public bool IsForgotten { get; set; }
+			
+		
+	}
+
+
 }
