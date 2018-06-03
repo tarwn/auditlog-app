@@ -14,6 +14,7 @@ namespace AuditLogApp.Controllers
 
     [Route("Error")]
     [AllowAnonymous]
+    [ApiVersionNeutral]
     public class ErrorController : Controller
     {
         private IErrorNotifier _notifier;
@@ -48,6 +49,7 @@ namespace AuditLogApp.Controllers
         }
 
         [HttpGet("{statusCode}")]
+        [HttpPost("{statusCode}")]
         public IActionResult Error(int statusCode)
         {
             var reexecuteFeature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

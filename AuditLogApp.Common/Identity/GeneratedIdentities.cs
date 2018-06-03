@@ -339,4 +339,138 @@ namespace AuditLogApp.Common.Identity
 	}
 
 
+	public class EventEntryId : IIdentity<Guid>
+	{	
+		[Obsolete("Serialization use only", true)]
+		public EventEntryId() { }
+
+		public EventEntryId(Guid id)
+		{
+			RawValue = id;
+		}
+
+		public Guid RawValue { get; set; }
+
+		public static implicit operator EventEntryId(Guid id)
+		{
+			return new EventEntryId(id);
+		}
+
+		public static EventEntryId FromString(string rawValue)
+		{
+						return Guid.Parse(rawValue);
+					}
+
+		public override bool Equals(object obj)
+		{
+			if(obj is EventEntryId)
+			{
+				return RawValue.Equals(((EventEntryId)obj).RawValue);
+			}
+			else
+			{
+				return base.Equals(obj);
+			}
+		}
+
+		public static bool operator ==(EventEntryId a, EventEntryId b)
+		{
+			if(System.Object.ReferenceEquals(a,b))
+			{
+				return true;
+			}
+
+			if(((object)a == null && (object)b != null) || ((object)a != null && (object)b == null))
+			{
+				return false;
+			}
+
+			return a.RawValue == b.RawValue;
+		}
+
+		public static bool operator !=(EventEntryId a, EventEntryId b)
+		{
+			return !(a == b);
+		}
+
+		
+        public override int GetHashCode()
+        {
+            return RawValue.GetHashCode();
+        }
+
+		public override string ToString()
+		{
+			return $"EventEntryId[{RawValue}]";
+		}
+	}
+
+
+	public class EventActorId : IIdentity<Guid>
+	{	
+		[Obsolete("Serialization use only", true)]
+		public EventActorId() { }
+
+		public EventActorId(Guid id)
+		{
+			RawValue = id;
+		}
+
+		public Guid RawValue { get; set; }
+
+		public static implicit operator EventActorId(Guid id)
+		{
+			return new EventActorId(id);
+		}
+
+		public static EventActorId FromString(string rawValue)
+		{
+						return Guid.Parse(rawValue);
+					}
+
+		public override bool Equals(object obj)
+		{
+			if(obj is EventActorId)
+			{
+				return RawValue.Equals(((EventActorId)obj).RawValue);
+			}
+			else
+			{
+				return base.Equals(obj);
+			}
+		}
+
+		public static bool operator ==(EventActorId a, EventActorId b)
+		{
+			if(System.Object.ReferenceEquals(a,b))
+			{
+				return true;
+			}
+
+			if(((object)a == null && (object)b != null) || ((object)a != null && (object)b == null))
+			{
+				return false;
+			}
+
+			return a.RawValue == b.RawValue;
+		}
+
+		public static bool operator !=(EventActorId a, EventActorId b)
+		{
+			return !(a == b);
+		}
+
+		
+        public override int GetHashCode()
+        {
+            return RawValue.GetHashCode();
+        }
+
+		public override string ToString()
+		{
+			return $"EventActorId[{RawValue}]";
+		}
+	}
+
+
 }

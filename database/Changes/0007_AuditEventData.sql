@@ -1,3 +1,9 @@
+-- NOTE: No constraint on CutsomerId + UUID
+-- There is not a unique constraint on EventActors by CustomerId/UUID
+-- because the goal is to ensure actor info is kept seperate from the
+-- event data and up to date, rather than ensuring perfect uniqueness.
+-- If there are dupes, they will become consistent over time.
+
 CREATE TABLE dbo.EventActors (
 	Id uniqueidentifier NOT NULL,
 	CustomerId int NOT NULL,

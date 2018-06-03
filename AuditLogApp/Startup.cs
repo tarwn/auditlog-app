@@ -26,6 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -56,10 +57,11 @@ namespace AuditLogApp
             RegisterDependencies(services);
 
             // MVC
-            services.AddMvcCore().AddVersionedApiExplorer(o => {
+            services.AddMvcCore().AddVersionedApiExplorer(o =>
+            {
                 o.GroupNameFormat = "'v'VVV";
                 o.SubstituteApiVersionInUrl = true;
-            }); 
+            });
             services.AddMvc(options =>
             {
                 options.RespectBrowserAcceptHeader = true;

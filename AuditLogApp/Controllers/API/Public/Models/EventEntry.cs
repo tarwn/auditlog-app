@@ -16,7 +16,8 @@ namespace AuditLogApp.Controllers.API.Public.Models
         public EventEntryClient Client { get; set; }
 
         [Required]
-        public DateTime Time { get; set; }
+        [DataType(DataType.DateTime, ErrorMessage = "Time must be provided in ISO8601 format")]
+        public DateTime? Time { get; set; }
 
         [Required]
         [StringLength(40)]
@@ -31,6 +32,7 @@ namespace AuditLogApp.Controllers.API.Public.Models
 
         public EventEntryActor Actor { get; set; }
 
+        [Required]
         public EventEntryContext Context { get; set; }
 
         public EventEntryTarget Target { get; set; }

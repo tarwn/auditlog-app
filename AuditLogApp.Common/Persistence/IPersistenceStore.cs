@@ -12,6 +12,7 @@ namespace AuditLogApp.Common.Persistence
         IUserStore Users { get; }
         IUserAuthenticationStore UserAuthentications { get; }
         IUserSessionStore UserSessions { get; }
+        IEventEntriesStore EventEntries { get; }
 
         Task RequireTransactionAsync(Func<Task> action);
     }

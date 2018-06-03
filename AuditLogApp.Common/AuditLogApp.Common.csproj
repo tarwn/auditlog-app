@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="DTO\GeneratedDTOs.tt">
+      <None Update="DTO\GeneratedDTOs.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>GeneratedDTOs.cs</LastGenOutput>
     </None>
@@ -32,6 +32,8 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>GeneratedDTOs.tt</DependentUpon>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GeneratedDTOs.cs</LastGenOutput>
     </Compile>
     <Compile Update="Identity\GeneratedIdentities.cs">
       <DesignTime>True</DesignTime>

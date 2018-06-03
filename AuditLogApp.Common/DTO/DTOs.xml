@@ -55,5 +55,32 @@
     <Property Name="CreationTime" Type="DateTime"/>
     <Property Name="LogoutTime" Type="DateTime?"/>
   </DTO>
+
+
+  <DTO Name="EventEntryDTO">
+    <Property Name="Id" Type="EventEntryId" />
+    <Property Name="CustomerId" Type="CustomerId" />
+    <Property Name="ReceptionTime" Type="DateTime" />
+    <Property Name="UUID" Type="string" />
+    <Property Name="Client_Id" Type="string" />
+    <Property Name="Client_Name" Type="string" />
+    <Property Name="EventTime" Type="DateTime" />
+    <Property Name="Action" Type="string" />
+    <Property Name="Description" Type="string" />
+    <Property Name="URL" Type="string" />
+    <Property Name="Actor_Id" Type="EventActorId" />
+    <Property Name="Actor_UUID" Type="string" />
+    <Property Name="Actor_Name" Type="string" />
+    <Property Name="Actor_Email" Type="string" />
+    <Property Name="Context_Client_IP" Type="string" />
+    <Property Name="Context_Client_BrowserAgent" Type="string" />
+    <Property Name="Context_Server_ServerId" Type="string" />
+    <Property Name="Context_Server_Version" Type="string" />
+    <Property Name="Target_Type" Type="string" />
+    <Property Name="Target_UUID" Type="string" />
+    <Property Name="Target_Label" Type="string" />
+    <Property Name="Target_URL" Type="string" />
+  </DTO>
+
   
 </DTOs>

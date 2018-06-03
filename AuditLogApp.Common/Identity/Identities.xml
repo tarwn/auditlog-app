@@ -5,4 +5,6 @@
   <Identity Name="CustomerAuthenticationId" Type="Guid" />
   <Identity Name="UserAuthenticationId" Type="Guid" />
   <Identity Name="UserSessionId" Type="Guid" />
+  <Identity Name="EventEntryId" Type="Guid" />
+  <Identity Name="EventActorId" Type="Guid" />
 </Identities>

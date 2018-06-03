@@ -209,4 +209,85 @@ namespace AuditLogApp.Common.DTO
 	}
 
 
+	public partial class EventEntryDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public EventEntryDTO() { }
+
+		public EventEntryDTO(EventEntryId id, CustomerId customerid, DateTime receptiontime, string uuid, string client_id, string client_name, DateTime eventtime, string action, string description, string url, EventActorId actor_id, string actor_uuid, string actor_name, string actor_email, string context_client_ip, string context_client_browseragent, string context_server_serverid, string context_server_version, string target_type, string target_uuid, string target_label, string target_url)
+		{
+		
+			Id = id;
+			CustomerId = customerid;
+			ReceptionTime = receptiontime;
+			UUID = uuid;
+			Client_Id = client_id;
+			Client_Name = client_name;
+			EventTime = eventtime;
+			Action = action;
+			Description = description;
+			URL = url;
+			Actor_Id = actor_id;
+			Actor_UUID = actor_uuid;
+			Actor_Name = actor_name;
+			Actor_Email = actor_email;
+			Context_Client_IP = context_client_ip;
+			Context_Client_BrowserAgent = context_client_browseragent;
+			Context_Server_ServerId = context_server_serverid;
+			Context_Server_Version = context_server_version;
+			Target_Type = target_type;
+			Target_UUID = target_uuid;
+			Target_Label = target_label;
+			Target_URL = target_url;
+		}
+
+		
+		public EventEntryId Id { get; set; }
+			
+		public CustomerId CustomerId { get; set; }
+			
+		public DateTime ReceptionTime { get; set; }
+			
+		public string UUID { get; set; }
+			
+		public string Client_Id { get; set; }
+			
+		public string Client_Name { get; set; }
+			
+		public DateTime EventTime { get; set; }
+			
+		public string Action { get; set; }
+			
+		public string Description { get; set; }
+			
+		public string URL { get; set; }
+			
+		public EventActorId Actor_Id { get; set; }
+			
+		public string Actor_UUID { get; set; }
+			
+		public string Actor_Name { get; set; }
+			
+		public string Actor_Email { get; set; }
+			
+		public string Context_Client_IP { get; set; }
+			
+		public string Context_Client_BrowserAgent { get; set; }
+			
+		public string Context_Server_ServerId { get; set; }
+			
+		public string Context_Server_Version { get; set; }
+			
+		public string Target_Type { get; set; }
+			
+		public string Target_UUID { get; set; }
+			
+		public string Target_Label { get; set; }
+			
+		public string Target_URL { get; set; }
+			
+		
+	}
+
+
 }

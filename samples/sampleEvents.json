@@ -1,0 +1,446 @@
+[
+    {
+        "uuid": "sample-event-000",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522313593,
+        "action": "user.login",
+        "description": null,
+        "url": null,
+        "actor": {
+            "uuid": "bd275099-e808-4c1a-bd32-57a589b7cf93",
+            "name": "Roberta Wharton",
+            "email": "rwharton@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.23",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        }
+    },
+    {
+        "uuid": "sample-event-001",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522313782,
+        "action": "user.invite",
+        "description": "Invited new user, 'QA' role",
+        "url": "http://blah.example.com/95c102ae-5930-413f-b794-8f0934fdb136",
+        "actor": {
+            "uuid": "bd275099-e808-4c1a-bd32-57a589b7cf93",
+            "name": "Roberta Wharton",
+            "email": "rwharton@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.23",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "user",
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "label": "Salman Randall",
+            "url": "http://blah.example.com/95c102ae-5930-413f-b794-8f0934fdb136"
+        }
+    },
+    {
+        "uuid": "sample-event-002",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522314910,
+        "action": "user.register",
+        "description": "Registering from invitation",
+        "url": null,
+        "actor": {
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "user",
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "label": "Salman Randall",
+            "url": null
+        }
+    },
+    {
+        "uuid": "sample-event-003",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522314990,
+        "action": "user.passwordReset",
+        "description": "Reset own password",
+        "url": null,
+        "actor": {
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "user",
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "label": "Salman Randall",
+            "url": null
+        }
+    },
+    {
+        "uuid": "sample-event-004",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522315212,
+        "action": "batch.logSamples",
+        "description": "Entered QA samples for batch",
+        "url": null,
+        "actor": {
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "batch",
+            "uuid": "5a61a8f0-1390-46bd-a4c7-d5381955d807",
+            "label": "Batch 20180329-003",
+            "url": null
+        }
+    },
+    {
+        "uuid": "sample-event-005",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522316143,
+        "action": "batch.logSamples",
+        "description": "Entered QA samples for batch",
+        "url": null,
+        "actor": {
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "batch",
+            "uuid": "5a61a8f0-1390-46bd-a4c7-d5381955d807",
+            "label": "Batch 20180329-003",
+            "url": null
+        }
+    },
+    {
+        "uuid": "sample-event-006",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522317043,
+        "action": "batch.logSamples",
+        "description": "Entered QA samples for batch",
+        "url": null,
+        "actor": {
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "batch",
+            "uuid": "5a61a8f0-1390-46bd-a4c7-d5381955d807",
+            "label": "Batch 20180329-003",
+            "url": null
+        }
+    },
+    {
+        "uuid": "sample-event-007",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522317322,
+        "action": "batch.complete",
+        "description": "Completed batch",
+        "url": null,
+        "actor": {
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "batch",
+            "uuid": "5a61a8f0-1390-46bd-a4c7-d5381955d807",
+            "label": "Batch 20180329-003",
+            "url": null
+        }
+    },
+    {
+        "uuid": "sample-event-008",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522317532,
+        "action": "user.logout",
+        "description": null,
+        "url": null,
+        "actor": {
+            "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        }
+    },
+    {
+        "uuid": "sample-event-009",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522317622,
+        "action": "billing.paymentUpdated",
+        "description": "Updated payment details",
+        "url": null,
+        "actor": {
+            "uuid": "bd275099-e808-4c1a-bd32-57a589b7cf93",
+            "name": "Roberta Wharton",
+            "email": "rwharton@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.23",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        }
+    },
+    {
+        "uuid": "sample-event-010",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522317645,
+        "action": "billing.paymentVerified",
+        "description": "Payment details verified",
+        "url": null,
+        "actor": {
+            "uuid": "SYSTEM",
+            "name": "SYSTEM",
+            "email": "SYSTEM"
+        },
+        "context": {
+            "client": {
+                "ipAddress": null,
+                "browserAgent": null
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        }
+    },
+    {
+        "uuid": "sample-event-011",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522318215,
+        "action": "prefs.updateLogo",
+        "description": "Update company logo",
+        "url": null,
+        "actor": {
+            "uuid": "bd275099-e808-4c1a-bd32-57a589b7cf93",
+            "name": "Roberta Wharton",
+            "email": "rwharton@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.23",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        }
+    },
+    {
+        "uuid": "sample-event-012",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522321834,
+        "action": "user.login",
+        "description": null,
+        "url": null,
+        "actor": {
+            "uuid": "75d604de-efeb-41bc-af60-cc17f21253ad",
+            "name": "Lilly Romero",
+            "email": "lromero@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        }
+    },
+    {
+        "uuid": "sample-event-013",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522322112,
+        "action": "batch.labelPrinted",
+        "description": "Printed label for batch",
+        "url": null,
+        "actor": {
+            "uuid": "75d604de-efeb-41bc-af60-cc17f21253ad",
+            "name": "Lilly Romero",
+            "email": "lromero@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "batch",
+            "uuid": "5a61a8f0-1390-46bd-a4c7-d5381955d807",
+            "label": "Batch 20180329-003",
+            "url": null
+        }
+    },
+    {
+        "uuid": "sample-event-014",
+        "client": {
+            "id": "1234567890",
+            "name": "Great Client"
+        },
+        "time": 1522322712,
+        "action": "batch.labelPrinted",
+        "description": "Printed label for batch",
+        "url": null,
+        "actor": {
+            "uuid": "75d604de-efeb-41bc-af60-cc17f21253ad",
+            "name": "Lilly Romero",
+            "email": "lromero@great-client.test"
+        },
+        "context": {
+            "client": {
+                "ipAddress": "192.168.105.68",
+                "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+            },
+            "server": {
+                "serverId": "prod-01-us-appfarm",
+                "version": "20180325-01"
+            }
+        },
+        "target": {
+            "type": "batch",
+            "uuid": "5a61a8f0-1390-46bd-a4c7-d5381955d807",
+            "label": "Batch 20180329-003",
+            "url": null
+        }
+    }
+]

@@ -30,5 +30,6 @@ namespace AuditLogApp.Membership
         Task<Dictionary<string, object>> DescribeUserForErrorAsync(ClaimsPrincipal principal);
 
         Task<RevocationDetails> RevokeAuthenticationAsync(UserId userId, UserAuthenticationId id);
+        
     }
 }

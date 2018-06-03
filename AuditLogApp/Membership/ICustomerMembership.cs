@@ -11,5 +11,6 @@ namespace AuditLogApp.Membership
     public interface ICustomerMembership
     {
         Task<ClaimsPrincipal> GetOneTimeLoginAsync(CustomerAuthenticationId id, string secret, CredentialType credentialType);
+        CustomerId GetCustomerId(ClaimsPrincipal user);
     }
 }

@@ -18,6 +18,7 @@ namespace AuditLogApp.Persistence.SQLServer
 
             Customers = new CustomerStore(_dbUtility);
             CustomerAuthentications = new CustomerAuthenticationStore(_dbUtility);
+            EventEntries = new EventEntriesStore(_dbUtility);
             Users = new UserStore(_dbUtility);
             UserAuthentications = new UserAuthenticationStore(_dbUtility);
             UserSessions = new UserSessionStore(_dbUtility);
@@ -27,6 +28,8 @@ namespace AuditLogApp.Persistence.SQLServer
         public ICustomerStore Customers { get; private set; }
 
         public ICustomerAuthenticationStore CustomerAuthentications { get; private set; }
+
+        public IEventEntriesStore EventEntries { get; private set; }
 
         public IUserStore Users { get; private set; }
 

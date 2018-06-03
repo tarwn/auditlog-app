@@ -273,6 +273,11 @@ namespace AuditLogApp.Membership.Implementation
 
         #region ICustomerMembership
 
+        public CustomerId GetCustomerId(ClaimsPrincipal principal)
+        {
+            return CustomerId.FromString(GetCustomerIdClaim(principal));
+        }
+
         public async Task<ClaimsPrincipal> GetOneTimeLoginAsync(CustomerAuthenticationId id, string secret, CredentialType credentialType)
         {
             var customerAuth = await _persistence.CustomerAuthentications.GetAsync(id);
