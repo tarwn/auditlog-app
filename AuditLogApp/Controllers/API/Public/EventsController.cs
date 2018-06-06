@@ -3,6 +3,7 @@ using AuditLogApp.Common.Identity;
 using AuditLogApp.Common.Persistence;
 using AuditLogApp.Controllers.API.Public.Models;
 using AuditLogApp.Controllers.API.Public.Models.Events;
+using AuditLogApp.Controllers.API.Public.Models.Events.Search;
 using AuditLogApp.Documentation;
 using AuditLogApp.Membership;
 using AuditLogApp.Models.Shared;
@@ -17,7 +18,7 @@ namespace AuditLogApp.Controllers.API.Public
 {
     [IncludeInDocumentation]
     [ApiVersion("1")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/events")]
     public class EventsController : Controller
     {
         private IPersistenceStore _persistence;
@@ -99,9 +100,35 @@ namespace AuditLogApp.Controllers.API.Public
                 return NotFound(new ApiError(404, "Specified event not found"));
             }
 
-            var recordedEntry = new RecordedEvent(entry);
+            var recordedEntry = new RecordedEvent(entry, "/api/v1/events/");
 
             return Ok(recordedEntry);
+        }
+
+
+        [Authorize(Policy = "APIAccessOnly")]
+        [HttpGet("")]
+        [ProducesResponseType(typeof(EventSearchResponse), 200)]
+        [ProducesResponseType(typeof(ApiError), 400)]
+        [ProducesResponseType(typeof(ApiError), 404)]
+        public async Task<IActionResult> GetEventsAsync(string clientID = null, DateTime? fromDate = null, DateTime? throughDate = null)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiError(400, ModelState));
+            }
+
+            var results = new EventSearchResponse()
+            {
+                Id = new EventSearchId(DateTime.UtcNow, "GET", $"{Request.Path}{Request.QueryString}", "Event Search")
+            };
+
+            var customerId = _membership.GetCustomerId(User);
+            var entries = await _persistence.EventEntries.SearchAsync(customerId, clientID, fromDate, throughDate);
+            results.Entries = entries.Select(e => new RecordedEvent(e, "/api/v1/events/"))
+                                     .ToList();
+
+            return Ok(results);
         }
 
         private static void EnsureAllowedNullsAreRepresented(EventEntry entry)

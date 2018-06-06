@@ -4,13 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuditLogApp.Common.DTO;
 using AuditLogApp.Common.Identity;
+using Newtonsoft.Json;
 
 namespace AuditLogApp.Controllers.API.Public.Models.Events
 {
     public class RecordedEvent
     {
-        public RecordedEvent(EventEntryDTO entry)
+        public RecordedEvent(EventEntryDTO entry, string baseUrl)
         {
+            Link = new RecordedEventLink() { Href = $"{baseUrl}{entry.Id.RawValue}" };
             Id = entry.Id;
             ReceptionTime = entry.ReceptionTime;
 
@@ -24,6 +26,9 @@ namespace AuditLogApp.Controllers.API.Public.Models.Events
             Context = new EventEntryContext(entry.Context_Client_IP, entry.Context_Client_BrowserAgent, entry.Context_Server_ServerId, entry.Context_Server_Version);
             Target = new EventEntryTarget(entry.Target_Type, entry.Target_UUID, entry.Target_Label, entry.Target_URL);
         }
+
+        [JsonProperty(PropertyName = "_links")]
+        public RecordedEventLink Link { get; set; }
 
         public EventEntryId Id { get; set; }
         public DateTime ReceptionTime { get; set; }
@@ -47,4 +52,11 @@ namespace AuditLogApp.Controllers.API.Public.Models.Events
 
         public EventEntryTarget Target { get; set; }
     }
+
+    public class RecordedEventLink
+    {
+        [JsonProperty(PropertyName = "href")]
+        public string Href { get; set; }
+    }
 }
+

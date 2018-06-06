@@ -125,6 +125,71 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             });
         }
 
+        public async Task<List<EventEntryDTO>> SearchAsync(CustomerId customerId, string clientID, DateTime? fromDate, DateTime? throughDate)
+        {
+            var whereClauses = new List<string>();
+            if (!String.IsNullOrEmpty(clientID))
+            {
+                whereClauses.Add("AND EE.Client_ID = @ClientID");
+            }
+            if (fromDate.HasValue)
+            {
+                whereClauses.Add("AND EE.EventTime >= @FromDate");
+            }
+            if (throughDate.HasValue)
+            {
+                if (throughDate.Value.Hour == 0 && throughDate.Value.Minute == 0)
+                {
+                    whereClauses.Add("AND EE.EventTime < DateAdd(day, 1, @ThroughDate)");
+                }
+                else
+                {
+                    whereClauses.Add("AND EE.EventTime <= @ThroughDate");
+                }
+            }
+
+            var sqlParams = new
+            {
+                CustomerId = customerId.RawValue,
+                ClientID = clientID,
+                FromDate = fromDate,
+                ThroughDate = throughDate
+            };
+            string sql = @"
+                SELECT EE.Id, 
+                       EE.CustomerId, 
+                       EE.ReceptionTime, 
+                       EE.UUID, 
+                       EE.Client_Id, 
+                       EE.Client_Name, 
+                       EE.EventTime, 
+                       EE.Action, 
+                       EE.Description, 
+                       EE.URL, 
+                       EE.EventActorId AS Actor_Id, 
+                       EA.UUID AS Actor_UUID,
+                       EA.Name AS Actor_Name,
+                       EA.Email AS Actor_Email,
+                       EE.Context_Client_IP, 
+                       EE.Context_Client_BrowserAgent, 
+                       EE.Context_Server_ServerId, 
+                       EE.Context_Server_Version, 
+                       EE.Target_Type, 
+                       EE.Target_UUID, 
+                       EE.Target_Label, 
+                       EE.Target_URL
+                FROM dbo.EventEntries EE   
+                    INNER JOIN dbo.EventActors EA ON EA.Id = EE.EventActorId
+                WHERE EE.CustomerId = @CustomerId
+                    " + String.Join("\n", whereClauses) + @";
+            ";
+
+            return await _db.Query(async (db) =>
+            {
+                return await db.FetchAsync<EventEntryDTO>(sql, sqlParams);
+            });
+        }
+
         #endregion
 
         #region Actors
@@ -220,6 +285,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 return await db.FetchAsync<EventActorDTO>(sql, sqlParams);
             });
         }
+
 
         #endregion
 
