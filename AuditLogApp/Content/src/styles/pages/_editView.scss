@@ -1,0 +1,27 @@
+@import "../variables";
+
+.ala-view-edit-configurations h3{
+    @extend .h6;
+
+    font-size: 85%;
+    font-weight: bold;
+    margin-top: 1em;
+}
+
+.ala-view-edit-menu{
+    display: block;
+    border-bottom: 1px solid $color-border;
+
+    padding: 0px 1em;
+    margin: 0px;
+    list-style-type: none;
+
+    & > li {
+        display: inline-block;
+        padding: 0px;
+    }
+}
+
+.ala-tab-content{
+    margin: .5em;
+}

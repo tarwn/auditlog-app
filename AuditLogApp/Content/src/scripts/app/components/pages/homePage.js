@@ -1,13 +1,10 @@
+import PageBase from './pageBase';
+
 export default {
     name: 'page-home',
-    viewModel: class HomePage {
+    viewModel: class HomePage extends PageBase {
         constructor(params) {
-            this._services = params.services;
-            this._sitewideContext = params.sitewideContext;
-            this._navigationContext = params.navigationContext;
-            this.readyForDisplay = params.readyForDisplay;
-            this.params = params;
-
+            super(params);
             this.initialize();
         }
 
@@ -21,6 +18,9 @@ export default {
         // }
     },
     template: `
-        stuff
+        <div class="ala-loading" data-bind="visible: !readyForDisplay()">Loading...</div>
+        <div data-bind="if: readyForDisplay">
+            stuff
+        </div>
     `
 };

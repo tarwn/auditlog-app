@@ -1,13 +1,11 @@
+import PageBase from '../pageBase';
 import AuthenticationMethod from '../../../models/authenticationMethodModel';
 
 export default {
     name: 'page-apikeys-list',
-    viewModel: class APIKeysListPage {
+    viewModel: class APIKeysListPage extends PageBase {
         constructor(params) {
-            this._services = params.services;
-            this._sitewideContext = params.sitewideContext;
-            this._navigationContext = params.navigationContext;
-            this.readyForDisplay = params.readyForDisplay;
+            super(params);
 
             this.apikeys = ko.observableArray();
             this.displayableAPIKeys = ko.pureComputed(() => {

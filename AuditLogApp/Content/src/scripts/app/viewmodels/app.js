@@ -14,14 +14,11 @@ export default class AppViewModel {
             activeMenuItem: ko.observable(),
             componentName: ko.observable(),
             componentParams: {
-                readyForDisplay: ko.observable(false),
                 navigationContext: ko.observable(),
                 sitewideContext: this._sitewideContext,
                 services: this._services
             }
         };
-        this.currentPage.readyForDisplay = ko.pureComputed(() => this.readyForDisplay() &&
-                this.currentPage.componentParams.readyForDisplay());
     }
 
     addPage(pageDefinition) {
@@ -37,7 +34,7 @@ export default class AppViewModel {
             ko.components.register(pageDefinition.component.name, pageDefinition.component);
 
             page(pageDefinition.route, (context) => {
-                this.currentPage.componentParams.readyForDisplay(false);
+                this.readyForDisplay(false);
                 // now that it's hidden, swap in the new component
                 //  rely on new component setting readyForDisplay to true to start displaying
                 //  update context just in case? before it's used <- don't like this
@@ -47,6 +44,7 @@ export default class AppViewModel {
                 this.currentPage.componentName(pageDefinition.component.name);
                 // will use the title to announce for screen readers
                 this.currentPage.title(pageDefinition.title);
+                this.readyForDisplay(true);
             });
         });
         page.start('/');

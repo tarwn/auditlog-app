@@ -41,8 +41,22 @@ function post(url, data) {
     });
 }
 
+function fakeGet(url, cb) {
+    return new Promise((resolve) => {
+        resolve(cb());
+    });
+}
+
+function fakePost() {
+    return new Promise((resolve) => {
+        resolve();
+    });
+}
+
 module.exports = {
     HttpError,
     get,
-    post
+    post,
+    fakeGet,
+    fakePost
 };

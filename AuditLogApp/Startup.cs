@@ -273,6 +273,7 @@ namespace AuditLogApp
                 options.AddRedirectToHttps();
             }
             options.AddRewrite("^configure/.*", "/", skipRemainingRules: true)
+                   .AddRewrite("^customize(/.*)?", "/", skipRemainingRules: true)
                    .AddRewrite("^welcome(/.*)?", "/onboarding", skipRemainingRules: true);
             app.UseRewriter(options);
 

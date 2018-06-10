@@ -17,8 +17,25 @@
 .ala-basic-table td {
     border-top: 1px solid $color-border;
     text-align: left;
-    padding: .25em 1em .25em 0.5em;
+    padding: 2px .25em .25em 0.5em;
     //color: @Color_Text_Default;
+}
+
+// Form Table
+.ala-form-table {
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.ala-form-table th {
+    text-align: left;
+    padding: 2px;
+    font-size: 85%;
+}
+
+.ala-form-table td {
+    text-align: left;
+    padding: 2px;
 }
 
 // Audit Table - subset of drop-in audit table CSS

@@ -1,0 +1,75 @@
+@import "../variables";
+
+.ala-form-row{
+    vertical-align: middle;
+
+    & > .ala-form-table{
+        margin-left: 1em;
+    }
+}
+
+%form-basics{
+    font-size: font-size-form;
+}
+
+.ala-form-description{
+    color: $text-color-light;
+    max-width: 600px;
+    padding: .5em;
+}
+
+.ala-form-label-w1 {
+    @extend %form-basics;
+
+    display: inline-block;
+    width: 3em;
+    padding: 4px 0;
+}
+.ala-form-label-w2 {
+    @extend %form-basics;
+
+    display: inline-block;
+    width: 6em;
+    padding: 4px 0;
+}
+
+.ala-form-input,
+.ala-form-input-faux{
+    @extend %form-basics;
+
+    display: inline-block;
+    padding: 2px;
+    border: 1px solid $ws_lightgrey;
+    width: 18em;
+
+    &.shorter{
+        width: 6em;
+    }
+}
+.ala-form-input:hover{
+    border-color: $color-primary;
+}
+.ala-form-input:active{
+    border-color: $color-primary;
+}
+
+.ala-form-indent{
+    padding-left: 3em;
+}
+
+ul.ala-form-indent{
+    margin: 0px;
+    list-style: inside;
+
+    & > li {
+        // nudge more for whitespace between label + input
+        padding-left: .25em;
+        line-height: 26px;
+
+        & > span,
+        & > button {
+            vertical-align: middle;
+            height: 20px;
+        }
+    }
+}

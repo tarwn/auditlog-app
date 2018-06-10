@@ -59,3 +59,42 @@
 .ala-button-red:visited{
     @include simple-button($ws-lightgrey, $ws-lightgrey, $text-color-normal, $cs-red, $cs-red, $text-color-inverse);
 }
+
+.ala-button-lite,
+.ala-button-lite:visited{
+    @include simple-button(transparent, transparent, $text-color-light, transparent, transparent, $text-color-normal);
+
+    border-radius: 0px;
+    border-width: 0px;
+    padding: 0 2px;
+    margin: 0px;
+}
+
+.ala-button-lite-red,
+.ala-button-lite-red:visited{
+    @include simple-button(transparent, transparent, $text-color-light, transparent, transparent, $cs-red);
+
+    border-radius: 0px;
+    border-width: 0px;
+    padding: 0 2px;
+    margin: 0px;
+}
+
+.ala-button-tab,
+.ala-button-tab:visited{
+    @include simple-button(transparent, transparent, $text-color-light, transparent, $color-border, $text-color-normal);
+
+    margin-bottom: -1px;
+    border-bottom-color: $color-border;
+}
+
+.ala-button-tab-selected,
+.ala-button-tab-selected:visited{
+    @include simple-button(transparent, $color-border, $text-color-normal, transparent, $color-border, $text-color-normal);
+
+    margin-bottom: -1px;
+    border-bottom-color: white;
+    &:hover{
+        border-bottom-color: white;
+    }
+}

@@ -1,14 +1,11 @@
+import PageBase from '../pageBase';
 import AuthenticationMethod from '../../../models/authenticationMethodModel';
 
 export default {
     name: 'page-apikeys-create',
-    viewModel: class APIKeysCreatePage {
+    viewModel: class APIKeysCreatePage extends PageBase {
         constructor(params) {
-            this._services = params.services;
-            this._sitewideContext = params.sitewideContext;
-            this._navigationContext = params.navigationContext;
-            this.readyForDisplay = params.readyForDisplay;
-            this.params = params;
+            super(params);
 
             // Workflow
             this.steps = {};
@@ -31,15 +28,10 @@ export default {
             this.initialize();
         }
 
-        initialize() {
-            this.readyForDisplay(true);
-        }
-
         createAPIKey() {
             this.isCreatingAPIKey(true);
             this._services.createAPIKey(this.displayName())
                 .then((data) => {
-                    console.log(data);
                     this.apikey(new AuthenticationMethod(data));
                     this.steps.currentStep(2);
                     this.isCreatingAPIKey(false);

@@ -51,7 +51,7 @@
         <h1 class="ala-screen-reader-only">Navigation</h1>
         <ul class="ala-navigation-menu">
             <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'home' }">Home</a></li>
-            <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'customize' }">Customize</a></li>
+            <li class="ala-navigation-item"><a href="/customize/view" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'customize' }">Customize</a></li>
             <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'account' }">Account</a></li>
             <li class="ala-navigation-item"><a href="/configure/apikeys" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'apikeys' }">API Keys</a></li>
             <li class="ala-navigation-item"><a href="/" class="ala-navigation-link" data-bind="css: { 'active': currentPage.activeMenuItem() == 'users' }">Users</a></li>
@@ -59,10 +59,10 @@
     </nav>
     <div class="ala-body">
         <div class="ala-page-container">
-            <div class="ala-loading" data-bind="visible: !currentPage.readyForDisplay()">
+            <div class="ala-loading" data-bind="visible: !readyForDisplay()">
                 Loading...
             </div>
-            <div style="display: none;" data-bind="visible: currentPage.readyForDisplay(), component: { name: currentPage.componentName, params: currentPage.componentParams }">
+            <div style="display: none;" data-bind="visible: readyForDisplay(), component: { name: currentPage.componentName, params: currentPage.componentParams }">
             </div>
             @RenderBody()
         </div>
@@ -75,6 +75,28 @@
     <script type="text/javascript">
         $(document).ready(function () { 
             var viewmodel = App.default.create();
+
+            (function() {
+            var existing = ko.bindingProvider.instance;
+
+                ko.bindingProvider.instance = {
+                    nodeHasBindings: existing.nodeHasBindings,
+                    getBindings: function(node, bindingContext) {
+                        var bindings;
+                        try {
+                        bindings = existing.getBindings(node, bindingContext);
+                        }
+                        catch (ex) {
+                        if (window.console && console.log) {
+                            console.log("binding error", ex.message, node, bindingContext);
+                        }
+                        }
+
+                        return bindings;
+                    }
+                };
+
+            })();
 
             // TODO capture JS errors
 
