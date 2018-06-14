@@ -1,5 +1,6 @@
 import PageBase from '../pageBase';
 import ViewConfigurationModel from '../../../models/viewConfigurationModel';
+import ViewHeaderLinkModel from '../../../models/viewHeaderLinkModel';
 
 class Tabs {
     constructor(tabs) {
@@ -20,8 +21,7 @@ export default {
             super(params);
             this.view = ko.observable();
 
-            this.newLinkLabel = ko.observable();
-            this.newLinkURL = ko.observable();
+            this.newLink = ko.observable(new ViewHeaderLinkModel(null));
 
             this.tabs = new Tabs(['Layout', 'Columns', 'Security']);
             this.tabs.changeToLayout();
@@ -33,6 +33,19 @@ export default {
             this.loadView().then(() => {
                 this.readyForDisplay(true);
             });
+        }
+
+        addNewHeaderLink() {
+            this.newLink().isRequired(true);
+
+            if (this.newLink().isValid()) {
+                this.view().addHeaderLink(this.newLink());
+                this.newLink(new ViewHeaderLinkModel(null));
+            }
+        }
+
+        removeHeaderLink(link) {
+            this.view().removeHeaderLink(link);
         }
 
         saveChanges() {
@@ -77,15 +90,15 @@ export default {
                 <h3>Header</h3>
                 <div class="ala-form-row">
                     <label class="ala-form-label-w1" for="txtLogo">Logo</label> 
-                    <input-url params="id: 'txtLogo', value: view().custom.logo, maxLength: 80" />
+                    <input-url params="id: 'txtLogo', value: { o: view().custom.logo }" />
                 </div>
                 <div class="ala-form-row">
                     <label class="ala-form-label-w1" for="txtTitle">Title</label> 
-                    <input-text params="id: 'txtTitle', value: view().custom.title, maxLength: 240" />
+                    <input-text params="id: 'txtTitle', value: { o: view().custom.title }" />
                 </div>
                 <div class="ala-form-row">
                     <label class="ala-form-label-w1" for="txtURL">URL</label> 
-                    <input-url params="id: 'txtURL', value: view().custom.url, maxLength: 80" />
+                    <input-url params="id: 'txtURL', value: { o: view().custom.url }" />
                 </div>
                 <div class="ala-form-row">
                     <label class="ala-form-label-w1">Links</label>
@@ -95,16 +108,16 @@ export default {
                         </thead>
                         <tbody data-bind="foreach: view().custom.headerLinks">
                             <tr>
-                                <td><input-text params="value: label, maxLength: 80, class: 'shorter'" /></td>
-                                <td><input-text params="value: url, maxLength: 240" /></td>
-                                <td><button class="ala-button-lite-red" title="Remove"><i class="icon-cancel"></i></button></td>
+                                <td><input-text params="value: { o: label }, isShorter: true" /></td>
+                                <td><input-url params="value: { o: url }" /></td>
+                                <td><button class="ala-button-lite-red" title="Remove" data-bind="click: $parent.removeHeaderLink.bind($parent)"><i class="icon-cancel"></i></button></td>
                             </tr>
                         </tbody>
-                        <tfoot>
+                        <tfoot data-bind="with: newLink">
                             <tr>
-                                <td><input-text params="value: newLinkLabel, maxLength: 80, class: 'shorter'" /></td>
-                                <td><input-text params="value: newLinkURL, maxLength: 240" /></td>
-                                <td><button class="ala-button-lite" title="Add Link"><i class="icon-plus-circled"></i>Add</button></td>
+                                <td><input-text params="value: { o: label }, isShorter: true" /></td>
+                                <td><input-url params="value: { o: url }" /></td>
+                                <td><button class="ala-button-lite" title="Add Link" data-bind="attr: { disabled: !isValid() }, click: $parent.addNewHeaderLink.bind($parent)"><i class="icon-plus-circled"></i>Add</button></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -113,7 +126,7 @@ export default {
                 <h3>Footer</h3>
                 <div class="ala-form-row">
                     <label class="ala-form-label-w2" for="txtCopyright">Copyright</label> 
-                    <input-text params="id: 'txtCopyright', value: view().custom.copyright, maxLength: 80" />
+                    <input-text params="id: 'txtCopyright', value: { o: view().custom.copyright }" />
                 </div>
             </div>
             <div class="ala-tab-content" data-bind="visible: tabs.isColumnsSelected">

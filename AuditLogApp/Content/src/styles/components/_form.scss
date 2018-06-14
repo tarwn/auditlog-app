@@ -53,6 +53,13 @@
     border-color: $color-primary;
 }
 
+.ala-form-input.ala-input-error,
+.ala-form-input.ala-input-error:hover,
+.ala-form-input.ala-input-error:active {
+    border-color: $cs_red;
+    color: $cs_red;
+}
+
 .ala-form-indent{
     padding-left: 3em;
 }

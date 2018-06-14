@@ -1,4 +1,5 @@
 ﻿import allComponents from '../components/allComponents';
+import validation from '../extenders/validation';
 
 export default class AppViewModel {
     constructor(services, sitewideContext) {
@@ -26,6 +27,8 @@ export default class AppViewModel {
     }
 
     mount() {
+        validation.applyExtender(ko);
+
         allComponents.forEach((component) => {
             ko.components.register(component.name, component);
         });

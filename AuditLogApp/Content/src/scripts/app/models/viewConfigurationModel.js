@@ -1,14 +1,10 @@
-class ViewHeaderLinkModel {
-    constructor(rawData) {
-        this.label = ko.observable(rawData.label);
-        this.url = ko.observable(rawData.url);
-    }
-}
+import validation from '../extenders/validation';
+import ViewHeaderLinkModel from './viewHeaderLinkModel';
 
 class ViewColumnConfigurationModel {
     constructor(rawData) {
         this.order = ko.observable(rawData.order);
-        this.label = ko.observable(rawData.label);
+        this.label = ko.observable(rawData.label).extend(validation.string(true, 40));
         this.type = ko.observable(rawData.type);
 
         if (rawData.type === 'multiline') {
@@ -34,18 +30,34 @@ class ViewConfigurationModel {
         this.id = rawData.id;
         this.key = ko.observable(rawData.key);
 
-        this.custom = {};
-        this.custom.url = ko.observable(rawData.custom.url);
-        this.custom.logo = ko.observable(rawData.custom.logo);
-        this.custom.title = ko.observable(rawData.custom.url);
-        this.custom.headerLinks = ko.observableArray(rawData.custom.headerLinks.map((link) => {
-            return new ViewHeaderLinkModel(link);
-        }));
-        this.custom.copyright = ko.observable(rawData.custom.copyright);
+        this.custom = {
+            url: ko.observable(rawData.custom.url).extend(validation.url(false, 400)),
+            logo: ko.observable(rawData.custom.logo).extend(validation.url(false, 400)),
+            title: ko.observable(rawData.custom.title).extend(validation.string(false, 40)),
+            headerLinks: ko.observableArray(rawData.custom.headerLinks.map((link) => {
+                return new ViewHeaderLinkModel(link);
+            })),
+            copyright: ko.observable(rawData.custom.copyright).extend(validation.string(false, 80))
+        };
 
         this.columns = ko.observableArray(rawData.columns.map((col) => {
             return new ViewColumnConfigurationModel(col);
         }));
+
+        this.isValid = ko.pureComputed(() => this.custom.url.isValid() &&
+                this.custom.logo.isValid() &&
+                this.custom.title.isValid() &&
+                this.custom.copyright.isValid() &&
+                this.custom.headerLinks().every(hl => hl.isValid()));
+    }
+
+    addHeaderLink(newLink) {
+        this.custom.headerLinks.push(newLink);
+    }
+
+    removeHeaderLink(linkToRemove) {
+        this.custom.headerLinks.remove(link => link.url === linkToRemove.url &&
+                                               link.label === linkToRemove.label);
     }
 }
 

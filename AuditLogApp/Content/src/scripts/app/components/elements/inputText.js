@@ -3,20 +3,25 @@ export default {
     viewModel: class InputText {
         constructor(params) {
             if (typeof params.value !== 'function') {
-                throw new Error(`Value is not an observable, InputText: ${ko.toJSON(params)}`);
+                this.value = params.value.o;
+            }
+            else {
+                this.value = params.value().o;
             }
 
             this.id = params.id;
-            this.value = params.value;
-            this.maxLength = params.maxLength;
-            this.extraClass = ko.pureComputed(() => params.class);
-            this.isValid = ko.pureComputed(() => {
-                return this.value() != null &&
-                    this.value().length <= this.maxLength;
-            });
+            this.isShorter = params.isShorter;
+            if (this.value.isValid) {
+                this.isValid = this.value.isValid;
+            }
+            else {
+                this.isValid = ko.pureComputed(() => {
+                    return true;
+                });
+            }
         }
     },
     template: `
-        <input type="text" class="ala-form-input" data-bind="attr: { id: id }, value: value, css: { 'ala-input-error': !isValid() }, css: extraClass" />
+        <input type="text" class="ala-form-input" data-bind="attr: { id: id }, value: value, css: { 'ala-input-error': !isValid(), shorter: isShorter }" />
     `
 };
