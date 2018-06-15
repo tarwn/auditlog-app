@@ -35,7 +35,7 @@ class ViewConfigurationModel {
             logo: ko.observable(rawData.custom.logo).extend(validation.url(false, 400)),
             title: ko.observable(rawData.custom.title).extend(validation.string(false, 40)),
             headerLinks: ko.observableArray(rawData.custom.headerLinks.map((link) => {
-                return new ViewHeaderLinkModel(link);
+                return new ViewHeaderLinkModel(link, true);
             })),
             copyright: ko.observable(rawData.custom.copyright).extend(validation.string(false, 80))
         };

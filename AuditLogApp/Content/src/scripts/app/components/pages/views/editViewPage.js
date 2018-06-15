@@ -21,7 +21,7 @@ export default {
             super(params);
             this.view = ko.observable();
 
-            this.newLink = ko.observable(new ViewHeaderLinkModel(null));
+            this.newLink = ko.observable(new ViewHeaderLinkModel(null, false));
 
             this.tabs = new Tabs(['Layout', 'Columns', 'Security']);
             this.tabs.changeToLayout();
@@ -36,11 +36,13 @@ export default {
         }
 
         addNewHeaderLink() {
-            this.newLink().isRequired(true);
-
-            if (this.newLink().isValid()) {
-                this.view().addHeaderLink(this.newLink());
-                this.newLink(new ViewHeaderLinkModel(null));
+            const newLink = new ViewHeaderLinkModel(ko.toJS(this.newLink()), true);
+            if (newLink.isValid()) {
+                this.view().addHeaderLink(newLink);
+                this.newLink(new ViewHeaderLinkModel(null, false));
+            }
+            else {
+                this.newLink(newLink);
             }
         }
 
