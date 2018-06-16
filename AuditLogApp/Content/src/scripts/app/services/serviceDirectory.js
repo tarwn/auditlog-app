@@ -37,11 +37,11 @@ export default class ServiceDirectory {
                 },
                 columns: [
                     /* eslint-disable */
-                    { order: 0, label: 'Event', type: 'multiline', lines: [{ type: 'plain', field: 'action' }, { type: 'plain', field: 'description' }] },
-                    { order: 1, label: 'Actor', type: 'plain', field: 'actor.email' },
-                    { order: 2, label: 'Source', type: 'plain', field: 'context.client.ip_address' },
-                    { order: 3, label: 'Item Changed', type: 'multiline', lines: [{ type: 'plain', field: 'target.type' }, { type: 'plain', field: 'target.label' }] },
-                    { order: 4, label: 'Time', type: 'time', field: 'time' }
+                    { order: 0, label: 'Event', lines: [{ field: 'action' }, { field: 'description' }] },
+                    { order: 1, label: 'Actor', lines: [{ field: 'actor.email' }] },
+                    { order: 2, label: 'Source', lines: [{ field: 'context.client.ip_address' }] },
+                    { order: 3, label: 'Item Changed', lines: [{ field: 'target.type' }, { field: 'target.label' }] },
+                    { order: 4, label: 'Time', lines: [{ field: 'time[time]' }] }
                     /* eslint-enable */
                 ]
             };

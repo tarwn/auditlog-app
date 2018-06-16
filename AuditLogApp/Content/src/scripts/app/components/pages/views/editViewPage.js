@@ -1,6 +1,7 @@
 import PageBase from '../pageBase';
 import ViewConfigurationModel from '../../../models/viewConfigurationModel';
 import ViewHeaderLinkModel from '../../../models/viewHeaderLinkModel';
+import ViewColumnConfigurationModel from '../../../models/viewColumnConfigurationModel';
 
 class Tabs {
     constructor(tabs) {
@@ -21,7 +22,8 @@ export default {
             super(params);
             this.view = ko.observable();
 
-            this.newLink = ko.observable(new ViewHeaderLinkModel(null, false));
+            this.newLink = ko.observable(ViewHeaderLinkModel.getEmpty(false));
+            this.newColumn = ko.observable(ViewColumnConfigurationModel.getEmpty());
 
             this.tabs = new Tabs(['Layout', 'Columns', 'Security']);
             this.tabs.changeToLayout();
@@ -39,7 +41,7 @@ export default {
             const newLink = new ViewHeaderLinkModel(ko.toJS(this.newLink()), true);
             if (newLink.isValid()) {
                 this.view().addHeaderLink(newLink);
-                this.newLink(new ViewHeaderLinkModel(null, false));
+                this.newLink(ViewHeaderLinkModel.getEmpty(false));
             }
             else {
                 this.newLink(newLink);
@@ -48,6 +50,34 @@ export default {
 
         removeHeaderLink(link) {
             this.view().removeHeaderLink(link);
+        }
+
+        addNewColumn() {
+            console.log(this);
+            const newColumn = new ViewColumnConfigurationModel(ko.toJS(this.newColumn()));
+            if (newColumn.isValid()) {
+                this.view().addColumn(newColumn);
+                this.newColumn(ViewColumnConfigurationModel.getEmpty());
+            }
+            else {
+                this.newColumn(newColumn);
+            }
+        }
+
+        removeColumn(column) {
+            this.view().removeColumn(column);
+        }
+
+        moveColumnUp(column) {
+            if (column.isValid()) {
+                this.view().moveColumnUp(column);
+            }
+        }
+
+        moveColumnDown(column) {
+            if (column.isValid()) {
+                this.view().moveColumnDown(column);
+            }
         }
 
         saveChanges() {
@@ -133,6 +163,47 @@ export default {
             </div>
             <div class="ala-tab-content" data-bind="visible: tabs.isColumnsSelected">
                 <h2 class="ala-screen-reader-only">Columns</h2>
+                <table class="ala-form-table">
+                    <thead>
+                        <tr><th>#</th><th>Label</th><th>Fields</th><th></th></tr>
+                    </thead>
+                    <tbody data-bind="foreach: view().sortedColumns">
+                        <tr>
+                            <td data-bind="text: $index() + 1"></td>
+                            <td>
+                                <input-text params="value: { o: label }, isShorter: true" />
+                            </td>
+                            <td>
+                                <select data-bind="options: $parent.view().availableFields, value: lines()[0].field">
+                                </select><br/>
+                                <select data-bind="options: $parent.view().availableFields, value: lines()[1].field, optionsCaption: 'Second row...'" class="ala-columns-line2">
+                                </select>
+                            </td>
+                            <td class="ala-center">
+                                <button class="ala-button-lite" title="Move Up" data-bind="click: $parent.moveColumnUp.bind($parent)"><i class="icon-up-open"></i></button>
+                                <button class="ala-button-lite" title="Move Down" data-bind="click: $parent.moveColumnDown.bind($parent)"><i class="icon-down-open"></i></button>
+                                <button class="ala-button-lite-red" title="Remove" data-bind="click: $parent.removeColumn.bind($parent)"><i class="icon-cancel"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot data-bind="with: newColumn">
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input-text params="value: { o: label }, isShorter: true" />
+                            </td>
+                            <td>
+                                <select data-bind="options: $parent.view().availableFields, value: lines()[0].field">
+                                </select><br/>
+                                <select data-bind="options: $parent.view().availableFields, value: lines()[1].field, optionsCaption: 'Second row...'">
+                                </select>
+                            </td>
+                            <td class="ala-center">
+                                <button class="ala-button-lite" title="Add Column" data-bind="click: $parent.addNewColumn.bind($parent)"><i class="icon-plus-circled"></i>Add</button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
             <div class="ala-tab-content" data-bind="visible: tabs.isSecuritySelected">
                 <h2 class="ala-screen-reader-only">Security</h2>

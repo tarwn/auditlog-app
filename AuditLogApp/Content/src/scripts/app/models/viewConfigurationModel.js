@@ -1,34 +1,11 @@
 import validation from '../extenders/validation';
 import ViewHeaderLinkModel from './viewHeaderLinkModel';
+import ViewColumnConfigurationModel from './viewColumnConfigurationModel';
 
-class ViewColumnConfigurationModel {
-    constructor(rawData) {
-        this.order = ko.observable(rawData.order);
-        this.label = ko.observable(rawData.label).extend(validation.string(true, 40));
-        this.type = ko.observable(rawData.type);
-
-        if (rawData.type === 'multiline') {
-            this.lines = [
-                {
-                    type: ko.observable(rawData.lines[0].type),
-                    field: ko.observable(rawData.lines[0].field)
-                },
-                {
-                    type: ko.observable(rawData.lines[1].type),
-                    field: ko.observable(rawData.lines[1].field)
-                }
-            ];
-        }
-        else {
-            this.field = ko.observable(rawData.field);
-        }
-    }
-}
-
-class ViewConfigurationModel {
+export default class ViewConfigurationModel {
     constructor(rawData) {
         this.id = rawData.id;
-        this.key = ko.observable(rawData.key);
+        this.key = ko.observable(rawData.key || 'Not set yet');
 
         this.custom = {
             url: ko.observable(rawData.custom.url).extend(validation.url(false, 400)),
@@ -43,12 +20,42 @@ class ViewConfigurationModel {
         this.columns = ko.observableArray(rawData.columns.map((col) => {
             return new ViewColumnConfigurationModel(col);
         }));
+        this.sortedColumns = ko.pureComputed(() => {
+            return this.columns.sort((a, b) => {
+                return a.order() - b.order();
+            })();
+        });
 
         this.isValid = ko.pureComputed(() => this.custom.url.isValid() &&
                 this.custom.logo.isValid() &&
                 this.custom.title.isValid() &&
                 this.custom.copyright.isValid() &&
-                this.custom.headerLinks().every(hl => hl.isValid()));
+            this.custom.headerLinks().every(hl => hl.isValid()));
+
+        this.availableFields = [
+            'receptionTime[time]',
+            'receptionTime[date]',
+            'receptionTime[diff]',
+            'uuid',
+            'client.id',
+            'client.name',
+            'time[time]',
+            'time[date]',
+            'action',
+            'description',
+            'url[anchor]',
+            'actor.uuid',
+            'actor.name',
+            'actor.email',
+            'context.client.ipAddress',
+            'context.client.browserAgent',
+            'context.server.serverId',
+            'context.server.version',
+            'target.type',
+            'target.uuid',
+            'target.label',
+            'target.url[anchor]'
+        ];
     }
 
     addHeaderLink(newLink) {
@@ -59,6 +66,35 @@ class ViewConfigurationModel {
         this.custom.headerLinks.remove(link => link.url === linkToRemove.url &&
                                                link.label === linkToRemove.label);
     }
-}
 
-export default ViewConfigurationModel;
+    addColumn(newColumn) {
+        newColumn.order(this.columns().length);
+        this.columns.push(newColumn);
+    }
+
+
+    removeColumn(columnToRemove) {
+        this.columns.remove(col => col.label === columnToRemove.label &&
+                                   col.order === columnToRemove.order);
+
+        this.columns().forEach((col, ind) => col.order(ind));
+    }
+
+    moveColumnUp(columnToMove) {
+        if (columnToMove.order() > 0) {
+            const colIndex = columnToMove.order();
+            const colNewIndex = colIndex - 1;
+            this.columns()[colNewIndex].order(colIndex);
+            columnToMove.order(colNewIndex);
+        }
+    }
+
+    moveColumnDown(columnToMove) {
+        if (columnToMove.order() < this.columns().length - 1) {
+            const colIndex = columnToMove.order();
+            const colNewIndex = colIndex + 1;
+            this.columns()[colNewIndex].order(colIndex);
+            columnToMove.order(colNewIndex);
+        }
+    }
+}
