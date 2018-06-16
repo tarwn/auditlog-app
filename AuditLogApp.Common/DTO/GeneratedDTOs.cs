@@ -320,4 +320,127 @@ namespace AuditLogApp.Common.DTO
 	}
 
 
+	public partial class ViewDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public ViewDTO() { }
+
+		public ViewDTO(ViewId id, CustomerId customerid, string accesskey, ViewCustomizationDTO customization, List<ViewColumnDTO> columns)
+		{
+		
+			Id = id;
+			CustomerId = customerid;
+			AccessKey = accesskey;
+			Customization = customization;
+			Columns = columns;
+		}
+
+		
+		public ViewId Id { get; set; }
+			
+		public CustomerId CustomerId { get; set; }
+			
+		public string AccessKey { get; set; }
+			
+		public ViewCustomizationDTO Customization { get; set; }
+			
+		public List<ViewColumnDTO> Columns { get; set; }
+			
+		
+	}
+
+
+	public partial class ViewCustomizationDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public ViewCustomizationDTO() { }
+
+		public ViewCustomizationDTO(string url, string logo, string title, List<ViewCustomizationHeaderLinkDTO> headerlinks, string copyright)
+		{
+		
+			URL = url;
+			Logo = logo;
+			Title = title;
+			HeaderLinks = headerlinks;
+			Copyright = copyright;
+		}
+
+		
+		public string URL { get; set; }
+			
+		public string Logo { get; set; }
+			
+		public string Title { get; set; }
+			
+		public List<ViewCustomizationHeaderLinkDTO> HeaderLinks { get; set; }
+			
+		public string Copyright { get; set; }
+			
+		
+	}
+
+
+	public partial class ViewCustomizationHeaderLinkDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public ViewCustomizationHeaderLinkDTO() { }
+
+		public ViewCustomizationHeaderLinkDTO(string label, string url)
+		{
+		
+			Label = label;
+			URL = url;
+		}
+
+		
+		public string Label { get; set; }
+			
+		public string URL { get; set; }
+			
+		
+	}
+
+
+	public partial class ViewColumnDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public ViewColumnDTO() { }
+
+		public ViewColumnDTO(int order, string label, List<ViewColumnLineDTO> lines)
+		{
+		
+			Order = order;
+			Label = label;
+			Lines = lines;
+		}
+
+		
+		public int Order { get; set; }
+			
+		public string Label { get; set; }
+			
+		public List<ViewColumnLineDTO> Lines { get; set; }
+			
+		
+	}
+
+
+	public partial class ViewColumnLineDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public ViewColumnLineDTO() { }
+
+		public ViewColumnLineDTO(string field)
+		{
+		
+			Field = field;
+		}
+
+		
+		public string Field { get; set; }
+			
+		
+	}
+
+
 }

@@ -473,4 +473,71 @@ namespace AuditLogApp.Common.Identity
 	}
 
 
+	public class ViewId : IIdentity<Guid>
+	{	
+		[Obsolete("Serialization use only", true)]
+		public ViewId() { }
+
+		public ViewId(Guid id)
+		{
+			RawValue = id;
+		}
+
+		public Guid RawValue { get; set; }
+
+		public static implicit operator ViewId(Guid id)
+		{
+			return new ViewId(id);
+		}
+
+		public static ViewId FromString(string rawValue)
+		{
+						return Guid.Parse(rawValue);
+					}
+
+		public override bool Equals(object obj)
+		{
+			if(obj is ViewId)
+			{
+				return RawValue.Equals(((ViewId)obj).RawValue);
+			}
+			else
+			{
+				return base.Equals(obj);
+			}
+		}
+
+		public static bool operator ==(ViewId a, ViewId b)
+		{
+			if(System.Object.ReferenceEquals(a,b))
+			{
+				return true;
+			}
+
+			if(((object)a == null && (object)b != null) || ((object)a != null && (object)b == null))
+			{
+				return false;
+			}
+
+			return a.RawValue == b.RawValue;
+		}
+
+		public static bool operator !=(ViewId a, ViewId b)
+		{
+			return !(a == b);
+		}
+
+		
+        public override int GetHashCode()
+        {
+            return RawValue.GetHashCode();
+        }
+
+		public override string ToString()
+		{
+			return $"ViewId[{RawValue}]";
+		}
+	}
+
+
 }

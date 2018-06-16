@@ -26,6 +26,8 @@ namespace AuditLogApp.Membership
         Task LogoutAsync();
 
         string GetSessionId(ClaimsPrincipal principal);
+        CustomerId GetCustomerId(ClaimsPrincipal user);
+        
         Task<SessionDetails> GetSessionDetailsAsync(ClaimsPrincipal principal);
         Task<Dictionary<string, object>> DescribeUserForErrorAsync(ClaimsPrincipal principal);
 

@@ -89,7 +89,7 @@ namespace AuditLogApp.Controllers.API.Application
             return Ok(key);
         }
 
-        private string GenerateAPIKey()
+        public static string GenerateAPIKey()
         {
             var key = new byte[32];
             using (var generator = RandomNumberGenerator.Create())

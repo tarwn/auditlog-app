@@ -22,6 +22,7 @@ namespace AuditLogApp.Persistence.SQLServer
             Users = new UserStore(_dbUtility);
             UserAuthentications = new UserAuthenticationStore(_dbUtility);
             UserSessions = new UserSessionStore(_dbUtility);
+            Views = new ViewStore(_dbUtility);
         }
 
 
@@ -36,6 +37,8 @@ namespace AuditLogApp.Persistence.SQLServer
         public IUserAuthenticationStore UserAuthentications { get; private set; }
 
         public IUserSessionStore UserSessions { get; private set; }
+
+        public IViewStore Views { get; private set; }
         
         public void Dispose()
         {

@@ -22,40 +22,45 @@ export default class ServiceDirectory {
     // Customized Views
 
     getOrCreateDefaultView() {
-        return ajax.fakeGet(`${this.basePath}/configuration/views/default`, () => {
-            return {
-                id: '1234567890',
-                custom: {
-                    url: 'https://www.audotlog.co/',
-                    logo: 'images/logo56-alt3.png',
-                    title: 'auditlog',
-                    headerLinks: [
-                        { url: 'https://app.auditlog.co', label: 'Home' },
-                        { url: 'mailto://contact@auditlog.co', label: 'Contact' }
-                    ],
-                    copyright: 'Copyright AuditLog.co, 2018, All rights reserved.'
-                },
-                columns: [
-                    /* eslint-disable */
-                    { order: 0, label: 'Event', lines: [{ field: 'action' }, { field: 'description' }] },
-                    { order: 1, label: 'Actor', lines: [{ field: 'actor.email' }] },
-                    { order: 2, label: 'Source', lines: [{ field: 'context.client.ip_address' }] },
-                    { order: 3, label: 'Item Changed', lines: [{ field: 'target.type' }, { field: 'target.label' }] },
-                    { order: 4, label: 'Time', lines: [{ field: 'time[time]' }] }
-                    /* eslint-enable */
-                ]
-            };
-        });
+        return ajax.get(`${this.basePath}/customization/views/default`);
+
+        //return ajax.fakeGet(`${this.basePath}/customization/views/default`, () => {
+        //    return {
+        //        id: '1234567890',
+        //        custom: {
+        //            url: 'https://www.audotlog.co/',
+        //            logo: 'images/logo56-alt3.png',
+        //            title: 'auditlog',
+        //            headerLinks: [
+        //                { url: 'https://app.auditlog.co', label: 'Home' },
+        //                { url: 'mailto://contact@auditlog.co', label: 'Contact' }
+        //            ],
+        //            copyright: 'Copyright AuditLog.co, 2018, All rights reserved.'
+        //        },
+        //        columns: [
+        //            /* eslint-disable */
+        //            { order: 0, label: 'Event', lines: [{ field: 'action' }, { field: 'description' }] },
+        //            { order: 1, label: 'Actor', lines: [{ field: 'actor.email' }] },
+        //            { order: 2, label: 'Source', lines: [{ field: 'context.client.ip_address' }] },
+        //            { order: 3, label: 'Item Changed', lines: [{ field: 'target.type' }, { field: 'target.label' }] },
+        //            { order: 4, label: 'Time', lines: [{ field: 'time[time]' }] }
+        //            /* eslint-enable */
+        //        ]
+        //    };
+        //});
     }
 
     saveView(view) {
-        return ajax.fakePost(`${this.basePath}/configuration/views/default`, view);
+        return ajax.post(`${this.basePath}/configuration/views/default`, view);
+        //return ajax.fakePost(`${this.basePath}/configuration/views/default`, view);
     }
 
     resetViewKey(viewId) {
-        return ajax.fakePost(`${this.basePath}/configuration/views/default/resetKey`, viewId)
-            .then(() => {
-                return 'abc-123';
-            });
+        return aja.post(`${this.basePath}/configuration/views/default/resetKey`, viewId);
+
+        //return ajax.fakePost(`${this.basePath}/configuration/views/default/resetKey`, viewId)
+        //    .then(() => {
+        //        return 'abc-123';
+        //    });
     }
 }

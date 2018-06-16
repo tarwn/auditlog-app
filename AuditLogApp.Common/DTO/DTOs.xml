@@ -89,5 +89,35 @@
     <Property Name="Email" Type="string" />
     <Property Name="IsForgotten" Type="bool" />
   </DTO>
-  
+
+  <DTO Name="ViewDTO">
+    <Property Name="Id" Type="ViewId" />
+    <Property Name="CustomerId" Type="CustomerId" />
+    <Property Name="AccessKey" Type="string" />
+    <Property Name="Customization" Type="ViewCustomizationDTO" />
+    <Property Name="Columns" Type="List&lt;ViewColumnDTO&gt;" />
+  </DTO>
+
+  <DTO Name="ViewCustomizationDTO">
+    <Property Name="URL" Type="string" />
+    <Property Name="Logo" Type="string" />
+    <Property Name="Title" Type="string" />
+    <Property Name="HeaderLinks" Type="List&lt;ViewCustomizationHeaderLinkDTO&gt;" />
+    <Property Name="Copyright" Type="string" />
+  </DTO>
+
+  <DTO Name="ViewCustomizationHeaderLinkDTO">
+    <Property Name="Label" Type="string" />
+    <Property Name="URL" Type="string" />
+  </DTO>
+
+  <DTO Name="ViewColumnDTO">
+    <Property Name="Order" Type="int"/>
+    <Property Name="Label" Type="string" />
+    <Property Name="Lines" Type="List&lt;ViewColumnLineDTO&gt;" />
+  </DTO>
+
+  <DTO Name="ViewColumnLineDTO">
+    <Property Name="Field" Type="string"/>
+  </DTO>
 </DTOs>

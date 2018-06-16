@@ -7,4 +7,5 @@
   <Identity Name="UserSessionId" Type="Guid" />
   <Identity Name="EventEntryId" Type="Guid" />
   <Identity Name="EventActorId" Type="Guid" />
+  <Identity Name="ViewId" Type="Guid" />
 </Identities>
