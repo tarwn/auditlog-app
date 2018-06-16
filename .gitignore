@@ -2,6 +2,7 @@
 
 mail/*.eml
 AuditLog/Content/build/
+database/DatabaseUpdate.sql
 
 *.swp
 *.*~
