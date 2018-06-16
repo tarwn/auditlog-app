@@ -28,6 +28,7 @@ export default {
             this.tabs = new Tabs(['Layout', 'Columns', 'Security']);
             this.tabs.changeToLayout();
 
+            this.isSaving = ko.observable(false);
             this.initialize();
         }
 
@@ -53,7 +54,6 @@ export default {
         }
 
         addNewColumn() {
-            console.log(this);
             const newColumn = new ViewColumnConfigurationModel(ko.toJS(this.newColumn()));
             if (newColumn.isValid()) {
                 this.view().addColumn(newColumn);
@@ -94,13 +94,13 @@ export default {
         }
 
         saveView() {
-            return this._services.saveView(this.view);
+            return this._services.saveView(this.view());
         }
 
         resetViewKey() {
             this._services.resetViewKey(this.view().id)
                 .then((newKey) => {
-                    this.view().key(newKey);
+                    this.view().accessKey(newKey.accessKey);
                 });
         }
 
@@ -213,7 +213,7 @@ export default {
                 </div>
                 <div class="ala-form-row">
                     <label class="ala-form-label-w2">View Key</label> 
-                    <span class="ala-form-input-faux" data-bind="text: view().key" /><br/>
+                    <span class="ala-form-input-faux" data-bind="text: view().accessKey" /><br/>
                 </div>
                 <div class="ala-form-row">
                     <button class="ala-button" data-bind="click: resetViewKey">Generate New Key</button>

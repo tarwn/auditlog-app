@@ -1,6 +1,8 @@
 using AuditLogApp.Common.DTO;
 using AuditLogApp.Common.Identity;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 public class ViewConfigurationModel{
@@ -8,15 +10,21 @@ public class ViewConfigurationModel{
 
     public ViewConfigurationModel(ViewDTO view)
     {
-        Id = view.Id;
+        Id = view.Id.RawValue;
         AccessKey = view.AccessKey;
         Custom = new ViewCustomizationModel(view.Customization);
         Columns = view.Columns.Select(c => new ViewColumnConfigurationModel(c))
                               .ToList();
     }
 
-    public  ViewId Id { get;set;}
+    [Required]
+    public  Guid Id { get;set;}
+
     public string AccessKey { get; set; }
+
+    [Required]
     public ViewCustomizationModel Custom { get; set; }
+
+    [Required]
     public List<ViewColumnConfigurationModel> Columns { get; set; }
 }

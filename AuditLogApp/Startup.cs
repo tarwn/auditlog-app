@@ -83,6 +83,8 @@ namespace AuditLogApp
             services.AddApiVersioning(o =>
             {
                 o.AssumeDefaultVersionWhenUnspecified = true;
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.ReportApiVersions = true;
             });
 
             // Documentation

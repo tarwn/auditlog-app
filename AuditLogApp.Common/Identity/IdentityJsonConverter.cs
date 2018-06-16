@@ -16,9 +16,16 @@ namespace AuditLogApp.Common.Identity
         {
             if (reader.Value != null)
             {
-                var ctor = objectType.GetConstructor(new Type[] { typeof(T) });
-                var obj = ctor.Invoke(new object[] { (T)Convert.ChangeType(reader.Value, typeof(T)) });
-                return obj;
+                if (typeof(T) == typeof(Guid) && reader.Value is string)
+                {
+                    return Guid.Parse((string)reader.Value);
+                }
+                else
+                {
+                    var ctor = objectType.GetConstructor(new Type[] { typeof(T) });
+                    var obj = ctor.Invoke(new object[] { (T)Convert.ChangeType(reader.Value, typeof(T)) });
+                    return obj;
+                }
             }
             else
             {

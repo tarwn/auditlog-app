@@ -443,4 +443,31 @@ namespace AuditLogApp.Common.DTO
 	}
 
 
+	public partial class RawViewDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public RawViewDTO() { }
+
+		public RawViewDTO(ViewId id, CustomerId customerid, string accesskey, string content)
+		{
+		
+			Id = id;
+			CustomerId = customerid;
+			AccessKey = accesskey;
+			Content = content;
+		}
+
+		
+		public ViewId Id { get; set; }
+			
+		public CustomerId CustomerId { get; set; }
+			
+		public string AccessKey { get; set; }
+			
+		public string Content { get; set; }
+			
+		
+	}
+
+
 }

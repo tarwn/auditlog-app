@@ -24,6 +24,8 @@ namespace AuditLogApp.Controllers
             _notifier = notifier;
         }
 
+        [HttpGet("")]
+        [HttpPost("")]
         public async Task<IActionResult> ErrorAsync()
         {
             var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();

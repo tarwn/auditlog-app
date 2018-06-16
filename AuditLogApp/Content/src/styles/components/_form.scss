@@ -54,6 +54,12 @@ select,
     border-color: $color-primary;
 }
 
+.ala-form-input-faux{
+    min-width: 18em;
+    width: unset;
+    padding: 2px 1em 2px 2px;
+}
+
 .ala-form-input.ala-input-error,
 .ala-form-input.ala-input-error:hover,
 .ala-form-input.ala-input-error:active {

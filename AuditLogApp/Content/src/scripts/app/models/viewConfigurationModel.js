@@ -5,7 +5,8 @@ import ViewColumnConfigurationModel from './viewColumnConfigurationModel';
 export default class ViewConfigurationModel {
     constructor(rawData) {
         this.id = rawData.id;
-        this.key = ko.observable(rawData.key || 'Not set yet');
+        console.log(rawData);
+        this.accessKey = ko.observable(rawData.accessKey || 'Not set yet');
 
         this.custom = {
             url: ko.observable(rawData.custom.url).extend(validation.url(false, 400)),

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace AuditLogApp.Controllers.API.Application
 {
     [ApiVersion("1")]
-    [Route("api/appln/v{version:apiVersion}/configuration")]
+    [Route("api/appln/v{version:apiVersion}/customization")]
     [Authorize(Policy = "InteractiveAccessOnly")]
     public class CustomizationController : Controller
     {
@@ -42,6 +42,11 @@ namespace AuditLogApp.Controllers.API.Application
         [HttpPost("views/default")]
         public async Task<IActionResult> UpdateViewAsync([FromBody] ViewConfigurationModel view)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var customerId = _membership.GetCustomerId(User);
             var viewDTO = new ViewDTO(
                 view.Id,
@@ -67,6 +72,11 @@ namespace AuditLogApp.Controllers.API.Application
         [HttpPost("views/default/resetKey")]
         public async Task<IActionResult> ResetKeyAsync([FromBody] Guid viewId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var id = new ViewId(viewId);
             var customerId = _membership.GetCustomerId(User);
             var accessKey = ConfigurationController.GenerateAPIKey();

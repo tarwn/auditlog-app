@@ -62,7 +62,12 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             string sql = @"
                 SELECT U.Id,
                        U.CustomerId,
-                       U.DisplayName
+                       U.UserName,
+                       U.DisplayName,
+                       U.EmailAddress,
+                       U.IsEnabled
+                       -- PasswordResetKey,
+                       -- PasswordResetGoodUntil, 
                 FROM dbo.Users U
                 WHERE U.CustomerId = @CustomerId
                     AND U.Id = @UserId;
@@ -83,7 +88,12 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             string sql = @"
                 SELECT U.Id,
                        U.CustomerId,
-                       U.DisplayName
+                       U.UserName,
+                       U.DisplayName,
+                       U.EmailAddress,
+                       U.IsEnabled
+                       -- PasswordResetKey,
+                       -- PasswordResetGoodUntil, 
                 FROM dbo.Users U
                 WHERE U.Id = @UserId;
             ";
@@ -103,7 +113,12 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             string sql = @"
                 SELECT U.Id,
                        U.CustomerId,
-                       U.DisplayName
+                       U.UserName,
+                       U.DisplayName,
+                       U.EmailAddress,
+                       U.IsEnabled
+                       -- PasswordResetKey,
+                       -- PasswordResetGoodUntil, 
                 FROM dbo.Users U
                 WHERE U.Username LIKE @Username;
             ";

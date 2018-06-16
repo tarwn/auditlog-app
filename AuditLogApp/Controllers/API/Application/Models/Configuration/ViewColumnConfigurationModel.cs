@@ -1,5 +1,6 @@
 ﻿using AuditLogApp.Common.DTO;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 public class ViewColumnConfigurationModel
@@ -14,7 +15,13 @@ public class ViewColumnConfigurationModel
                             .ToList();
     }
 
+    [Required]
     public int Order { get; set; }
+
+    [Required]
+    [MaxLength(40)]
     public string Label { get; set; }
+
+    [Required]
     public List<ViewColumnConfigurationLineModel> Lines { get; set; }
 }

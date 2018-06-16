@@ -20,18 +20,19 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
 
         public async Task<ViewDTO> CreateNewAsync(ViewDTO view)
         {
+            var origAccessKey = view.AccessKey;
             view.AccessKey = "----";
-
             var rawViewContent = JsonConvert.SerializeObject(view);
             var sqlParams = new
             {
                 Id = Guid.NewGuid(),
                 CustomerId = view.CustomerId.RawValue,
+                AccessKey = origAccessKey,
                 Content = rawViewContent
             };
             string sql = @";
-                INSERT INTO dbo.Views(Id, CustomerId, Content)
-                VALUES(@Id, @CustomerId, @Content);
+                INSERT INTO dbo.Views(Id, CustomerId, AccessKey, Content)
+                VALUES(@Id, @CustomerId, @AccessKey, @Content);
 
                 SELECT Id, 
                        CustomerId,
@@ -72,10 +73,18 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             {
                 return await db.FetchAsync<RawView>(sql, sqlParams);
             });
-            var view = JsonConvert.DeserializeObject<ViewDTO>(rawView.Content);
-            view.Id = rawView.Id;
-            view.AccessKey = rawView.AccessKey;
-            return view;
+
+            if (rawView == null)
+            {
+                return null;
+            }
+            else
+            {
+                var view = JsonConvert.DeserializeObject<ViewDTO>(rawView.Content);
+                view.Id = rawView.Id;
+                view.AccessKey = rawView.AccessKey;
+                return view;
+            }
         }
 
         public async Task<ViewDTO> UpdateAsync(ViewDTO view)
@@ -91,8 +100,8 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             string sql = @";
                 UPDATE dbo.Views
                 SET Content = @Content
-                WHERE V.Id = @Id
-                    AND V.CustomerId = @CustomerId;
+                WHERE Id = @Id
+                    AND CustomerId = @CustomerId;
 
                 SELECT Id, 
                        CustomerId,
@@ -124,8 +133,8 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             string sql = @";
                 UPDATE dbo.Views
                 SET AccessKey = @AccessKey
-                WHERE V.Id = @Id
-                    AND V.CustomerId = @CustomerId;
+                WHERE Id = @Id
+                    AND CustomerId = @CustomerId;
 
                 SELECT AccessKey
                 FROM dbo.Views V
@@ -139,13 +148,5 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             });
         }
 
-    }
-
-    public class RawView
-    {
-        public ViewId Id { get; set; }
-        public CustomerId CustomerId { get; set; }
-        public string AccessKey { get; set; }
-        public string Content { get; set; }
     }
 }

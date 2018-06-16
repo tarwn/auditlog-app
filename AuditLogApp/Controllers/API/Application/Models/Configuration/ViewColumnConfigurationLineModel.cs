@@ -1,4 +1,6 @@
-﻿public class ViewColumnConfigurationLineModel
+﻿using System.ComponentModel.DataAnnotations;
+
+public class ViewColumnConfigurationLineModel
 {
     public ViewColumnConfigurationLineModel() { }
 

@@ -120,4 +120,11 @@
   <DTO Name="ViewColumnLineDTO">
     <Property Name="Field" Type="string"/>
   </DTO>
+
+  <DTO Name="RawViewDTO">
+    <Property Name="Id" Type="ViewId" />
+    <Property Name="CustomerId" Type="CustomerId" />
+    <Property Name="AccessKey" Type="string" />
+    <Property Name="Content" Type="string" />
+  </DTO>
 </DTOs>
