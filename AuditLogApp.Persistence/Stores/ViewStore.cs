@@ -43,14 +43,25 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                     AND V.CustomerId = @CustomerId;
             ";
 
-            var rawView = await _db.QuerySingleOrDefault(async (db) =>
+            return await GetSingleOrDefaultAsync(sql, sqlParams);
+        }
+
+        public async Task<ViewDTO> GetAsync(ViewId id)
+        {
+            var sqlParams = new
             {
-                return await db.FetchAsync<RawView>(sql, sqlParams);
-            });
-            var newView = JsonConvert.DeserializeObject<ViewDTO>(rawView.Content);
-            newView.Id = rawView.Id;
-            newView.AccessKey = rawView.AccessKey;
-            return newView;
+                ViewId = id.RawValue
+            };
+            string sql = @";
+                SELECT Id, 
+                       CustomerId,
+                       AccessKey,
+                       Content
+                FROM dbo.Views V
+                WHERE V.Id = @ViewId;
+            ";
+
+            return await GetSingleOrDefaultAsync(sql, sqlParams);
         }
 
 
@@ -69,22 +80,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 WHERE V.CustomerId = @CustomerId;
             ";
 
-            var rawView = await _db.QuerySingleOrDefault(async (db) =>
-            {
-                return await db.FetchAsync<RawView>(sql, sqlParams);
-            });
-
-            if (rawView == null)
-            {
-                return null;
-            }
-            else
-            {
-                var view = JsonConvert.DeserializeObject<ViewDTO>(rawView.Content);
-                view.Id = rawView.Id;
-                view.AccessKey = rawView.AccessKey;
-                return view;
-            }
+            return await GetSingleOrDefaultAsync(sql, sqlParams);
         }
 
         public async Task<ViewDTO> UpdateAsync(ViewDTO view)
@@ -112,14 +108,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                     AND V.CustomerId = @CustomerId;
             ";
 
-            var rawView = await _db.QuerySingleOrDefault(async (db) =>
-            {
-                return await db.FetchAsync<RawView>(sql, sqlParams);
-            });
-            var newView = JsonConvert.DeserializeObject<ViewDTO>(rawView.Content);
-            newView.Id = rawView.Id;
-            newView.AccessKey = rawView.AccessKey;
-            return newView;
+            return await GetSingleOrDefaultAsync(sql, sqlParams);
         }
 
         public async Task<string> ResetKeyAsync(ViewId id, CustomerId customerId, string accessKey)
@@ -148,5 +137,24 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             });
         }
 
+        private async Task<ViewDTO> GetSingleOrDefaultAsync(string sql, object sqlParams)
+        {
+            var rawView = await _db.QuerySingleOrDefault(async (db) =>
+            {
+                return await db.FetchAsync<RawView>(sql, sqlParams);
+            });
+
+            if (rawView == null)
+            {
+                return null;
+            }
+            else
+            {
+                var view = JsonConvert.DeserializeObject<ViewDTO>(rawView.Content);
+                view.Id = rawView.Id;
+                view.AccessKey = rawView.AccessKey;
+                return view;
+            }
+        }
     }
 }

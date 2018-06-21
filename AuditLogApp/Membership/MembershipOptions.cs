@@ -6,6 +6,7 @@
         public string DefaultPathAfterLogout { get; set; }
 
         public string InteractiveAuthenticationScheme { get; set; }
-        public string APIAuthenticationScheme { get; internal set; }
+        public string APIAuthenticationScheme { get; set; }
+        public string ViewAPIAuthenticationScheme { get; set; }
     }
 }

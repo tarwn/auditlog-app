@@ -13,5 +13,6 @@ namespace AuditLogApp.Common.Persistence
         Task<ViewDTO> CreateNewAsync(ViewDTO view);
         Task<ViewDTO> UpdateAsync(ViewDTO view);
         Task<string> ResetKeyAsync(ViewId id, CustomerId customerId, string accessKey);
+        Task<ViewDTO> GetAsync(ViewId viewId);
     }
 }

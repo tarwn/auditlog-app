@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace AuditLogApp.Membership.Implementation
 {
-    public class PersistedUserMembership : IUserMembership, ICustomerMembership
+    public class PersistedUserMembership : IUserMembership, ICustomerMembership, ICustomerViewMembership
     {
         private IHttpContextAccessor _context;
         private IPersistenceStore _persistence;
@@ -27,6 +27,44 @@ namespace AuditLogApp.Membership.Implementation
         }
 
         public MembershipOptions Options { get; private set; }
+
+        public async Task<Dictionary<string, object>> DescribeUserForErrorAsync(ClaimsPrincipal principal)
+        {
+            if (IsSession(principal))
+            {
+                var sessionDetails = await GetSessionDetailsAsync(principal);
+                return new Dictionary<string, object>() {
+                    { "Login Type", "Session (Interactive)" },
+                    { "User.Id", sessionDetails.User.Id },
+                    { "User.Username", sessionDetails.User.Username ?? "" },
+                    { "User.EmailAddress", sessionDetails.User.EmailAddress ?? "" },
+                    { "Session.Id", sessionDetails.Id },
+                    { "Session.CreationTime", sessionDetails.CreationTime }
+                };
+            }
+            else if (IsOneTimeLogin(principal))
+            {
+                return new Dictionary<string, object>() {
+                    { "Login Type", "One Time (API)" },
+                    { "Customer.Id", GetCustomerIdClaim(principal) },
+                    { "CustomerAuth.Id", GetCustomerAuthClaim(principal) }
+                };
+            }
+            else if (IsAuditView(principal))
+            {
+                return new Dictionary<string, object>() {
+                    { "Login Type", "Audit View (API)" },
+                    { "Customer.Id", GetCustomerIdClaim(principal) },
+                    { "View.Id", GetViewIdClaim(principal) }
+                };
+            }
+            else
+            {
+                return new Dictionary<string, object>() {
+                    { "User Details", "Anonymous User" }
+                };
+            }
+        }
 
         #region IUserMembeship 
 
@@ -214,36 +252,6 @@ namespace AuditLogApp.Membership.Implementation
 
         // Describe User / Session
 
-        public async Task<Dictionary<string, object>> DescribeUserForErrorAsync(ClaimsPrincipal principal)
-        {
-            if (IsSession(principal))
-            {
-                var sessionDetails = await GetSessionDetailsAsync(principal);
-                return new Dictionary<string, object>() {
-                    { "Login Type", "Session (Interactive)" },
-                    { "User.Id", sessionDetails.User.Id },
-                    { "User.Username", sessionDetails.User.Username ?? "" },
-                    { "User.EmailAddress", sessionDetails.User.EmailAddress ?? "" },
-                    { "Session.Id", sessionDetails.Id },
-                    { "Session.CreationTime", sessionDetails.CreationTime }
-                };
-            }
-            else if (IsOneTimeLogin(principal))
-            {
-                return new Dictionary<string, object>() {
-                    { "Login Type", "One Time (API)" },
-                    { "Customer.Id", GetCustomerIdClaim(principal) },
-                    { "CustomerAuth.Id", GetCustomerAuthClaim(principal) }
-                };
-            }
-            else
-            {
-                return new Dictionary<string, object>() {
-                    { "User Details", "Anonymous User" }
-                };
-            }
-        }
-
         public async Task<SessionDetails> GetSessionDetailsAsync(ClaimsPrincipal principal)
         {
             var sessionId = GetSessionId(principal);
@@ -301,6 +309,52 @@ namespace AuditLogApp.Membership.Implementation
             AddCustomerIdClaim(claimsIdentity, customerAuth.CustomerId);
             AddCustomerAuthClaim(claimsIdentity, customerAuth.Id);
             return new ClaimsPrincipal(claimsIdentity);
+        }
+
+        #endregion
+
+        #region ICustomerViewMembership
+
+        private bool IsAuditView(ClaimsPrincipal principal)
+        {
+            return principal.Identities.Any(i => i.IsAuthenticated && i.AuthenticationType == Options.ViewAPIAuthenticationScheme)
+                && GetViewId(principal) != null;
+        }
+
+        public async Task<ClaimsPrincipal> GetAuditViewAsync(ViewId viewId, string accessKey)
+        {
+            var view = await _persistence.Views.GetAsync(viewId);
+            if (view == null)
+            {
+                return null;
+            }
+
+            if (!view.AccessKey.Equals(accessKey, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return null;
+            }
+
+            var customer = await _persistence.Customers.GetAsync(view.CustomerId);
+
+            var claimsIdentity = new ClaimsIdentity(Options.ViewAPIAuthenticationScheme);
+            AddCustomerIdClaim(claimsIdentity, customer.Id);
+            AddViewIdClaim(claimsIdentity, view.Id);
+            return new ClaimsPrincipal(claimsIdentity);
+        }
+
+        private void AddViewIdClaim(ClaimsIdentity identity, ViewId viewId)
+        {
+            identity.AddClaim(new Claim("viewId", viewId.RawValue.ToString()));
+        }
+
+        private string GetViewIdClaim(ClaimsPrincipal principal)
+        {
+            return principal.FindFirstValue("viewId");
+        }
+
+        public ViewId GetViewId(ClaimsPrincipal principal)
+        {
+            return ViewId.FromString(GetViewIdClaim(principal));
         }
 
         #endregion
@@ -364,6 +418,7 @@ namespace AuditLogApp.Membership.Implementation
         {
             return principal.FindFirstValue("customerAuthId");
         }
+
         #endregion
     }
 }

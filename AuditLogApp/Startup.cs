@@ -37,6 +37,9 @@ namespace AuditLogApp
         const string CUSTOMER_API_SCHEME = "APIKey";
         const string CUSTOMER_API_HEADER = "X-API-KEY";
         const string CUSTOMER_API_POLICY = "APIAccessOnly";
+        const string CUSTOMERVIEW_API_SCHEME = "ViewKey";
+        const string CUSTOMERVIEW_API_HEADER = "X-VIEW-KEY";
+        const string CUSTOMERVIEW_API_POLICY = "ViewAPIAccessOnly";
 
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
@@ -128,9 +131,11 @@ namespace AuditLogApp
             {
                 options.InteractiveAuthenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.APIAuthenticationScheme = CUSTOMER_API_SCHEME;
+                options.ViewAPIAuthenticationScheme = CUSTOMERVIEW_API_SCHEME;
                 options.DefaultPathAfterLogin = "/";
             });
             services.AddTransient<ICustomerMembership, PersistedUserMembership>();
+            services.AddTransient<ICustomerViewMembership, PersistedUserMembership>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 /* API Authentication Provider */
@@ -138,6 +143,12 @@ namespace AuditLogApp
                 {
                     options.WWWAuthenticateRealm = "auditlog.co";
                     options.HTTPHeader = CUSTOMER_API_HEADER;
+                })
+                /* API Authentication Provider - Audit Views (Customer's Clients) */
+                .AddCustomerViewAPIAuth(CUSTOMERVIEW_API_SCHEME, (options) =>
+                {
+                    options.WWWAuthenticateRealm = "auditlog.co";
+                    options.HTTPHeader = CUSTOMERVIEW_API_HEADER;
                 })
                 /* 3rd Party Auth Providers */
                 .AddCookie("ExternalProvidersCookie")
@@ -189,6 +200,13 @@ namespace AuditLogApp
                 options.AddPolicy(CUSTOMER_API_POLICY, policy =>
                 {
                     policy.AddAuthenticationSchemes(CUSTOMER_API_SCHEME);
+                    policy.RequireAuthenticatedUser();
+                });
+
+                options.AddPolicy(CUSTOMERVIEW_API_POLICY, policy =>
+                {
+                    policy.AddAuthenticationSchemes(CUSTOMER_API_SCHEME);
+                    policy.AddAuthenticationSchemes(CUSTOMERVIEW_API_SCHEME);
                     policy.RequireAuthenticatedUser();
                 });
             });

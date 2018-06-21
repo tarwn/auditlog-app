@@ -14,6 +14,7 @@
         "comma-dangle": ["error", "never"],         "// YAGNI": "",
         "brace-style": ["error", "stroustrup"],     "// personal preference also": "",
         "no-underscore-dangle": "off",              "// used to denote 'private' properties and functions": "",
-        "arrow-body-style": "off",                  "// freedom to use blocks when more readable instead of using ({ return ... })": ""
+        "arrow-body-style": "off",                  "// freedom to use blocks when more readable instead of using ({ return ... })": "",
+        "no-else-return": "off",                    "// I find consistent indentation more readable": ""
     }
 }
