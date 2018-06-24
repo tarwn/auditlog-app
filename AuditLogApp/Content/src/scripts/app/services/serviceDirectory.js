@@ -53,14 +53,7 @@ export default class ServiceDirectory {
     }
 
     saveView(view) {
-        console.log(view);
-        const trimmedView = {
-            id: view.id,
-            accessKey: '',
-            custom: view.custom,
-            columns: view.columns()
-        };
-        return ajax.post(`${this.basePath}/customization/views/default`, trimmedView);
+        return ajax.post(`${this.basePath}/customization/views/default`, view.toRawData());
         // return ajax.fakePost(`${this.basePath}/configuration/views/default`, view);
     }
 

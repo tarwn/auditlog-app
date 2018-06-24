@@ -30,6 +30,15 @@ export default class AppViewModel {
         validation.applyExtender(ko);
 
         allComponents.forEach((component) => {
+            if (component.viewModel === undefined) {
+                if (component.viewmodel !== undefined) {
+                    throw new Error(`${component.name} component's viewModel is capitalized incorrectly: currently viewmodel (capitalize the M!)`);
+                }
+                else {
+                    throw new Error(`${component.name} component's viewModel is missing!`);
+                }
+            }
+
             ko.components.register(component.name, component);
         });
 

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>View your audit log</title>
+
+        <script src="underscore-min.js"></script>
+        <script src="jquery-3.3.1.min.js"></script>
+        <script src="knockout-3.4.2.js"></script>
+        <script src="app.min.js"></script>
+        <link rel="stylesheet" href="app.min.css"/>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="viewport" content="width=device-width">
+        <meta http-equiv="cleartype" content="on">
+    </head>
+    <body>
+        <div class="aldi-initializing" data-bind="visible: isInitializing">Loading...</div>
+        <!-- ko if: !isInitializing() -->
+        <div id="aldi-header-container" data-bind="visible: !isInitializing()" style="display: none">
+            <ko-header params="customization: customization"></ko-header>
+        </div>
+        <div id="aldi-container">
+            <div id="aldi-nav-container" data-bind="visible: !isInitializing()" style="display: none">
+                <ko-navigation params="auditList: auditList"></ko-navigation>
+                <span class="aldi-links"><a href="#">Export <i class="icon-table"></i></a></span>
+            </div>
+            <div id="aldi-table-container" data-bind="visible: !isInitializing()" style="display: none">
+                <ko-audit-list params="customization: customization, auditList: auditList"></ko-audit-list>
+                <!--<div id="aldi-details-panel" style="display: none">details panel</div>-->
+            </div>
+            <div id="aldi-banner" data-bind="visible: !isInitializing()" style="display: none">Powered by <a href="https://www.auditlog.co">AuditLog.co</a></div>
+        </div>
+        <div id="aldi-footer">
+            <ko-footer params="customization: customization"></ko-footer>
+        </div>
+        <!-- /ko -->
+        
+        <script id="table-head" type="text/html">
+            <thead>
+                <tr class="aldi-audit-headrow">
+                    <th></th>
+                    <% _.each(columns(), function(c){ %>
+                        <th><span data-bind="text: c.label"></span><i data-bind="attr: { class: c.label == 'Time' ? 'icon-sort-down' : 'icon-sort' }"></i></th>
+                    <% }) %>
+                </tr>
+            </thead>
+        </script>
+        <script id="table-row" type="text/html">
+            <tbody>
+                <% _.each(rows(), function(r){ %>
+                    <tr class="aldi-audit-row">
+                        <td class="aldi-row-doubleheight">
+                            <a href="#" title="Show Details" data-bind="detailsClick: '#aldi-details-panel', rowId: r.id, selectRow: $root.selectRow.bind($root), selectedClass: 'aldi-row-selected'"><i class="icon-plus-circled"></i></a>
+                        </td>
+                        <% _.each(r.columns, function(c){ %>
+                            <td data-bind="html: c.value"></td>
+                        <% }); %>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </script>
+
+        <script>
+            function DOMReady(a,b,c){ b=document,c='addEventListener';b[c]?b[c]('DOMContentLoaded',a):window.attachEvent('onload',a) };
+            function isInFrame() { 
+                try {   
+                    return window.self !== window.top;
+                }
+                catch (e) {
+                    return true;
+                }
+            };
+            if (!window.location.origin) {
+                window.location.origin = window.location.protocol + "//" 
+                    + window.location.hostname 
+                    + (window.location.port ? ':' + window.location.port : '');
+            }
+
+            DOMReady(function(){
+                var options = {
+                    readToken: 'abc123'
+                };
+
+                if(!isInFrame()) {
+                    var app = new App(options);
+                    app.mount('targetElement');
+                }
+                else {
+                    var app = new App(options);
+                    var sampleMessageReceiver = app.applySampleOverride();
+                    window.addEventListener("message", function(evt){
+                        console.log("event received");
+            
+                        if(evt.origin !== window.location.origin)
+                            return;
+                        sampleMessageReceiver(evt);
+                    }, false);
+
+                    console.log({ message: 'ready', origin: window.location.origin });
+                    window.parent.postMessage('ready', window.location.origin);
+                }
+            });
+        </script>
+        </body>
+</html>

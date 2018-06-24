@@ -33,7 +33,9 @@ var configs = {
     imagesWatch: './AuditLogApp/Content/src/images/**/*.*',
     imagesOutput: './AuditLogApp/Content/build/images',
     fontsInput: './AuditLogApp/Content/src/font/*',
-    fontsOutput: './AuditLogApp/Content/build/font'
+    fontsOutput: './AuditLogApp/Content/build/font',
+    dropinInput: '../auditlog-dropin/build/*',
+    dropinOutput: './AuditLogApp/Content/dropin'
 };
 
 function applyMinPath(path) {
@@ -89,7 +91,7 @@ gulp.task('js:watch', function () {
 });
 
 gulp.task('js-lib', function () { 
-    gulp.src(configs.jsLibInput)
+    return gulp.src(configs.jsLibInput)
         .pipe(uglify())
         .pipe(gulp.dest(configs.jsLibOutput));
 });
@@ -112,7 +114,7 @@ gulp.task('sass', function(){
 
 
 gulp.task('sass:watch', function(){
-    gulp.watch(configs.sassWatch, function () {
+    return gulp.watch(configs.sassWatch, function () {
             // trying to solve for collisions between sass and vs code save
             setTimeout(function () { 
                 gulp.start('sass');    
@@ -130,12 +132,12 @@ function shortenPath(longPath){
 // Images
 
 gulp.task('images', function(){
-    gulp.src(configs.imagesInput)
+    return gulp.src(configs.imagesInput)
         .pipe(gulp.dest(configs.imagesOutput));
 });
 
 gulp.task('images:watch', function(){
-    gulp.watch(configs.imagesWatch, ['images'])
+    return gulp.watch(configs.imagesWatch, ['images'])
         .on('change', function(event){
             console.log('[IMAGE WATCH] ' + shortenPath(event.path) + ' was ' + event.type);
         });
@@ -144,12 +146,25 @@ gulp.task('images:watch', function(){
 // Fonts
 
 gulp.task('fonts', function () { 
-    gulp.src(configs.fontsInput)
+    return gulp.src(configs.fontsInput)
         .pipe(gulp.dest(configs.fontsOutput));
+});
+
+// DropIn
+
+gulp.task('dropin', function () { 
+    return gulp.src(configs.dropinInput)
+        .pipe(gulp.dest(configs.dropinOutput));
+});
+gulp.task('dropin:watch', function () {
+    return gulp.watch(configs.dropinInput, ['dropin'])
+        .on('change', function(event){
+            console.log('[DROPIN WATCH] ' + shortenPath(event.path) + ' was ' + event.type);
+        });
 });
 
 // Tasks
 
-gulp.task('local', ['images', 'fonts','sass', 'images:watch', 'js-lib', 'js:watch', 'sass:watch']);
-gulp.task('build', ['images', 'fonts', 'js-lib', 'js', 'sass']);
+gulp.task('local', ['images', 'fonts', 'dropin', 'dropin:watch', 'sass', 'images:watch', 'js-lib', 'js:watch', 'sass:watch']);
+gulp.task('build', ['images', 'fonts', 'dropin', 'js-lib', 'js', 'sass']);
 gulp.task('default', ['local']);

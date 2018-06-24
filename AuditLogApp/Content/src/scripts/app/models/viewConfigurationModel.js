@@ -5,7 +5,7 @@ import ViewColumnConfigurationModel from './viewColumnConfigurationModel';
 export default class ViewConfigurationModel {
     constructor(rawData) {
         this.id = rawData.id;
-        console.log(rawData);
+
         this.accessKey = ko.observable(rawData.accessKey || 'Not set yet');
 
         this.custom = {
@@ -97,5 +97,15 @@ export default class ViewConfigurationModel {
             this.columns()[colNewIndex].order(colIndex);
             columnToMove.order(colNewIndex);
         }
+    }
+
+    toRawData() {
+        // trims down field to match raw data for service calls + passing to iframe
+        return {
+            id: this.id,
+            accessKey: '',
+            custom: this.custom,
+            columns: this.columns()
+        };
     }
 }

@@ -302,6 +302,11 @@ namespace AuditLogApp
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content/build"))
             });
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                RequestPath = "/dropin",
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content/dropin"))
+            });
 
             // MVC route handling
             app.UseMvc();
