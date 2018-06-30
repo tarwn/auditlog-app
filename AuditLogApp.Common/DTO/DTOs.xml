@@ -62,7 +62,8 @@
     <Property Name="CustomerId" Type="CustomerId" />
     <Property Name="ReceptionTime" Type="DateTime" />
     <Property Name="UUID" Type="string" />
-    <Property Name="Client_Id" Type="string" />
+    <Property Name="Client_Id" Type="EventClientId" />
+    <Property Name="Client_UUID" Type="string" />
     <Property Name="Client_Name" Type="string" />
     <Property Name="EventTime" Type="DateTime" />
     <Property Name="Action" Type="string" />
@@ -88,6 +89,12 @@
     <Property Name="Name" Type="string" />
     <Property Name="Email" Type="string" />
     <Property Name="IsForgotten" Type="bool" />
+  </DTO>
+
+  <DTO Name="EventClientDTO">
+    <Property Name="Id" Type="EventClientId" />
+    <Property Name="UUID" Type="string" />
+    <Property Name="Name" Type="string" />
   </DTO>
 
   <DTO Name="ViewDTO">

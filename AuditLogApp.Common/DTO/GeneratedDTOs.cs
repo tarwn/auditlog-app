@@ -214,7 +214,7 @@ namespace AuditLogApp.Common.DTO
 		[Obsolete("Serialization use only", true)]
 		public EventEntryDTO() { }
 
-		public EventEntryDTO(EventEntryId id, CustomerId customerid, DateTime receptiontime, string uuid, string client_id, string client_name, DateTime eventtime, string action, string description, string url, EventActorId actor_id, string actor_uuid, string actor_name, string actor_email, string context_client_ip, string context_client_browseragent, string context_server_serverid, string context_server_version, string target_type, string target_uuid, string target_label, string target_url)
+		public EventEntryDTO(EventEntryId id, CustomerId customerid, DateTime receptiontime, string uuid, EventClientId client_id, string client_uuid, string client_name, DateTime eventtime, string action, string description, string url, EventActorId actor_id, string actor_uuid, string actor_name, string actor_email, string context_client_ip, string context_client_browseragent, string context_server_serverid, string context_server_version, string target_type, string target_uuid, string target_label, string target_url)
 		{
 		
 			Id = id;
@@ -222,6 +222,7 @@ namespace AuditLogApp.Common.DTO
 			ReceptionTime = receptiontime;
 			UUID = uuid;
 			Client_Id = client_id;
+			Client_UUID = client_uuid;
 			Client_Name = client_name;
 			EventTime = eventtime;
 			Action = action;
@@ -250,7 +251,9 @@ namespace AuditLogApp.Common.DTO
 			
 		public string UUID { get; set; }
 			
-		public string Client_Id { get; set; }
+		public EventClientId Client_Id { get; set; }
+			
+		public string Client_UUID { get; set; }
 			
 		public string Client_Name { get; set; }
 			
@@ -315,6 +318,30 @@ namespace AuditLogApp.Common.DTO
 		public string Email { get; set; }
 			
 		public bool IsForgotten { get; set; }
+			
+		
+	}
+
+
+	public partial class EventClientDTO
+	{	
+		[Obsolete("Serialization use only", true)]
+		public EventClientDTO() { }
+
+		public EventClientDTO(EventClientId id, string uuid, string name)
+		{
+		
+			Id = id;
+			UUID = uuid;
+			Name = name;
+		}
+
+		
+		public EventClientId Id { get; set; }
+			
+		public string UUID { get; set; }
+			
+		public string Name { get; set; }
 			
 		
 	}

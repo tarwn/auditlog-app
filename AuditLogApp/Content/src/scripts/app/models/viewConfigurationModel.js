@@ -38,7 +38,7 @@ export default class ViewConfigurationModel {
             'receptionTime[date]',
             'receptionTime[diff]',
             'uuid',
-            'client.id',
+            'client.uuid',
             'client.name',
             'time[time]',
             'time[date]',

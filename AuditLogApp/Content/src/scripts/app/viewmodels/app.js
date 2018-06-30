@@ -1,6 +1,9 @@
 ﻿import allComponents from '../components/allComponents';
 import validation from '../extenders/validation';
 
+import applyBindingDetailsClick from '../borrowed/auditLogDropIn/utils/applyBindingDetailsClick';
+import applyBindingPotentialLink from '../borrowed/auditLogDropIn/utils/applyBindingPotentialLink';
+
 export default class AppViewModel {
     constructor(services, sitewideContext) {
         this._services = services;
@@ -28,6 +31,10 @@ export default class AppViewModel {
 
     mount() {
         validation.applyExtender(ko);
+
+        // COPIED: dropin/app.js, ln 26
+        applyBindingDetailsClick(ko, $);
+        applyBindingPotentialLink(ko, $);
 
         allComponents.forEach((component) => {
             if (component.viewModel === undefined) {

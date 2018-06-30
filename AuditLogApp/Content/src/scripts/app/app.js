@@ -3,7 +3,7 @@ import SiteWideViewModel from './viewmodels/sitewide';
 import AppViewModel from './viewmodels/app';
 
 import PageDefinition from './viewmodels/pages/pageDefinition';
-import HomePage from './components/pages/homePage';
+import HomePage from './components/pages/dashboard/homePage';
 import APIKeysListPage from './components/pages/apikeys/listAPIKeysPage';
 import APIKeysCreatePage from './components/pages/apikeys/createAPIKeysPage';
 import ViewEditPage from './components/pages/views/editViewPage';

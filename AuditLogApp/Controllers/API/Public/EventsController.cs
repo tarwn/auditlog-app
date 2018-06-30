@@ -54,7 +54,8 @@ namespace AuditLogApp.Controllers.API.Public
             {
                 var dto = new EventEntryDTO(null, customerId, DateTime.UtcNow,
                 entry.UUID,
-                entry.Client.Id,
+                null,
+                entry.Client.UUID,
                 entry.Client.Name,
                 entry.Time.Value,   // nullable - ModelBinding should catch this, as it's annotated as Required - convert to UTC
                 entry.Action,
@@ -113,6 +114,11 @@ namespace AuditLogApp.Controllers.API.Public
         [ProducesResponseType(typeof(ApiError), 404)]
         public async Task<IActionResult> GetEventsAsync(string clientID = null, DateTime? fromDate = null, DateTime? throughDate = null)
         {
+            if (clientID == null)
+            {
+                ModelState.AddModelError("clientId", "ClientId is required");
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiError(400, ModelState));

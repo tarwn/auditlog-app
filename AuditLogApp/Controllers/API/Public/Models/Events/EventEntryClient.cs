@@ -6,15 +6,15 @@ namespace AuditLogApp.Controllers.API.Public.Models.Events
     {
 
         public EventEntryClient() { }
-        public EventEntryClient(string id, string name)
+        public EventEntryClient(string uuid, string name)
         {
-            Id = id;
+            UUID = uuid;
             Name = name;
         }
 
         [Required]
         [StringLength(120)]
-        public string Id { get; set; }
+        public string UUID { get; set; }
 
         [StringLength(120)]
         public string Name { get; set; }

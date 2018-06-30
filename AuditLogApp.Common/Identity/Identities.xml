@@ -6,6 +6,7 @@
   <Identity Name="UserAuthenticationId" Type="Guid" />
   <Identity Name="UserSessionId" Type="Guid" />
   <Identity Name="EventEntryId" Type="Guid" />
+  <Identity Name="EventClientId" Type="Guid" />
   <Identity Name="EventActorId" Type="Guid" />
   <Identity Name="ViewId" Type="Guid" />
 </Identities>

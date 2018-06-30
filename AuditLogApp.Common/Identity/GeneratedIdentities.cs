@@ -406,6 +406,73 @@ namespace AuditLogApp.Common.Identity
 	}
 
 
+	public class EventClientId : IIdentity<Guid>
+	{	
+		[Obsolete("Serialization use only", true)]
+		public EventClientId() { }
+
+		public EventClientId(Guid id)
+		{
+			RawValue = id;
+		}
+
+		public Guid RawValue { get; set; }
+
+		public static implicit operator EventClientId(Guid id)
+		{
+			return new EventClientId(id);
+		}
+
+		public static EventClientId FromString(string rawValue)
+		{
+						return Guid.Parse(rawValue);
+					}
+
+		public override bool Equals(object obj)
+		{
+			if(obj is EventClientId)
+			{
+				return RawValue.Equals(((EventClientId)obj).RawValue);
+			}
+			else
+			{
+				return base.Equals(obj);
+			}
+		}
+
+		public static bool operator ==(EventClientId a, EventClientId b)
+		{
+			if(System.Object.ReferenceEquals(a,b))
+			{
+				return true;
+			}
+
+			if(((object)a == null && (object)b != null) || ((object)a != null && (object)b == null))
+			{
+				return false;
+			}
+
+			return a.RawValue == b.RawValue;
+		}
+
+		public static bool operator !=(EventClientId a, EventClientId b)
+		{
+			return !(a == b);
+		}
+
+		
+        public override int GetHashCode()
+        {
+            return RawValue.GetHashCode();
+        }
+
+		public override string ToString()
+		{
+			return $"EventClientId[{RawValue}]";
+		}
+	}
+
+
 	public class EventActorId : IIdentity<Guid>
 	{	
 		[Obsolete("Serialization use only", true)]

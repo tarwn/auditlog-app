@@ -48,7 +48,7 @@ namespace AuditLogApp.Controllers.API.Application
                 // convert the default client view into a dashboard view, until we offer customizable dashboard views
                 view.Columns.Insert(0, new ViewColumnDTO(0, "Client", new List<ViewColumnLineDTO>() {
                     new ViewColumnLineDTO("client.name"),
-                    new ViewColumnLineDTO("client.id")
+                    new ViewColumnLineDTO("client.uuid")
                 }));
                 for (int i = 0; i < view.Columns.Count; i++)
                 {

@@ -26,7 +26,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 CustomerId = eventEntry.CustomerId.RawValue,
                 eventEntry.ReceptionTime,
                 eventEntry.UUID,
-                eventEntry.Client_Id,
+                eventEntry.Client_UUID,
                 eventEntry.Client_Name,
                 eventEntry.EventTime,
                 eventEntry.Action,
@@ -69,9 +69,28 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                         AND IsForgotten = 0;
                 END
 
+                DECLARE @@ClientId uniqueidentifier;
+                SELECT @@ClientId = Id 
+                FROM dbo.EventClients
+                WHERE CustomerId = @CustomerId
+                    AND UUID = @Client_UUID;
+
+                IF @@ClientId IS NULL
+                BEGIN
+                    SET @@ClientId = NewID();
+                    INSERT INTO dbo.EventClients(Id, CustomerId, UUID, Name)
+                    VALUES(@@ClientId, @CustomerId, @Client_UUID, @Client_Name);
+                END
+                ELSE
+                BEGIN
+                    UPDATE dbo.EventClients
+                    SET Name = @Client_Name
+                    WHERE Id = @@ClientId;
+                END
+
                 DECLARE @@Id uniqueidentifier = NewId();
-                INSERT INTO dbo.EventEntries(Id, CustomerId, ReceptionTime, UUID, Client_Id, Client_Name, EventTime, Action, Description, URL, EventActorId, Context_Client_IP, Context_Client_BrowserAgent, Context_Server_ServerId, Context_Server_Version, Target_Type, Target_UUID, Target_Label, Target_URL)
-                VALUES(                    @@Id,@CustomerId,@ReceptionTime,@UUID,@Client_Id,@Client_Name,@EventTime,@Action,@Description,@URL,    @@ActorId,@Context_Client_IP,@Context_Client_BrowserAgent,@Context_Server_ServerId,@Context_Server_Version,@Target_Type,@Target_UUID,@Target_Label,@Target_URL);
+                INSERT INTO dbo.EventEntries(Id, CustomerId, ReceptionTime, UUID, EventClientId, EventTime, Action, Description, URL, EventActorId, Context_Client_IP, Context_Client_BrowserAgent, Context_Server_ServerId, Context_Server_Version, Target_Type, Target_UUID, Target_Label, Target_URL)
+                VALUES(                    @@Id,@CustomerId,@ReceptionTime,@UUID,    @@ClientId,@EventTime,@Action,@Description,@URL,    @@ActorId,@Context_Client_IP,@Context_Client_BrowserAgent,@Context_Server_ServerId,@Context_Server_Version,@Target_Type,@Target_UUID,@Target_Label,@Target_URL);
 
                 SELECT @@Id as Id;
             ";
@@ -95,8 +114,9 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                        EE.CustomerId, 
                        EE.ReceptionTime, 
                        EE.UUID, 
-                       EE.Client_Id, 
-                       EE.Client_Name, 
+                       EE.EventClientId AS Client_Id,
+                       EC.UUID AS Client_UUID, 
+                       EC.Name AS Client_Name, 
                        EE.EventTime, 
                        EE.Action, 
                        EE.Description, 
@@ -115,6 +135,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                        EE.Target_URL
                 FROM dbo.EventEntries EE   
                     INNER JOIN dbo.EventActors EA ON EA.Id = EE.EventActorId
+                    INNER JOIN dbo.EventClients EC ON EC.Id = EE.EventClientId
                 WHERE EE.CustomerId = @CustomerId
                     AND EE.Id = @Id;
             ";
@@ -125,12 +146,12 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             });
         }
 
-        public async Task<List<EventEntryDTO>> SearchAsync(CustomerId customerId, string clientID, DateTime? fromDate, DateTime? throughDate)
+        public async Task<List<EventEntryDTO>> SearchAsync(CustomerId customerId, string clientUUID, DateTime? fromDate, DateTime? throughDate)
         {
             var whereClauses = new List<string>();
-            if (!String.IsNullOrEmpty(clientID))
+            if (!String.IsNullOrEmpty(clientUUID))
             {
-                whereClauses.Add("AND EE.Client_ID = @ClientID");
+                whereClauses.Add("AND EC.UUID = @ClientUUID");
             }
             if (fromDate.HasValue)
             {
@@ -151,7 +172,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             var sqlParams = new
             {
                 CustomerId = customerId.RawValue,
-                ClientID = clientID,
+                ClientUUID = clientUUID,
                 FromDate = fromDate,
                 ThroughDate = throughDate
             };
@@ -160,8 +181,9 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                        EE.CustomerId, 
                        EE.ReceptionTime, 
                        EE.UUID, 
-                       EE.Client_Id, 
-                       EE.Client_Name, 
+                       EE.EventClientId AS Client_Id,
+                       EC.UUID AS Client_UUID, 
+                       EC.Name AS Client_Name, 
                        EE.EventTime, 
                        EE.Action, 
                        EE.Description, 
@@ -180,6 +202,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                        EE.Target_URL
                 FROM dbo.EventEntries EE   
                     INNER JOIN dbo.EventActors EA ON EA.Id = EE.EventActorId
+                    INNER JOIN dbo.EventClients EC ON EC.Id = EE.EventClientId
                 WHERE EE.CustomerId = @CustomerId
                     " + String.Join("\n", whereClauses) + @";
             ";
@@ -286,6 +309,30 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
             });
         }
 
+        #endregion
+
+        #region Clients
+        
+        public async Task<List<EventClientDTO>> GetAllClientsAsync(CustomerId customerId)
+        {
+            var sqlParams = new
+            {
+                CustomerId = customerId.RawValue
+            };
+            string sql = @";
+                SELECT C.Id,
+                       C.CustomerId,
+                       C.UUID,
+                       C.Name
+                FROM dbo.EventClients C
+                WHERE C.CustomerId = @CustomerId;
+            ";
+
+            return await _db.Query(async (db) =>
+            {
+                return await db.FetchAsync<EventClientDTO>(sql, sqlParams);
+            });
+        }
 
         #endregion
 

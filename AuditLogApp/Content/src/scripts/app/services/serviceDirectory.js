@@ -3,6 +3,12 @@
 export default class ServiceDirectory {
     constructor() {
         this.basePath = '/api/appln/v1';
+        this.ready = Promise.resolve();
+    }
+
+    // Resolved promise for future use
+    whenReady() {
+        return this.ready;
     }
 
     // Company Configurations
@@ -52,6 +58,10 @@ export default class ServiceDirectory {
         /* eslint-enable */
     }
 
+    getDashboardView() {
+        return ajax.get(`${this.basePath}/customization/views/dashboard`);
+    }
+
     saveView(view) {
         return ajax.post(`${this.basePath}/customization/views/default`, view.toRawData());
         // return ajax.fakePost(`${this.basePath}/configuration/views/default`, view);
@@ -64,5 +74,17 @@ export default class ServiceDirectory {
         //    .then(() => {
         //        return 'abc-123';
         //    });
+    }
+
+    // Clients
+
+    getClients() {
+        return ajax.get(`${this.basePath}/clients`);
+    }
+
+    // Events
+
+    getEvents(clientId) {
+        return ajax.get(`${this.basePath}/events/${clientId || 'all'}`);
     }
 }

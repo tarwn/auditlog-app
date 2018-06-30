@@ -40,11 +40,12 @@ export default {
         }
 
         initialize() {
-            this.loadView().then(() => {
-                this.connectSampleIFrame();
-            }).then(() => {
-                this.readyForDisplay(true);
-            });
+            this._services.whenReady()
+                .then(() => this.loadView())
+                .then(() => this.connectSampleIFrame())
+                .then(() => {
+                    this.readyForDisplay(true);
+                });
         }
 
         addNewHeaderLink() {
@@ -114,7 +115,7 @@ export default {
         }
 
         connectSampleIFrame() {
-            const fake = ko.computed(() => {
+            this.fake = ko.computed(() => {
                 this.sendIFrameUpdate();
             });
         }

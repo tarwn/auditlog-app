@@ -2,7 +2,7 @@
     {
         "uuid": "sample-event-000",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522313593,
@@ -28,7 +28,7 @@
     {
         "uuid": "sample-event-001",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522313782,
@@ -60,7 +60,7 @@
     {
         "uuid": "sample-event-002",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522314910,
@@ -92,7 +92,7 @@
     {
         "uuid": "sample-event-003",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522314990,
@@ -124,7 +124,7 @@
     {
         "uuid": "sample-event-004",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522315212,
@@ -156,7 +156,7 @@
     {
         "uuid": "sample-event-005",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522316143,
@@ -188,7 +188,7 @@
     {
         "uuid": "sample-event-006",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522317043,
@@ -220,7 +220,7 @@
     {
         "uuid": "sample-event-007",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522317322,
@@ -252,7 +252,7 @@
     {
         "uuid": "sample-event-008",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522317532,
@@ -278,7 +278,7 @@
     {
         "uuid": "sample-event-009",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522317622,
@@ -304,7 +304,7 @@
     {
         "uuid": "sample-event-010",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522317645,
@@ -330,7 +330,7 @@
     {
         "uuid": "sample-event-011",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522318215,
@@ -356,7 +356,7 @@
     {
         "uuid": "sample-event-012",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522321834,
@@ -382,7 +382,7 @@
     {
         "uuid": "sample-event-013",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522322112,
@@ -414,7 +414,7 @@
     {
         "uuid": "sample-event-014",
         "client": {
-            "id": "1234567890",
+            "uuid": "1234567890",
             "name": "Great Client"
         },
         "time": 1522322712,

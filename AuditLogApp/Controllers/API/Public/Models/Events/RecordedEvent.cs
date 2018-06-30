@@ -17,7 +17,7 @@ namespace AuditLogApp.Controllers.API.Public.Models.Events
             ReceptionTime = entry.ReceptionTime;
 
             UUID = entry.UUID;
-            Client = new EventEntryClient(entry.Client_Id, entry.Client_Name);
+            Client = new EventEntryClient(entry.Client_UUID, entry.Client_Name);
             Time = entry.EventTime;
             Action = entry.Action;
             Description = entry.Description;
