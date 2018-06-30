@@ -42,5 +42,5 @@ msbuild.wrn
 
 
 # NCrunch
-_NCrunch_SampleCosmosCore2App
+_NCrunch_AuditLogApp
 *.ncrunchsolution

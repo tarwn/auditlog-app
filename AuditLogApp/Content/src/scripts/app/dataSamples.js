@@ -34,11 +34,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.23",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
+                            "ipAddress": "192.168.105.23",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -67,11 +67,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.23",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
+                            "ipAddress": "192.168.105.23",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -100,11 +100,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -133,11 +133,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -166,11 +166,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -199,11 +199,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -232,11 +232,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -265,11 +265,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -298,11 +298,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -331,11 +331,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.23",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
+                            "ipAddress": "192.168.105.23",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -364,11 +364,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": null,
-                            "browser_agent": null
+                            "ipAddress": null,
+                            "browserAgent": null
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -397,11 +397,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.23",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
+                            "ipAddress": "192.168.105.23",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -430,11 +430,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -463,11 +463,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },
@@ -496,11 +496,11 @@ export default {
                     },
                     "context": {
                         "client": {
-                            "ip_address": "192.168.105.68",
-                            "browser_agent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
+                            "ipAddress": "192.168.105.68",
+                            "browserAgent": "Mozilla/5.0 (Windows NT 6.2; rv:20.0) Gecko/20121202 Firefox/20.0"
                         },
                         "server": {
-                            "server_id": "prod-01-us-appfarm",
+                            "serverId": "prod-01-us-appfarm",
                             "version": "20180325-01"
                         }
                     },

@@ -32,9 +32,28 @@ namespace AuditLogApp.Controllers.API.Application
             var view = await _persistence.Views.GetForCustomerAsync(customerId);
             if (view == null)
             {
-                var accessKey = ConfigurationController.GenerateAPIKey();
-                var newView = new ViewDTO(null, customerId, accessKey, new ViewCustomizationDTO("", "", "", new List<ViewCustomizationHeaderLinkDTO>(), ""), new List<ViewColumnDTO>());
-                view = await _persistence.Views.CreateNewAsync(newView);
+                view = await CreateDefaultViewAsync(customerId);
+            }
+            return Ok(new ViewConfigurationModel(view));
+        }
+        
+        [HttpGet("views/dashboard")]
+        public async Task<IActionResult> GetOrCreateDashboardViewAsync()
+        {
+            var customerId = _membership.GetCustomerId(User);
+            var view = await _persistence.Views.GetForCustomerAsync(customerId);
+            if (view == null)
+            {
+                view = await CreateDefaultViewAsync(customerId);
+                // convert the default client view into a dashboard view, until we offer customizable dashboard views
+                view.Columns.Insert(0, new ViewColumnDTO(0, "Client", new List<ViewColumnLineDTO>() {
+                    new ViewColumnLineDTO("client.name"),
+                    new ViewColumnLineDTO("client.id")
+                }));
+                for (int i = 0; i < view.Columns.Count; i++)
+                {
+                    view.Columns[i].Order = 0;
+                }
             }
             return Ok(new ViewConfigurationModel(view));
         }
@@ -86,6 +105,39 @@ namespace AuditLogApp.Controllers.API.Application
                 Id = id,
                 Key = freshKey
             });
+        }
+
+
+        private async Task<ViewDTO> CreateDefaultViewAsync(CustomerId customerId)
+        {
+            var customer = await _persistence.Customers.GetAsync(customerId);
+            var accessKey = ConfigurationController.GenerateAPIKey();
+            var newView = new ViewDTO(null, customerId, accessKey, new ViewCustomizationDTO("", "/images/logo56.png", customer.DisplayName, new List<ViewCustomizationHeaderLinkDTO>(), ""), CreateDefaultColumnLayout());
+            return await _persistence.Views.CreateNewAsync(newView);
+        }
+
+        private List<ViewColumnDTO> CreateDefaultColumnLayout()
+        {
+            return new List<ViewColumnDTO>() {
+                new ViewColumnDTO(0, "Action", new List<ViewColumnLineDTO>(){
+                    new ViewColumnLineDTO("action"),
+                    new ViewColumnLineDTO("description")
+                }),
+                new ViewColumnDTO(0, "Actor", new List<ViewColumnLineDTO>(){
+                    new ViewColumnLineDTO("actor.name"),
+                    new ViewColumnLineDTO("actor.uuid")
+                }),
+                new ViewColumnDTO(0, "Actor IP", new List<ViewColumnLineDTO>(){
+                    new ViewColumnLineDTO("context.client.ipAddress")
+                }),
+                new ViewColumnDTO(0, "Target", new List<ViewColumnLineDTO>(){
+                    new ViewColumnLineDTO("target.type"),
+                    new ViewColumnLineDTO("target.label")
+                }),
+                new ViewColumnDTO(0, "Time", new List<ViewColumnLineDTO>(){
+                    new ViewColumnLineDTO("time[time]")
+                })
+            };
         }
     }
 }
