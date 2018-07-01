@@ -225,7 +225,7 @@ export default {
                         <tr class="aldi-audit-headrow">
                             <th></th>
                             <!-- ko foreach: dropInColumns -->
-                                <th data-bind="click: $parent.applySort.bind($parent)" class="ala-table-sortable"><span data-bind="text: label"></span><i data-bind="css: { 'icon-sort': $data !== $parent.sortColumn(), 'icon-sort-down': $data === $parent.sortColumn() && $parent.sortDirection() === 'desc', 'icon-sort-up': $data === $parent.sortColumn() && $parent.sortDirection() === 'asc'  }"></i></th>
+                                <th data-bind="click: $parent.applySort.bind($parent)" class="aldi-table-sortable"><span data-bind="text: label"></span><i data-bind="css: { 'icon-sort': $data !== $parent.sortColumn(), 'icon-sort-down': $data === $parent.sortColumn() && $parent.sortDirection() === 'desc', 'icon-sort-up': $data === $parent.sortColumn() && $parent.sortDirection() === 'asc'  }"></i></th>
                             <!-- /ko -->
                         </tr>
                     </thead>

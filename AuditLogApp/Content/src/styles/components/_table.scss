@@ -7,17 +7,6 @@
     padding: 1em 0;
 }
 
-.ala-table-sortable:hover{
-    cursor: pointer;
-    color: $text-color-normal;
-    background-color: $color-mild-highlight;
-    
-    // this will bite me one day
-    & > i{ 
-        color: $color-primary;
-    }
-}
-
 // Basic Table
 .ala-basic-table {
     border-collapse: collapse;

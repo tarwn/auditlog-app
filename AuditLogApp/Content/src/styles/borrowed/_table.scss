@@ -1,5 +1,16 @@
 @import "../variables";
 
+.aldi-table-sortable:hover{
+    cursor: pointer;
+    color: $text-color-normal;
+    background-color: $color-mild-highlight;
+    
+    // this will bite me one day
+    & > i{ 
+        color: $color-primary;
+    }
+}
+
 .aldi-audit-table{
     margin: 0.5em;
     border-collapse: collapse;

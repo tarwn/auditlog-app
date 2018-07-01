@@ -64,7 +64,7 @@ export default class EntryTableRow {
             case 'actor.name':
                 return (a.actor.name || '') > (b.actor.name || '');
             case 'actor.email':
-                return (a.context.actor.email || '') > (b.context.actor.email || '');
+                return (a.actor.email || '').toLowerCase() > (b.actor.email || '').toLowerCase();
             case 'context.client.ipAddress':
                 return (a.context.client.ipAddress || '') > (b.context.client.ipAddress || '');
             case 'context.client.browserAgent':
