@@ -47,6 +47,45 @@ export default class EntryTableRow {
         return `<div class="aldi-row-multi-1">${firstLine}</div><div class="aldi-row-multi-2">${secondLine}</div>`;
     }
 
+    static compare(columnName, entryA, entryB) {
+        const a = entryA.row;
+        const b = entryB.row;
+
+        switch (columnName) {
+            case 'id':
+            case 'receptionTime':
+            case 'time':
+            case 'action':
+            case 'description':
+            case 'url':
+                return (a[columnName] || '') > (b[columnName] || '');
+            case 'actor.uuid':
+                return (a.actor.uuid || '') > (b.actor.uuid || '');
+            case 'actor.name':
+                return (a.actor.name || '') > (b.actor.name || '');
+            case 'actor.email':
+                return (a.context.actor.email || '') > (b.context.actor.email || '');
+            case 'context.client.ipAddress':
+                return (a.context.client.ipAddress || '') > (b.context.client.ipAddress || '');
+            case 'context.client.browserAgent':
+                return (a.context.client.browserAgent || '') > (b.context.client.browserAgent || '');
+            case 'context.server.server':
+                return (a.context.server.server || '') > (b.context.server.server || '');
+            case 'context.server.version':
+                return (a.context.server.version || '') > (b.context.server.version || '');
+            case 'target.type':
+                return (a.target.type || '') > (b.target.type || '');
+            case 'target.uuid':
+                return (a.target.uuid || '') > (b.target.uuid || '');
+            case 'target.label':
+                return (a.target.label || '') > (b.target.label || '');
+            case 'target.url':
+                return (a.target.url || '') > (b.target.url || '');
+            default:
+                return null;
+        }
+    }
+
     static _getValue(columnName, rowData) {
         switch (columnName) {
             case 'id':

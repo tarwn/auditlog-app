@@ -45,17 +45,24 @@ export default {
 
             // dropin data
             this.dropInColumns = ko.observable();
-            this.dropInRows = ko.observable();
+            this.dropInRows = ko.observableArray();
             this.selectedRow = ko.observable();
-            this.noRowsAvailable = ko.pureComputed(() => this.dropInRows() === null || this.dropInRows().length === 0);
+            this.noRowsAvailable = ko.pureComputed(() =>
+                this.dropInRows() === null ||
+                this.dropInRows().length === 0);
+            this.sortColumn = ko.observable();
+            this.sortDirection = ko.observable();
 
             this.initialize();
         }
 
         initialize() {
-            this._initializeDates();
             this._services.whenReady()
                 .then(() => this._loadView())
+                .then(() => Promise.all([
+                    this._initializeDates(),
+                    this._initializeSorting()
+                ]))
                 .then(() => Promise.all([
                     this._loadEvents(),
                     this._loadClients()
@@ -64,6 +71,18 @@ export default {
                     this._subscribeToFilterChanges();
                     this.readyForDisplay(true);
                 });
+        }
+
+        _loadView() {
+            return this._services.getDashboardView().then((rawData) => {
+                this._view(new ViewConfigurationModel(rawData));
+
+                // COPIED: dropin/models/customizationModel, ln 15
+                const dropInColumns = rawData.columns
+                    .sort((a, b) => a.order - b.order)
+                    .map(c => new CustomizationColumnModel(c));
+                this.dropInColumns(dropInColumns);
+            });
         }
 
         _initializeDates() {
@@ -82,18 +101,22 @@ export default {
                 });
             this.availableDates(dates);
             this.selectedDate(dates[0]);
+
+            return Promise.resolve();
         }
 
-        _loadView() {
-            return this._services.getDashboardView().then((rawData) => {
-                this._view(new ViewConfigurationModel(rawData));
+        _initializeSorting() {
+            /* eslint-disable no-restricted-syntax */
+            for (const c of this.dropInColumns()) {
+                if (c.lines[0].field === 'time') {
+                    this.sortColumn(c);
+                    this.sortDirection('desc');
+                    break;
+                }
+            }
+            /* eslint-enable no-restricted-syntax */
 
-                // COPIED: dropin/models/customizationModel, ln 15
-                const dropInColumns = rawData.columns
-                    .sort((a, b) => a.order - b.order)
-                    .map(c => new CustomizationColumnModel(c));
-                this.dropInColumns(dropInColumns);
-            });
+            return Promise.resolve();
         }
 
         _loadEvents() {
@@ -111,8 +134,23 @@ export default {
             this.isRefreshing(true);
             this._loadEvents()
                 .finally(() => {
+                    // hacky - this is going to apply after the binding takes effect
+                    // - there will be flicker: https://app.clubhouse.io/launchready/story/789/improve-sort-on-dashboard-load
+                    this._sortEvents();
                     this.isRefreshing(false);
                 });
+        }
+
+        _sortEvents() {
+            const sortColumnName = this.sortColumn().lines[0].field;
+            const sortFunction = (a, b) => {
+                return EntryTableRow.compare(sortColumnName, a, b);
+            };
+            const sortHigh = this.sortDirection() === 'desc' ? 1 : -1;
+            const sortLow = sortHigh * -1;
+            this.dropInRows.sort((a, b) => {
+                return sortFunction(a, b) ? sortHigh : sortLow;
+            });
         }
 
         _loadClients() {
@@ -133,6 +171,22 @@ export default {
             this._subscriptions.push(this.selectedDate.subscribe(() => {
                 this._refreshEvents();
             }));
+        }
+
+        applySort(col) {
+            if (this.sortColumn() === col) {
+                if (this.sortDirection() === 'desc') {
+                    this.sortDirection('asc');
+                }
+                else {
+                    this.sortDirection('desc');
+                }
+            }
+            else {
+                this.sortColumn(col);
+                this.sortDirection('desc');
+            }
+            this._sortEvents();
         }
 
         // COPIED: dropin/appViewModel, ln 39
@@ -171,7 +225,7 @@ export default {
                         <tr class="aldi-audit-headrow">
                             <th></th>
                             <!-- ko foreach: dropInColumns -->
-                                <th><span data-bind="text: label"></span><i data-bind="attr: { class: label == 'Time' ? 'icon-sort-down' : 'icon-sort' }"></i></th>
+                                <th data-bind="click: $parent.applySort.bind($parent)" class="ala-table-sortable"><span data-bind="text: label"></span><i data-bind="css: { 'icon-sort': $data !== $parent.sortColumn(), 'icon-sort-down': $data === $parent.sortColumn() && $parent.sortDirection() === 'desc', 'icon-sort-up': $data === $parent.sortColumn() && $parent.sortDirection() === 'asc'  }"></i></th>
                             <!-- /ko -->
                         </tr>
                     </thead>
