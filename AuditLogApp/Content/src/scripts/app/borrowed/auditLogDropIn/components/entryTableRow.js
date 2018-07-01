@@ -23,8 +23,8 @@ export default class EntryTableRow {
 
         this.row = rawRow;
         this.row.display = {
-            time: new Date(rawRow.time * 1000).toUTCString(),
-            receivedAt: new Date(rawRow.receptionTime * 1000).toUTCString(),
+            time: new Date(rawRow.time).toUTCString(),
+            receivedAt: new Date(rawRow.receptionTime).toUTCString(),
             receivedLatency: EntryTableRow._formatLatency(rawRow.receptionTime, rawRow.time)
         };
     }
@@ -88,9 +88,9 @@ export default class EntryTableRow {
 
         switch (fieldDefinition.format) {
             case 'time':
-                return EntryTableRow._formatShortDateTime(new Date(rawValue * 1000));
+                return EntryTableRow._formatShortDateTime(new Date(rawValue));
             case 'date':
-                return EntryTableRow._formatShortDate(new Date(rawValue * 1000));
+                return EntryTableRow._formatShortDate(new Date(rawValue));
             case 'diff':
                 return EntryTableRow._formatLatency(rawValue, EntryTableRow._getValue('time', rowData));
             case 'anchor':
@@ -109,7 +109,7 @@ export default class EntryTableRow {
     }
 
     static _formatLatency(receivedAt, eventTime) {
-        const diff = (receivedAt * 1000) - (eventTime * 1000);
+        const diff = new Date(receivedAt) - new Date(eventTime);
 
         const seconds = 1000;
         const minutes = seconds * 60;

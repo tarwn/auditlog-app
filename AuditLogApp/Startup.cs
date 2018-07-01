@@ -12,6 +12,7 @@ using AuditLogApp.ErrorNotification;
 using AuditLogApp.Membership;
 using AuditLogApp.Membership.Implementation;
 using AuditLogApp.Models.Error;
+using AuditLogApp.Other;
 using AuditLogApp.Persistence.SQLServer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -73,6 +74,8 @@ namespace AuditLogApp
                 options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
                 // Don't default to JSON when there isn't a good answer
                 options.ReturnHttpNotAcceptable = true;
+                // Correct ASP.Net Core's incorrect handling of UTC datetime's
+                options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider());
 
             })
             .AddJsonOptions(options =>

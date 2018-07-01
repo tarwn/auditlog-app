@@ -6,7 +6,8 @@
     "globals": {
         "$": true,
         "ko": true,
-        "page": true
+        "page": true,
+        "moment": true
     },
     "rules": {
         "indent": ["error", 4, {"SwitchCase": 1}],  "// personal preference": "",
@@ -15,6 +16,7 @@
         "brace-style": ["error", "stroustrup"],     "// personal preference also": "",
         "no-underscore-dangle": "off",              "// used to denote 'private' properties and functions": "",
         "arrow-body-style": "off",                  "// freedom to use blocks when more readable instead of using ({ return ... })": "",
-        "no-else-return": "off",                    "// I find consistent indentation more readable": ""
+        "no-else-return": "off",                    "// I find consistent indentation more readable": "",
+        "no-plusplus": "off",                       "// Only needed as ASI protection for folks allergic to semi-colons": ""
     }
 }

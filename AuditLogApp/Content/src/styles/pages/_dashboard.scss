@@ -1,0 +1,20 @@
+@import "../variables";
+
+.ala-dashboard-title{
+    margin-bottom: .5em;
+}
+.ala-dashboard-filter{
+    margin-top: -.5em;
+    margin-bottom: 1em;
+}
+.ala-dashboard-filter-selection{
+    display: inline-block;
+}
+.ala-dashboard-filter-summary{
+    display: inline-block;
+    margin-left: 2em;
+}
+
+.ala-dashboard-chart-area{
+    height: 300px;
+}

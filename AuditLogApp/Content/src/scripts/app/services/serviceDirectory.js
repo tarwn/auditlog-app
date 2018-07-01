@@ -84,7 +84,7 @@ export default class ServiceDirectory {
 
     // Events
 
-    getEvents(clientId) {
-        return ajax.get(`${this.basePath}/events/${clientId || 'all'}`);
+    getEvents(clientId, from, to) {
+        return ajax.get(`${this.basePath}/events/${clientId || 'all'}?fromDate=${from}&throughDate=${to}`);
     }
 }

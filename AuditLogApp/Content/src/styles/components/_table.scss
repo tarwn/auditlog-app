@@ -1,5 +1,12 @@
 @import "../variables";
 
+.ala-table-no-data {
+    font-size: 1.75em;
+    color: $text-color-light;
+    text-align: center;
+    padding: 1em 0;
+}
+
 // Basic Table
 .ala-basic-table {
     border-collapse: collapse;

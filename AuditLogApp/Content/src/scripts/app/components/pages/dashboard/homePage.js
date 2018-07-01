@@ -10,7 +10,9 @@ export default {
         constructor(params) {
             super(params);
 
-            // selectable options
+            // User Filter
+            this.isRefreshing = ko.observable(false);
+
             this.allClients = ko.observable();
             this.selectedClient = ko.observable();
             this.selectedClientId = ko.pureComputed(() => {
@@ -22,37 +24,69 @@ export default {
                 }
             });
 
-            // TODO: build in date navigation on top bar
-            this.availableDates = [];
+            this.availableDates = ko.observable();
             this.selectedDate = ko.observable();
 
+            this.filterSummary = ko.pureComputed(() => {
+                if (!this.readyForDisplay()) {
+                    return 'loading...';
+                }
+                else if (this.isRefreshing()) {
+                    return 'loading...';
+                }
+                else {
+                    return `${this.dropInRows().length} entries available`;
+                }
+            });
+
             // raw data
-            this.view = ko.observable();
-            this.auditList = ko.observable();
+            this._view = ko.observable();
+            this._auditList = ko.observable();
 
             // dropin data
             this.dropInColumns = ko.observable();
             this.dropInRows = ko.observable();
             this.selectedRow = ko.observable();
+            this.noRowsAvailable = ko.pureComputed(() => this.dropInRows() === null || this.dropInRows().length === 0);
 
             this.initialize();
         }
 
         initialize() {
+            this._initializeDates();
             this._services.whenReady()
-                .then(() => this.loadView())
+                .then(() => this._loadView())
                 .then(() => Promise.all([
-                    this.loadEvents(),
-                    this.loadClients()
+                    this._loadEvents(),
+                    this._loadClients()
                 ]))
                 .then(() => {
+                    this._subscribeToFilterChanges();
                     this.readyForDisplay(true);
                 });
         }
 
-        loadView() {
+        _initializeDates() {
+            const dates = [];
+            const a = [];
+            for (let i = 0; i < 12; i++) {
+                a.push(i);
+            }
+            a.map(n => moment().subtract(n, 'months'))
+                .forEach((m) => {
+                    dates.push({
+                        from: `${m.format('YYYY-MM-DD')}T00:00:00Z`,
+                        to: `${m.clone().add(1, 'months').format('YYYY-MM-DD')}T00:00:00Z`,
+                        display: m.format('MMM YYYY')
+                    });
+                });
+            this.availableDates(dates);
+            this.selectedDate(dates[0]);
+        }
+
+        _loadView() {
             return this._services.getDashboardView().then((rawData) => {
-                this.view(new ViewConfigurationModel(rawData));
+                this._view(new ViewConfigurationModel(rawData));
 
                 // COPIED: dropin/models/customizationModel, ln 15
                 const dropInColumns = rawData.columns
@@ -62,9 +96,10 @@ export default {
             });
         }
 
-        loadEvents() {
-            return this._services.getEvents(this.selectedClientId()).then((rawData) => {
-                this.auditList(rawData);
+        _loadEvents() {
+            const { from, to } = this.selectedDate();
+            return this._services.getEvents(this.selectedClientId(), from, to).then((rawData) => {
+                this._auditList(rawData);
 
                 // COPIED: dropin/components/entryTable, ln 8
                 const rows = rawData.entries.map(r => new EntryTableRow(r, this.dropInColumns()));
@@ -72,15 +107,32 @@ export default {
             });
         }
 
-        loadClients() {
+        _refreshEvents() {
+            this.isRefreshing(true);
+            this._loadEvents()
+                .finally(() => {
+                    this.isRefreshing(false);
+                });
+        }
+
+        _loadClients() {
             return this._services.getClients().then((rawData) => {
                 this.allClients(rawData.map((c) => {
                     return {
-                        id: c.id,
+                        from: c.id,
                         name: c.name
                     };
                 }));
             });
+        }
+
+        _subscribeToFilterChanges() {
+            this._subscriptions.push(this.selectedClientId.subscribe(() => {
+                this._refreshEvents();
+            }));
+            this._subscriptions.push(this.selectedDate.subscribe(() => {
+                this._refreshEvents();
+            }));
         }
 
         // COPIED: dropin/appViewModel, ln 39
@@ -91,26 +143,28 @@ export default {
         clearSelectedRow() {
             this.selectedRow(null);
         }
-
-        // dispose() {
-        // }
     },
     // COPIED: table matches audit table templates from dropin
     template: `
         <div class="ala-loading" data-bind="visible: !readyForDisplay()">Loading...</div>
         <div class="ala-view-edit-configurations" data-bind="if: readyForDisplay">
-            <h1>Dashboard</h1>
+            <h1 class="ala-dashboard-title">Dashboard</h1>
 
-            <div>
-                <select data-bind="options: allClients, value: selectedClient, optionsText: 'name', optionsCaption: 'All Clients'"></select>
-                <select data-bind="options: availableDates, value: selectedDate"></select>
+            <div class="ala-dashboard-filter">
+                <div class="ala-dashboard-filter-selection">
+                    <select data-bind="options: allClients, value: selectedClient, optionsText: 'name', optionsCaption: 'All Clients'"></select>
+                </div>
+                <div class="ala-dashboard-filter-selection">
+                    <select data-bind="options: availableDates, value: selectedDate, optionsText: 'display'"></select>
+                </div>
+                <span class="ala-dashboard-filter-summary" data-bind="text: filterSummary"></span>
             </div>
 
-            <div>
+            <div class="ala-dashboard-chart-area">
                 Chart Here
             </div>
 
-            <div>
+            <div class="ala-dashboard-table">
                 <table class="aldi-audit-table">
                     
                     <thead>
@@ -133,6 +187,9 @@ export default {
                         </tr>
                     </tbody>
 
+                    <tr data-bind="if: noRowsAvailable()">
+                        <td class="ala-table-no-data" data-bind="attr: { colspan: dropInColumns().length + 1 }">No entries available</td>
+                    </tr>
                     <tr style="display: none" id="aldi-details-panel" data-bind="if: selectedRow()">
                         <td data-bind="attr: { colspan: dropInColumns().length + 1 }">
                             <div class="aldi-details-inner-panel">
@@ -147,7 +204,7 @@ export default {
                                     </table>
                                 </div>
                                 <div class="aldi-details-subheader">Details</div>
-                                <div class="aldi-details-columns" data-bind="with: $parent.selectedRow">
+                                <div class="aldi-details-columns" data-bind="with: selectedRow">
                                     <!-- ko if: target != null && target.type != null -->
                                     <div class="aldi-details-column">
                                         <table class="aldi-details-table">

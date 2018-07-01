@@ -36,7 +36,8 @@
   },
   "browserify-shim": {
     "jquery": "$:global",
-    "knockout": "ko:global"
+    "knockout": "ko:global",
+    "moment": "moment:global"
   },
   "browserify": {
     "transform": [
