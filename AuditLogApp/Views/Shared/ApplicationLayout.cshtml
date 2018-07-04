@@ -1,4 +1,5 @@
-﻿@{
+﻿@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnv
+@{
     var pageTitle = ViewData["Title"] ?? "Fast, transparent, safe";
 }<!DOCTYPE html>
 <html lang="en-US" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
@@ -75,12 +76,12 @@
 
     <script type="text/javascript">
         if (!window.location.origin) {
-            window.location.origin = window.location.protocol + "//" 
-                + window.location.hostname 
+            window.location.origin = window.location.protocol + "//"
+                + window.location.hostname
                 + (window.location.port ? ':' + window.location.port : '');
         }
 
-        $(document).ready(function () { 
+        $(document).ready(function () {
             var viewmodel = App.default.create();
 
             // Surface ko binding errors
@@ -113,14 +114,15 @@
     </script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101987909-3"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    @if(hostingEnv.EnvironmentName.Equals("Production")){
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101987909-3"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-    gtag('config', 'UA-101987909-3');
-    </script>
-
+            gtag('config', 'UA-101987909-3');
+        </script>
+    }
 </body>
 </html>

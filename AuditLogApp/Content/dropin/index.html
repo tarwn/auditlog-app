@@ -23,7 +23,7 @@
         </div>
         <div id="aldi-container">
             <div id="aldi-nav-container" data-bind="visible: !isInitializing()" style="display: none">
-                <ko-navigation params="auditList: auditList"></ko-navigation>
+                <ko-navigation params="auditList: auditList, onNavigate: navigateData.bind($data)"></ko-navigation>
                 <span class="aldi-links"><a href="#">Export <i class="icon-table"></i></a></span>
             </div>
             <div id="aldi-table-container" data-bind="visible: !isInitializing()" style="display: none">
@@ -42,7 +42,10 @@
                 <tr class="aldi-audit-headrow">
                     <th></th>
                     <% _.each(columns(), function(c){ %>
-                        <th><span data-bind="text: c.label"></span><i data-bind="attr: { class: c.label == 'Time' ? 'icon-sort-down' : 'icon-sort' }"></i></th>
+                        <th data-bind="click: applySort.bind($data, c)" class="aldi-table-sortable">
+                            <span data-bind="text: c.label"></span>
+                            <i data-bind="css: { 'icon-sort': c !== sortColumn(), 'icon-sort-down': c === sortColumn() && sortDirection() === 'desc', 'icon-sort-up': c === sortColumn() && sortDirection() === 'asc'  }"></i>
+                        </th>
                     <% }) %>
                 </tr>
             </thead>

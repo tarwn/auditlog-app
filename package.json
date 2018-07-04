@@ -37,7 +37,8 @@
   "browserify-shim": {
     "jquery": "$:global",
     "knockout": "ko:global",
-    "moment": "moment:global"
+    "moment": "moment:global",
+    "d3": "d3:global"
   },
   "browserify": {
     "transform": [

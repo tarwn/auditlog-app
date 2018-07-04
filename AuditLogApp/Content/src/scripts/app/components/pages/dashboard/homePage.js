@@ -1,5 +1,6 @@
 import PageBase from '../pageBase';
 import ViewConfigurationModel from '../../../models/viewConfigurationModel';
+import DailyEventCount from '../../charts/models/dailyEventCount';
 
 import CustomizationColumnModel from '../../../borrowed/auditLogDropIn/models/customizationColumnModel';
 import EntryTableRow from '../../../borrowed/auditLogDropIn/components/entryTableRow';
@@ -52,6 +53,35 @@ export default {
                 this.dropInRows().length === 0);
             this.sortColumn = ko.observable();
             this.sortDirection = ko.observable();
+
+            // chart data
+            this.chartData = {
+                eventsByDay: ko.pureComputed(() => {
+                    if (!this.readyForDisplay() ||
+                        this.isRefreshing() ||
+                        this.selectedDate() == null) {
+                        return [];
+                    }
+
+                    const data = [];
+                    const indexedData = {};
+                    const from = moment(this.selectedDate().from).clone();
+                    const to = moment(this.selectedDate().to);
+                    while (from <= to) {
+                        const item = new DailyEventCount(from.clone(), 0);
+                        data.push(item);
+                        indexedData[from] = item;
+                        from.add(1, 'days');
+                    }
+
+                    // YOU ARE HERE: - add in counts, then go see if chart is working, etc
+                    // this._auditList().forEach((e) => {
+                    //     indexedData
+                    // });
+
+                    return data;
+                })
+            };
 
             this.initialize();
         }
@@ -215,7 +245,7 @@ export default {
             </div>
 
             <div class="ala-dashboard-chart-area">
-                Chart Here
+                <daily-event-chart params="value: { data: chartData.eventsByDay }" />
             </div>
 
             <div class="ala-dashboard-table">
