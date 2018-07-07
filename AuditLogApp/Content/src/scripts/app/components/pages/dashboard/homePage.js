@@ -27,6 +27,7 @@ export default {
 
             this.availableDates = ko.observable();
             this.selectedDate = ko.observable();
+            this.displayedDate = ko.observable();
 
             this.filterSummary = ko.pureComputed(() => {
                 if (!this.readyForDisplay()) {
@@ -36,7 +37,7 @@ export default {
                     return 'loading...';
                 }
                 else {
-                    return `${this.dropInRows().length} entries available`;
+                    return `${this.dropInRows().length} events available`;
                 }
             });
 
@@ -58,28 +59,12 @@ export default {
             this.chartData = {
                 eventsByDay: ko.pureComputed(() => {
                     if (!this.readyForDisplay() ||
-                        this.isRefreshing() ||
-                        this.selectedDate() == null) {
+                        this.displayedDate() == null) {
                         return [];
                     }
 
-                    const data = [];
-                    const indexedData = {};
-                    const from = moment(this.selectedDate().from).clone();
-                    const to = moment(this.selectedDate().to);
-                    while (from <= to) {
-                        const item = new DailyEventCount(from.clone(), 0);
-                        data.push(item);
-                        indexedData[from] = item;
-                        from.add(1, 'days');
-                    }
-
-                    // YOU ARE HERE: - add in counts, then go see if chart is working, etc
-                    // this._auditList().forEach((e) => {
-                    //     indexedData
-                    // });
-
-                    return data;
+                    const { entries = [] } = this._auditList();
+                    return HomePage.calculateDailyEventCounts(entries, this.displayedDate());
                 })
             };
 
@@ -121,11 +106,11 @@ export default {
             for (let i = 0; i < 12; i++) {
                 a.push(i);
             }
-            a.map(n => moment().subtract(n, 'months'))
+            a.map(n => moment().startOf('month').subtract(n, 'months'))
                 .forEach((m) => {
                     dates.push({
                         from: `${m.format('YYYY-MM-DD')}T00:00:00Z`,
-                        to: `${m.clone().add(1, 'months').format('YYYY-MM-DD')}T00:00:00Z`,
+                        to: `${m.clone().add(1, 'months').add(-1, 'days').format('YYYY-MM-DD')}T00:00:00Z`,
                         display: m.format('MMM YYYY')
                     });
                 });
@@ -150,13 +135,18 @@ export default {
         }
 
         _loadEvents() {
-            const { from, to } = this.selectedDate();
+            const start = Date.now();
+            const loadingDate = this.selectedDate();
+            const { from, to } = loadingDate;
             return this._services.getEvents(this.selectedClientId(), from, to).then((rawData) => {
                 this._auditList(rawData);
 
                 // COPIED: dropin/components/entryTable, ln 8
                 const rows = rawData.entries.map(r => new EntryTableRow(r, this.dropInColumns()));
                 this.dropInRows(rows);
+                console.log({ loadEvents: Date.now() - start });
+
+                this.displayedDate(loadingDate);
             });
         }
 
@@ -226,6 +216,33 @@ export default {
 
         clearSelectedRow() {
             this.selectedRow(null);
+        }
+
+        static calculateDailyEventCounts(events, selectedDate) {
+            const data = [];
+            const indexedData = {};
+            const from = moment(selectedDate.from).utc().clone();
+            const to = moment(selectedDate.to).utc();
+
+            const getIndex = dt => `${dt.getUTCFullYear()}${`0${dt.getUTCMonth() + 1}`.slice(-2)}${dt.getUTCDate()}`;
+
+            while (from <= to) {
+                const item = new DailyEventCount(from.clone(), 0);
+                data.push(item);
+                indexedData[getIndex(from.toDate())] = item;
+                from.add(1, 'days');
+            }
+
+            events.forEach((e) => {
+                const indexDate = new Date(e.time);
+                indexDate.setUTCHours(0, 0, 0, 0);
+                const index = getIndex(indexDate);
+                if (indexedData[index]) {
+                    indexedData[index].incrementCount(1);
+                }
+            });
+
+            return data;
         }
     },
     // COPIED: table matches audit table templates from dropin

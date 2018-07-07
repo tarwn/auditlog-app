@@ -29,10 +29,14 @@ export default {
                 return this.safeData().length;
             });
 
+            this.chart = {};
+
             this.subscriptions = [];
             this.subscriptions.push(this.data.subscribe(() => {
-                this.render();
+                this._refreshRender();
             }));
+
+            this._initialRender();
         }
 
         dispose() {
@@ -41,8 +45,7 @@ export default {
             });
         }
 
-        render() {
-            console.log(this.data());
+        _initialRender() {
             const margin = {
                 top: 20,
                 right: 20,
@@ -52,38 +55,111 @@ export default {
             const width = 600 - margin.left - margin.right;
             const height = 300 - margin.top - margin.bottom;
 
-            const xScale = d3.scaleUtc()
-                .domain([this.startDate().valueOf(), this.endDate().valueOf()])
-                .range([0, width]);
+            if (!this._initializeChart(width, height, margin)) {
+                setTimeout(() => this._initialRender(), 50);
+                return;
+            }
+            this.chart.isInitialized = true;
 
-            console.log({ xScale, st: this.startDate().valueOf(), en: this.endDate().valueOf() });
+            this._render(width, height, margin);
+        }
 
+        _refreshRender() {
+            if (!this.chart.isInitialized) {
+                return;
+            }
 
-            const yScale = d3.scaleLinear()
-                .domain([0, this.eventCountMax()])
-                .range([height, 0]);
+            const margin = {
+                top: 20,
+                right: 20,
+                bottom: 70,
+                left: 40
+            };
+            const width = 600 - margin.left - margin.right;
+            const height = 300 - margin.top - margin.bottom;
 
-            const svg = d3.select(`#${this.id}`)
+            this._render(width, height, margin);
+        }
+
+        _initializeChart(width, height, margin) {
+            // not visible
+            if (d3.select(`#${this.id}`).empty()) {
+                return false;
+            }
+
+            this.chart.svg = d3.select(`#${this.id}`)
                 .append('svg')
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom);
 
-            const bar = svg.selectAll('g')
-                .data(this.data())
-                .enter().append('g');
+            // x-axis scale
+            this.chart.xScale = d3.scaleBand()
+                .range([0, width])
+                .round(true)
+                .paddingInner(.1);
 
-            bar.append('rect')
+            // x-axis drawing
+            this.chart.xAxis = d3.axisBottom(this.chart.xScale)
+                .ticks(1, 'no data');
+            this.chart.svg.append('g')
+                .attr('transform', `translate(0, ${height})`)
+                .attr("class", "x axis")
+                .call(this.chart.xAxis);
+
+            // y-axis scale
+            // TODO: improve range and tick intervals w/ dynamic rounding
+            this.chart.yScale = d3.scaleLinear()
+                .range([height, 0]);
+
+            // y-axis drawing
+            this.chart.yAxis = d3.axisLeft(this.chart.yScale)
+                .ticks(0);
+            this.chart.svg.append('g')
+                .attr('transform', 'translate(0,0)')
+                .attr('class', 'y axis')
+                .call(this.chart.yAxis);
+
+            return true;
+        }
+
+        _render(width, height, margin) {
+            const { svg, xScale, xAxis, yScale, yAxis } = this.chart;
+
+            // update the scales from data
+            xScale.domain(this.data().map(d => d.date.valueOf()));
+            xAxis.tickFormat((d) => new Date(d).getUTCDate());
+            svg.select('.x.axis').transition().duration(300).call(xAxis);
+            yScale.domain([0, this.eventCountMax()]);
+            yAxis.ticks(4);
+
+            // bars
+            const bars = svg.selectAll('.ala-chart-bar')
+                .data(this.data(), d => d.date.valueOf());
+
+            bars.enter()
+                .append('rect')
+                .attr('class', 'ala-chart-bar')
                 .style('fill', 'steelblue')
                 .attr('x', d => xScale(d.date.valueOf()))
-                .attr('width', this.dataCount())
+                .attr('width', 15)
                 .attr('y', d => yScale(d.count()))
                 .attr('height', d => height - yScale(d.count()));
 
-            bar.append('text')
-                .attr('x', d => xScale(d.date.valueOf()))
-                .attr('y', d => yScale(d.count()) - 3)
-                .attr('dy', '.35em')
-                .text(d => d.date.format('D'));
+            bars.exit()
+                .remove();
+
+            // bars.transition()
+            //     .duration(300)
+            //     .attr('x', d => xScale(d.date.valueOf()))
+            //     .attr('width', this.dataCount())
+            //     .attr('y', d => yScale(d.count()))
+            //     .attr('height', d => height - yScale(d.count()));
+
+            // bar.append('text')
+            //     .attr('x', d => xScale(d.date.valueOf()))
+            //     .attr('y', height)
+            //     .attr('dy', '.35em')
+            //     .text(d => d.date.format('D'));
         }
     },
     template: `

@@ -4,7 +4,7 @@ export default class DailyEventCount {
         this.count = ko.observable(count);
     }
 
-    setCount(newCount) {
-        this.count(newCount);
+    incrementCount(additionalCount) {
+        this.count(this.count() + additionalCount);
     }
 }

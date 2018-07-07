@@ -5,28 +5,35 @@ const http = require("http");
 const host = process.argv[2];
 const port = process.argv[3];
 const auth = process.argv[4];
+const startDateAdjust = process.argv[5] || 0;
+
+const targetStartDate = new Date(Date.now() + (startDateAdjust * 24 * 60 * 60 * 1000));
 
 const content = fs.readFileSync("sampleEvents.json");
 const events = JSON.parse(content).sort((a,b) => { 
     return a.time - b.time;
 });
+const targetEventCount = Math.round(Math.random() * events.length);
  
 //fix up dates
 const initialDate = events[0].time * 1000;
 const lastDate = events[events.length - 1].time * 1000;
-const dateDiff = Date.now() - lastDate;
+const dateDiff = targetStartDate - lastDate;
 
 console.log('------');
-console.log(new Date(lastDate).toUTCString());
-console.log(new Date(lastDate + dateDiff).toUTCString());
+console.log('Data will be for: ' + new Date(lastDate + dateDiff).toUTCString());
+console.log('Number of events: ' + targetEventCount + '/' + events.length);
 console.log('------');
 
 events.forEach((e) => { 
     e.time = new Date(e.time * 1000 + dateDiff).toUTCString();
 });
 
+// remove some random count of events
+const eventsToSend = events.slice(0, targetEventCount);
+
 console.log("Calling api...");
-const postData = JSON.stringify(events);
+const postData = JSON.stringify(eventsToSend);
 
 const
     options = {
