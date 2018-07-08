@@ -239,7 +239,7 @@ export default {
                         <h2 class="ala-screen-reader-only">Security</h2>
                         <div class="ala-form-description">
                             The <code>View Key</code> is an access key used to display this customized view to your clients. It should
-                            be treated as a specialized API key, usable to access saved Event Log data but not make changes.
+                            be treated as a specialized API key, usable to access saved Audit Log data but not make changes.
                         </div>
                         <div class="ala-form-row">
                             <label class="ala-form-label-w2">View Key</label> 

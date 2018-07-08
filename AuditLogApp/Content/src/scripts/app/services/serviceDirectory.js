@@ -82,9 +82,9 @@ export default class ServiceDirectory {
         return ajax.get(`${this.basePath}/clients`);
     }
 
-    // Events
+    // Entries
 
-    getEvents(clientId, from, to) {
-        return ajax.get(`${this.basePath}/events/${clientId || 'all'}?fromDate=${from}&throughDate=${to}`);
+    getEntries(clientId, from, to) {
+        return ajax.get(`${this.basePath}/entries/${clientId || 'all'}?fromDate=${from}&throughDate=${to}`);
     }
 }

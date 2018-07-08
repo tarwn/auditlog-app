@@ -1,6 +1,6 @@
 import PageBase from '../pageBase';
 import ViewConfigurationModel from '../../../models/viewConfigurationModel';
-import DailyEventCount from '../../charts/models/dailyEventCount';
+import DailyEntryCount from '../../charts/models/dailyEntryCount';
 
 import CustomizationColumnModel from '../../../borrowed/auditLogDropIn/models/customizationColumnModel';
 import EntryTableRow from '../../../borrowed/auditLogDropIn/components/entryTableRow';
@@ -37,7 +37,7 @@ export default {
                     return 'loading...';
                 }
                 else {
-                    return `${this.dropInRows().length} events available`;
+                    return `${this.dropInRows().length} entries available`;
                 }
             });
 
@@ -57,14 +57,14 @@ export default {
 
             // chart data
             this.chartData = {
-                eventsByDay: ko.pureComputed(() => {
+                entriesByDay: ko.pureComputed(() => {
                     if (!this.readyForDisplay() ||
                         this.displayedDate() == null) {
                         return [];
                     }
 
                     const { entries = [] } = this._auditList();
-                    return HomePage.calculateDailyEventCounts(entries, this.displayedDate());
+                    return HomePage.calculateDailyEntryCounts(entries, this.displayedDate());
                 })
             };
 
@@ -79,7 +79,7 @@ export default {
                     this._initializeSorting()
                 ]))
                 .then(() => Promise.all([
-                    this._loadEvents(),
+                    this._loadEntries(),
                     this._loadClients()
                 ]))
                 .then(() => {
@@ -134,34 +134,34 @@ export default {
             return Promise.resolve();
         }
 
-        _loadEvents() {
+        _loadEntries() {
             const start = Date.now();
             const loadingDate = this.selectedDate();
             const { from, to } = loadingDate;
-            return this._services.getEvents(this.selectedClientId(), from, to).then((rawData) => {
+            return this._services.getEntries(this.selectedClientId(), from, to).then((rawData) => {
                 this._auditList(rawData);
 
                 // COPIED: dropin/components/entryTable, ln 8
                 const rows = rawData.entries.map(r => new EntryTableRow(r, this.dropInColumns()));
                 this.dropInRows(rows);
-                console.log({ loadEvents: Date.now() - start });
+                console.log({ loadEntries: Date.now() - start });
 
                 this.displayedDate(loadingDate);
             });
         }
 
-        _refreshEvents() {
+        _refreshEntries() {
             this.isRefreshing(true);
-            this._loadEvents()
+            this._loadEntries()
                 .finally(() => {
                     // hacky - this is going to apply after the binding takes effect
                     // - there will be flicker: https://app.clubhouse.io/launchready/story/789/improve-sort-on-dashboard-load
-                    this._sortEvents();
+                    this._sortEntries();
                     this.isRefreshing(false);
                 });
         }
 
-        _sortEvents() {
+        _sortEntries() {
             const sortColumnName = this.sortColumn().lines[0].field;
             const sortFunction = (a, b) => {
                 return EntryTableRow.compare(sortColumnName, a, b);
@@ -186,10 +186,10 @@ export default {
 
         _subscribeToFilterChanges() {
             this._subscriptions.push(this.selectedClientId.subscribe(() => {
-                this._refreshEvents();
+                this._refreshEntries();
             }));
             this._subscriptions.push(this.selectedDate.subscribe(() => {
-                this._refreshEvents();
+                this._refreshEntries();
             }));
         }
 
@@ -206,7 +206,7 @@ export default {
                 this.sortColumn(col);
                 this.sortDirection('desc');
             }
-            this._sortEvents();
+            this._sortEntries();
         }
 
         // COPIED: dropin/appViewModel, ln 39
@@ -218,7 +218,7 @@ export default {
             this.selectedRow(null);
         }
 
-        static calculateDailyEventCounts(events, selectedDate) {
+        static calculateDailyEntryCounts(entries, selectedDate) {
             const data = [];
             const indexedData = {};
             const from = moment(selectedDate.from).utc().clone();
@@ -227,13 +227,13 @@ export default {
             const getIndex = dt => `${dt.getUTCFullYear()}${`0${dt.getUTCMonth() + 1}`.slice(-2)}${dt.getUTCDate()}`;
 
             while (from <= to) {
-                const item = new DailyEventCount(from.clone(), 0);
+                const item = new DailyEntryCount(from.clone(), 0);
                 data.push(item);
                 indexedData[getIndex(from.toDate())] = item;
                 from.add(1, 'days');
             }
 
-            events.forEach((e) => {
+            entries.forEach((e) => {
                 const indexDate = new Date(e.time);
                 indexDate.setUTCHours(0, 0, 0, 0);
                 const index = getIndex(indexDate);
@@ -261,11 +261,11 @@ export default {
                 <span class="ala-dashboard-filter-summary" data-bind="text: filterSummary"></span>
             </div>
 
-            <div class="ala-dashboard-chart-area">
-                <daily-event-chart params="value: { data: chartData.eventsByDay }" />
-            </div>
-
             <div class="ala-dashboard-table">
+                <div class="ala-dashboard-chart-area">
+                    <daily-entry-chart params="value: { data: chartData.entriesByDay }" />
+                </div>
+
                 <table class="aldi-audit-table">
                     
                     <thead>
@@ -295,7 +295,7 @@ export default {
                         <td data-bind="attr: { colspan: dropInColumns().length + 1 }">
                             <div class="aldi-details-inner-panel">
                                 <i class="icon-cancel" data-bind="detailsHide: '#aldi-details-panel', clearRow: clearSelectedRow.bind($data), selectedClass: 'aldi-row-selected'"></i>
-                                <h3><i class="icon-ellipsis-vert"></i>Event Details</h3>
+                                <h3><i class="icon-ellipsis-vert"></i>Entry Details</h3>
                                 <div class="aldi-details-subheader">Summary</div>
                                 <div class="aldi-details-summary" data-bind="with: selectedRow">
                                     <table class="aldi-details-table">

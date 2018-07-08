@@ -1,7 +1,7 @@
-import DailyEventCount from './models/dailyEventCount';
+import DailyEventCount from './models/dailyEntryCount';
 
 export default {
-    name: 'daily-event-chart',
+    name: 'daily-entry-chart',
     viewModel: class DailyEventChartViewModel {
         constructor(params) {
             this.id = `chart_${Math.round(Math.random() * 10000)}`;
@@ -118,8 +118,6 @@ export default {
 
             // x-axis scale
             this.chart.xScale = d3.scaleBand()
-                .range([0, width])
-                .round(true)
                 .paddingInner(0.1);
 
             // x-axis drawing
@@ -132,9 +130,7 @@ export default {
 
             // y-axis scale
             // TODO: improve range and tick intervals w/ dynamic rounding
-            this.chart.yScale = d3.scaleLinear()
-                .range([height, 0])
-                .nice();
+            this.chart.yScale = d3.scaleLinear();
 
             // y-axis chart bg
             this.chart.yGrid = d3.axisRight(this.chart.yScale);
@@ -156,23 +152,33 @@ export default {
         _render() {
             const {
                 svg,
-                margin,
                 xScale,
                 xAxis,
                 yScale,
                 yAxis,
-                yGrid
+                yGrid,
+                margin
             } = this.chart;
             const { width, height } = this.chart.dimensions();
 
+            // Adjust from width + data change
+
+            svg.attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom);
+
             // update the scales from data
-            xScale.domain(this.data().map(d => d.date.valueOf()));
+            xScale.domain(this.data().map(d => d.date.valueOf()))
+                .range([0, width])
+                .round();
             xAxis.tickFormat(d => new Date(d).getUTCDate());
-            svg.select('.x.ala-chart-axis').transition().duration(300).call(xAxis);
+            // svg.select('.x.ala-chart-axis').transition().duration(300).call(xAxis);
+            svg.select('.x.ala-chart-axis').call(xAxis);
 
             let yMax = this.eventCountMax();
             yMax += yMax % 4;
-            yScale.domain([0, yMax]);
+            yScale.domain([0, yMax])
+                .range([height, 0])
+                .nice();
 
             yGrid.ticks(3)
                 .tickSizeInner(width)
@@ -183,33 +189,27 @@ export default {
             yAxis.ticks(3);
             svg.select('.y.ala-chart-axis').call(yAxis);
 
+            // Adjust from data
             // bars
-            const bars = svg.selectAll('.ala-chart-bar')
+            this.chart.bars = this.chart.svg.selectAll('.ala-chart-bar')
                 .data(this.data(), d => d.date.valueOf());
 
-            bars.enter()
+            this.chart.bars.enter()
                 .append('rect')
                 .attr('class', 'ala-chart-bar')
-                .attr('x', d => margin.left + xScale(d.date.valueOf()))
-                .attr('width', xScale.bandwidth)
-                .attr('y', d => margin.top + yScale(d.count()))
-                .attr('height', d => height - yScale(d.count()));
+                .attr('x', d => margin.left + this.chart.xScale(d.date.valueOf()))
+                .attr('width', this.chart.xScale.bandwidth)
+                .attr('y', d => margin.top + this.chart.yScale(d.count()))
+                .attr('height', d => height - this.chart.yScale(d.count()));
 
-            bars.exit()
+            this.chart.bars.exit()
                 .remove();
 
-            // bars.transition()
-            //     .duration(300)
-            //     .attr('x', d => xScale(d.date.valueOf()))
-            //     .attr('width', this.dataCount())
-            //     .attr('y', d => yScale(d.count()))
-            //     .attr('height', d => height - yScale(d.count()));
+            this.chart.bars.attr('x', d => margin.left + this.chart.xScale(d.date.valueOf()))
+                .attr('width', this.chart.xScale.bandwidth)
+                .attr('y', d => margin.top + this.chart.yScale(d.count()))
+                .attr('height', d => height - this.chart.yScale(d.count()));
 
-            // bar.append('text')
-            //     .attr('x', d => xScale(d.date.valueOf()))
-            //     .attr('y', height)
-            //     .attr('dy', '.35em')
-            //     .text(d => d.date.format('D'));
         }
     },
     template: `

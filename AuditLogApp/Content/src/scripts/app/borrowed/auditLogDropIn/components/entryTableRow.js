@@ -147,8 +147,8 @@ export default class EntryTableRow {
         return `${MONTHS[date.getUTCMonth()]} ${date.getUTCDate()} ${padTwo(date.getUTCHours().toString())}:${padTwo(date.getUTCMinutes().toString())}:${padTwo(date.getUTCSeconds().toString())}`;
     }
 
-    static _formatLatency(receivedAt, eventTime) {
-        const diff = new Date(receivedAt) - new Date(eventTime);
+    static _formatLatency(receivedAt, entryTime) {
+        const diff = new Date(receivedAt) - new Date(entryTime);
 
         const seconds = 1000;
         const minutes = seconds * 60;
