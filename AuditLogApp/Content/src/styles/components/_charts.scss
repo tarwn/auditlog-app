@@ -1,5 +1,25 @@
 @import "../variables";
 
-.ala-daily-event-chart-area{
-    height: 200px;
+.ala-daily-event-chart{
+    height: 150px;
+}
+
+.ala-chart-axis{
+    line, path {
+        stroke: $color-chart-grey;
+    } 
+    text {
+        fill: $color-chart-grey;
+    }
+}
+.ala-chart-grid{
+    line, path {
+        stroke: $color-chart-grey-lighter;
+    } 
+    text {
+        fill: $color-chart-grey-lighter;
+    }
+}
+.ala-chart-bar{
+    fill: $color-chart-bar;
 }

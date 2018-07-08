@@ -18,6 +18,7 @@
         "no-underscore-dangle": "off",              "// used to denote 'private' properties and functions": "",
         "arrow-body-style": "off",                  "// freedom to use blocks when more readable instead of using ({ return ... })": "",
         "no-else-return": "off",                    "// I find consistent indentation more readable": "",
-        "no-plusplus": "off",                       "// Only needed as ASI protection for folks allergic to semi-colons": ""
+        "no-plusplus": "off",                       "// Only needed as ASI protection for folks allergic to semi-colons": "",
+        "no-mixed-operators": ["error", {"allowSamePrecedence": true}],     "// a + b - c is easy enough to understand": ""
     }
 }
