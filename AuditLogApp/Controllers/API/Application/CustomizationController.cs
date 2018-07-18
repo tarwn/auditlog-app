@@ -1,6 +1,7 @@
 using AuditLogApp.Common.DTO;
 using AuditLogApp.Common.Identity;
 using AuditLogApp.Common.Persistence;
+using AuditLogApp.Controllers.API.Application.Models.Configuration;
 using AuditLogApp.Membership;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -123,18 +124,18 @@ namespace AuditLogApp.Controllers.API.Application
                     new ViewColumnLineDTO("action"),
                     new ViewColumnLineDTO("description")
                 }),
-                new ViewColumnDTO(0, "Actor", new List<ViewColumnLineDTO>(){
+                new ViewColumnDTO(1, "Actor", new List<ViewColumnLineDTO>(){
                     new ViewColumnLineDTO("actor.name"),
                     new ViewColumnLineDTO("actor.uuid")
                 }),
-                new ViewColumnDTO(0, "Actor IP", new List<ViewColumnLineDTO>(){
+                new ViewColumnDTO(2, "Actor IP", new List<ViewColumnLineDTO>(){
                     new ViewColumnLineDTO("context.client.ipAddress")
                 }),
-                new ViewColumnDTO(0, "Target", new List<ViewColumnLineDTO>(){
+                new ViewColumnDTO(3, "Target", new List<ViewColumnLineDTO>(){
                     new ViewColumnLineDTO("target.type"),
                     new ViewColumnLineDTO("target.label")
                 }),
-                new ViewColumnDTO(0, "Time", new List<ViewColumnLineDTO>(){
+                new ViewColumnDTO(4, "Time", new List<ViewColumnLineDTO>(){
                     new ViewColumnLineDTO("time[time]")
                 })
             };

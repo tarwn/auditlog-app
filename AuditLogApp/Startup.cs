@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Threading.Tasks;
 using AuditLogApp.Common.Identity;
 using AuditLogApp.Common.Persistence;
@@ -41,6 +42,7 @@ namespace AuditLogApp
         const string CUSTOMERVIEW_API_SCHEME = "ViewKey";
         const string CUSTOMERVIEW_API_HEADER = "X-VIEW-KEY";
         const string CUSTOMERVIEW_API_POLICY = "ViewAPIAccessOnly";
+        const string CORS_DROPIN = "AllowDropInAccess";
 
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
@@ -70,14 +72,15 @@ namespace AuditLogApp
             {
                 options.RespectBrowserAcceptHeader = true;
                 // Add XML Content Negotiation
-                options.InputFormatters.Add(new XmlSerializerInputFormatter());
-                options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                //options.InputFormatters.Add(new XmlSerializerInputFormatter());
+                //options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
                 // Don't default to JSON when there isn't a good answer
                 options.ReturnHttpNotAcceptable = true;
                 // Correct ASP.Net Core's incorrect handling of UTC datetime's
                 options.ModelBinderProviders.Insert(0, new DateTimeModelBinderProvider());
 
             })
+            .AddXmlSerializerFormatters().AddXmlDataContractSerializerFormatters()
             .AddJsonOptions(options =>
             {
                 options.SerializerSettings.Converters.Add(new IdentityJsonConverter<Int32>());
@@ -113,7 +116,8 @@ namespace AuditLogApp
                             .Any(v => $"v{v.ToString()}" == docName);
                 });
 
-                o.AddSecurityDefinition(CUSTOMER_API_SCHEME, new ApiKeyScheme() {
+                o.AddSecurityDefinition(CUSTOMER_API_SCHEME, new ApiKeyScheme()
+                {
                     Type = "apiKey",
                     In = "header",
                     Name = CUSTOMER_API_HEADER
@@ -122,6 +126,12 @@ namespace AuditLogApp
                     { CUSTOMER_API_SCHEME, new[] { CUSTOMER_API_POLICY } }
                 });
                 o.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                // Include XML Docs to incorporate XML descriptions
+                var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                var commentsFileName = Assembly.GetExecutingAssembly().GetName().Name + ".XML";
+                var commentsFile = Path.Combine(baseDirectory, commentsFileName);
+                o.IncludeXmlComments(commentsFile);
 
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
@@ -211,6 +221,16 @@ namespace AuditLogApp
                     policy.AddAuthenticationSchemes(CUSTOMER_API_SCHEME);
                     policy.AddAuthenticationSchemes(CUSTOMERVIEW_API_SCHEME);
                     policy.RequireAuthenticatedUser();
+                });
+            });
+
+            // CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy(CORS_DROPIN, builder => {
+                    builder.AllowAnyOrigin()
+                        .WithMethods("GET")
+                        .WithHeaders("accept", "content-type", "origin", "X-VIEW-KEY");
                 });
             });
         }

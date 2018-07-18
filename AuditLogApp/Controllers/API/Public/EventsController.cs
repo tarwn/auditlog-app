@@ -107,6 +107,12 @@ namespace AuditLogApp.Controllers.API.Public
         }
 
 
+        /// <summary>
+        /// Query for a set of events.
+        /// </summary>
+        /// <param name="clientID">UUID for one of your clients</param>
+        /// <param name="fromDate">Starting date to filter for</param>
+        /// <param name="throughDate">End date to filter through</param>
         [Authorize(Policy = "APIAccessOnly")]
         [HttpGet("")]
         [ProducesResponseType(typeof(EventSearchResponse), 200)]

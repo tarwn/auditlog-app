@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace AuditLogApp.Controllers.API.Application.Models.Configuration
+namespace AuditLogApp.Controllers.API.Public.Models.Configuration
 {
     public class ViewConfigurationModel
     {

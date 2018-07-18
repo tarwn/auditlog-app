@@ -29,11 +29,14 @@ namespace AuditLogApp.Controllers.API.Public
             _membership = membership;
         }
 
+        /// <summary>
+        /// Query to see what User information is in your AuditLog
+        /// for the given User (by UUID).
+        /// </summary>
+        /// <param name="uuid">Your UUID for the given user</param>
         [Authorize(Policy = "APIAccessOnly")]
         [HttpGet("{uuid}")]
         [ProducesResponseType(typeof(ActorQueryResponse), 200)]
-        [ProducesResponseType(typeof(ApiError), 400)]
-        [ProducesResponseType(typeof(ApiError), 404)]
         public async Task<IActionResult> GetAsync(string uuid)
         {
             var customerId = _membership.GetCustomerId(User);

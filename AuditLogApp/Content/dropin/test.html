@@ -12,14 +12,15 @@
     <body>
         
         <div id="audit-log"></div>
-        <script src="dropin.js"></script>
+        <script src="http://localhost:56110/dropin/dropin.js"></script>
         <script>
             auditLog({
-                mode: 'demo',
-                view: '{view-id}',
-                accessKey: '{view-accesskey}',
-                clientId: '{client-id}',
-                target: 'audit-log'
+                mode: 'production',
+                view: 'cb021bea-66ae-4e3d-803c-df84411ea977',
+                accessKey: 'q8BdFTE27wiU+gIpn6vjrp3CTxVcdGoF7WqLtHWPFGE=',
+                clientId: '1234567890',
+                target: 'audit-log',
+                host: 'http://localhost:56110'
             });
         </script>
 

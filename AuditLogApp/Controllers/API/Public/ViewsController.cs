@@ -1,5 +1,6 @@
 ﻿using AuditLogApp.Common.Identity;
 using AuditLogApp.Common.Persistence;
+using AuditLogApp.Controllers.API.Public.Models.Configuration;
 using AuditLogApp.Controllers.API.Public.Models.Events;
 using AuditLogApp.Controllers.API.Public.Models.Events.Search;
 using AuditLogApp.Controllers.API.Public.Models.Views;
@@ -7,6 +8,7 @@ using AuditLogApp.Documentation;
 using AuditLogApp.Membership;
 using AuditLogApp.Models.Shared;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -29,7 +31,38 @@ namespace AuditLogApp.Controllers.API.Public
             _membership = membership;
         }
 
+        /// <summary>
+        /// Returns the customized view settings for this view.
+        /// </summary>
+        /// <param name="viewId">View Id for your customized View</param>
         [Authorize(Policy = "ViewAPIAccessOnly")]
+        [EnableCors("AllowDropInAccess")]
+        [HttpGet("configuration/{viewId:guid}")]
+        [ProducesResponseType(typeof(ViewConfigurationModel), 200)]
+        [ProducesResponseType(typeof(ApiError), 400)]
+        [ProducesResponseType(typeof(ApiError), 404)]
+        public async Task<IActionResult> GetOrCreateDefaultViewAsync(Guid viewId)
+        {
+            var customerId = _membership.GetCustomerId(User);
+            var view = await _persistence.Views.GetForCustomerAsync(customerId);
+            if (view == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(new ViewConfigurationModel(view));
+            }
+        }
+
+        /// <summary>
+        /// Returns the entries for a given page of a customized View.
+        /// </summary>
+        /// <param name="viewId">View Id for your customized View</param>
+        /// <param name="clientUUId">Your unique Id for your client</param>
+        /// <param name="page">Page name to retrieve (or empty for most recent)</param>
+        [Authorize(Policy = "ViewAPIAccessOnly")]
+        [EnableCors("AllowDropInAccess")]
         [HttpGet("{viewId:guid}/{clientUUId}")]
         [ProducesResponseType(typeof(PagedViewResult), 200)]
         [ProducesResponseType(typeof(ApiError), 400)]

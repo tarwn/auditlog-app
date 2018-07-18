@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AuditLogApp.Models.Shared
@@ -26,7 +31,11 @@ namespace AuditLogApp.Models.Shared
             Message = GetMessageForStatusCode(statusCode);
 
             var errors = modelState.Select(p => new { key = CorrectCase(p.Key), errors = String.Join(", ", p.Value.Errors.Select(e => GetErrorMessage(e)).Distinct()) });
-            Details = errors.ToDictionary(e => e.key, e => e.errors);
+            Details = new CustomDictionary();
+            foreach (var e in errors)
+            {
+                Details[e.key] = e.errors;
+            }
         }
 
         private string CorrectCase(string key)
@@ -117,6 +126,54 @@ namespace AuditLogApp.Models.Shared
 
         public int StatusCode { get; set; }
         public string Message { get; set; }
-        public Dictionary<string, string> Details { get; set; }
+        public CustomDictionary Details { get; set; }
+    }
+
+    public class CustomDictionary : Dictionary<string, string>, IXmlSerializable
+    {
+        private static readonly XmlSerializer KeySerializer;
+        private static readonly XmlSerializer ValueSerializer;
+
+        private readonly string _namespace;
+
+        static CustomDictionary()
+        {
+        }
+
+        private static void ValueSerializerOnUnknownElement(object sender, XmlNodeEventArgs xmlNodeEventArgs)
+        {
+            Debugger.Break();
+        }
+
+        public CustomDictionary()
+            : this("")
+        {
+        }
+
+        public CustomDictionary(string @namespace)
+        {
+            _namespace = @namespace;
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            foreach (var kvp in this)
+            {
+                writer.WriteStartElement("Detail");
+                writer.WriteElementString("Key", kvp.Key);
+                writer.WriteElementString("Message", kvp.Value);
+                writer.WriteEndElement();
+            }
+        }
     }
 }

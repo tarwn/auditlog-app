@@ -38,6 +38,6 @@ export default {
         }
     },
     template: `
-        <iframe src="/dropin/index.html" class="ala-view-edit-preview-iframe" data-bind="attr: { id: id }" />
+        <iframe src="/dropin/iframe.html" class="ala-view-edit-preview-iframe" data-bind="attr: { id: id }" />
     `
 };

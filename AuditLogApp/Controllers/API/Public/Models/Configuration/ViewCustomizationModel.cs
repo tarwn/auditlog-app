@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using AuditLogApp.Common.DTO;
 
-namespace AuditLogApp.Controllers.API.Application.Models.Configuration
+namespace AuditLogApp.Controllers.API.Public.Models.Configuration
 {
     public class ViewCustomizationModel
     {
