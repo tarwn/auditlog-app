@@ -1,5 +1,6 @@
 ﻿import allComponents from '../components/allComponents';
 import validation from '../extenders/validation';
+import applyHightlightBinding from '../bindings/highlight';
 
 import applyBindingDetailsClick from '../borrowed/auditLogDropIn/utils/applyBindingDetailsClick';
 import applyBindingPotentialLink from '../borrowed/auditLogDropIn/utils/applyBindingPotentialLink';
@@ -35,6 +36,7 @@ export default class AppViewModel {
         // COPIED: dropin/app.js, ln 26
         applyBindingDetailsClick(ko, $);
         applyBindingPotentialLink(ko, $);
+        applyHightlightBinding(ko);
 
         allComponents.forEach((component) => {
             if (component.viewModel === undefined) {

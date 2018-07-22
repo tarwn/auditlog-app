@@ -26,7 +26,7 @@ export default {
             this.newLink = ko.observable(ViewHeaderLinkModel.getEmpty(false));
             this.newColumn = ko.observable(ViewColumnConfigurationModel.getEmpty());
 
-            this.tabs = new Tabs(['Layout', 'Columns', 'Security']);
+            this.tabs = new Tabs(['Layout', 'Columns', 'Security', 'Embed']);
             this.tabs.changeToLayout();
 
             this.iframeId = 'iframe-123';
@@ -34,6 +34,12 @@ export default {
             /* eslint-disable new-cap */
             ko[this.iframeSubscribable] = new ko.subscribable();
             /* eslint-enable new-cap */
+
+            this.sampleScript = ko.pureComputed(() => {
+                const val = this.getSampleScript();
+                console.log({ val });
+                return val;
+            });
 
             this.isSaving = ko.observable(false);
             this.initialize();
@@ -110,8 +116,22 @@ export default {
         resetViewKey() {
             this._services.resetViewKey(this.view().id)
                 .then((newKey) => {
-                    this.view().accessKey(newKey.accessKey);
+                    this.view().accessKey(newKey.key);
                 });
+        }
+
+        getSampleScript() {
+            return `<div id="audit-log"></div>
+<script src="https://app.auditlog.co/dropin/dropin.js"></script>
+<script>
+    auditLog({
+        view: '${this.view().id}',
+        accessKey: '${this.view().accessKey()}',
+        clientId: '{clientUUID}',
+        target: 'audit-log',
+        host: 'https://app.auditlog.co'
+    });
+</script>`;
         }
 
         connectSampleIFrame() {
@@ -146,6 +166,7 @@ export default {
                         <li><button class="ala-button-tab" data-bind="click: tabs.changeToLayout, css: { 'ala-button-tab-selected': tabs.isLayoutSelected }">Layout</button></li>
                         <li><button class="ala-button-tab" data-bind="click: tabs.changeToColumns, css: { 'ala-button-tab-selected': tabs.isColumnsSelected }">Columns</button></li>
                         <li><button class="ala-button-tab" data-bind="click: tabs.changeToSecurity, css: { 'ala-button-tab-selected': tabs.isSecuritySelected }">Security</button></li>
+                        <li><button class="ala-button-tab" data-bind="click: tabs.changeToEmbed, css: { 'ala-button-tab-selected': tabs.isEmbedSelected }">Embed Script</button></li>
                     </ul>
                     <div class="ala-tab-content" data-bind="visible: tabs.isLayoutSelected">
                         <h2 class="ala-screen-reader-only">Layout</h2>
@@ -172,7 +193,7 @@ export default {
                                     <tr>
                                         <td><input-text params="value: { o: label }, isShorter: true" /></td>
                                         <td><input-url params="value: { o: url }" /></td>
-                                        <td><button class="ala-button-lite-red" title="Remove" data-bind="click: $parent.removeHeaderLink.bind($parent)"><i class="icon-cancel"></i></button></td>
+                                        <td><button class="ala-button-lite-red" title="Remove" data-bind="click: $parent.removeHeaderLink.bind($parent)"><i class="icon-cancel icon-cancel-large"></i></button></td>
                                     </tr>
                                 </tbody>
                                 <tfoot data-bind="with: newLink">
@@ -209,10 +230,10 @@ export default {
                                         <select data-bind="options: $parent.view().availableFields, value: lines()[1].field, optionsCaption: 'Second row...'" class="ala-columns-line2">
                                         </select>
                                     </td>
-                                    <td class="ala-center">
+                                    <td class="ala-center" style="white-space: nowrap; vertical-align: middle">
                                         <button class="ala-button-lite" title="Move Up" data-bind="click: $parent.moveColumnUp.bind($parent)"><i class="icon-up-open"></i></button>
                                         <button class="ala-button-lite" title="Move Down" data-bind="click: $parent.moveColumnDown.bind($parent)"><i class="icon-down-open"></i></button>
-                                        <button class="ala-button-lite-red" title="Remove" data-bind="click: $parent.removeColumn.bind($parent)"><i class="icon-cancel"></i></button>
+                                        <button class="ala-button-lite-red" title="Remove" data-bind="click: $parent.removeColumn.bind($parent)"><i class="icon-cancel icon-cancel-large"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -242,11 +263,24 @@ export default {
                             be treated as a specialized API key, usable to access saved Audit Log data but not make changes.
                         </div>
                         <div class="ala-form-row">
-                            <label class="ala-form-label-w2">View Key</label> 
-                            <span class="ala-form-input-faux" data-bind="text: view().accessKey" /><br/>
+                            <label class="ala-form-label-w2">View Id</label> 
+                            <span class="ala-form-input-faux"  data-bind="text: view().id" /><br/>
                         </div>
                         <div class="ala-form-row">
-                            <button class="ala-button" data-bind="click: resetViewKey">Generate New Key</button>
+                            <label class="ala-form-label-w2">Access Key</label> 
+                            <span class="ala-form-input-faux"  data-bind="text: view().accessKey" /><br/>
+                        </div>
+                        <div class="ala-form-row">
+                            <button class="ala-button" data-bind="click: resetViewKey">Generate New Access Key</button>
+                        </div>
+                    </div>
+                    <div class="ala-tab-content" data-bind="visible: tabs.isEmbedSelected">
+                        <h2 class="ala-screen-reader-only">Sample Embed Script</h2>
+                        <div class="ala-form-row">
+                            Here is a sample script to embed this View in your application.
+                            <pre class="highlight html" data-bind="highlight: sampleScript">
+                            Note: Replace the <code>{clientUUID}</code> with the relevant value for each client 
+                            so they can only see their content.
                         </div>
                     </div>
                 </div>

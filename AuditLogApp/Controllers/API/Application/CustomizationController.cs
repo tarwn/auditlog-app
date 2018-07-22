@@ -46,15 +46,15 @@ namespace AuditLogApp.Controllers.API.Application
             if (view == null)
             {
                 view = await CreateDefaultViewAsync(customerId);
-                // convert the default client view into a dashboard view, until we offer customizable dashboard views
-                view.Columns.Insert(0, new ViewColumnDTO(0, "Client", new List<ViewColumnLineDTO>() {
+            }
+            // convert the default client view into a dashboard view, until we offer customizable dashboard views
+            view.Columns.Insert(0, new ViewColumnDTO(0, "Client", new List<ViewColumnLineDTO>() {
                     new ViewColumnLineDTO("client.name"),
                     new ViewColumnLineDTO("client.uuid")
                 }));
-                for (int i = 0; i < view.Columns.Count; i++)
-                {
-                    view.Columns[i].Order = 0;
-                }
+            for (int i = 0; i < view.Columns.Count; i++)
+            {
+                view.Columns[i].Order = 0;
             }
             return Ok(new ViewConfigurationModel(view));
         }

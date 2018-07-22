@@ -144,7 +144,6 @@ export default {
                 // COPIED: dropin/components/entryTable, ln 8
                 const rows = rawData.entries.map(r => new EntryTableRow(r, this.dropInColumns()));
                 this.dropInRows(rows);
-                console.log({ loadEntries: Date.now() - start });
 
                 this.displayedDate(loadingDate);
             });

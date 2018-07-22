@@ -81,6 +81,10 @@ export default class EntryTableRow {
                 return (a.target.label || '') > (b.target.label || '');
             case 'target.url':
                 return (a.target.url || '') > (b.target.url || '');
+            case 'client.uuid':
+                return (a.client.uuid || '') > (b.client.uuid || '');
+            case 'client.name':
+                return (a.client.name || '') > (b.client.name || '');
             default:
                 return null;
         }
@@ -117,6 +121,10 @@ export default class EntryTableRow {
                 return rowData.target.label;
             case 'target.url':
                 return rowData.target.url;
+            case 'client.uuid':
+                return rowData.client.uuid;
+            case 'client.name':
+                return rowData.client.name;
             default:
                 return null;
         }

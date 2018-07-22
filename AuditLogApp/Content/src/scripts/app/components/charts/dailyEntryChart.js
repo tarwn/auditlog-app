@@ -209,7 +209,6 @@ export default {
                 .attr('width', this.chart.xScale.bandwidth)
                 .attr('y', d => margin.top + this.chart.yScale(d.count()))
                 .attr('height', d => height - this.chart.yScale(d.count()));
-
         }
     },
     template: `

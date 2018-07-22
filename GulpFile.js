@@ -27,6 +27,7 @@ var configs = {
     jsLibInput: './AuditLogApp/Content/src/scripts/lib/*.js',
     jsLibOutput: './AuditLogApp/Content/build/scripts/lib/',
     jsInput: './AuditLogApp/Content/src/scripts/app/app.js',
+    cssInput: './AuditLogApp/Content/src/styles/*.css',
     sassInput: ['./AuditLogApp/Content/src/styles/app.scss','./AuditLogApp/Content/src/styles/standalone.scss'],
     sassWatch: './AuditLogApp/Content/src/styles/**/*.scss',
     imagesInput: './AuditLogApp/Content/src/images/**/*.*',
@@ -129,6 +130,28 @@ function shortenPath(longPath){
     return longPath.substr(__dirname.length);
 }
 
+gulp.task('css-static', function () {
+    var plugins = [
+        cssnano()
+    ];
+
+    return gulp.src(configs.cssInput)
+        .pipe(sourcemaps.init())
+        .pipe(sass().on('error', sass.logError))
+        .pipe(postcss(plugins))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(configs.outputFolder));
+});
+
+gulp.task('css-static:watch', function () {
+    return gulp.watch(configs.cssInput, function () {
+        gulp.start('css-static');
+    })
+        .on('change', function (event) {
+            console.log('[CSS WATCH] ' + shortenPath(event.path) + ' was ' + event.type);
+        });
+});
+
 // Images
 
 gulp.task('images', function(){
@@ -165,6 +188,6 @@ gulp.task('dropin:watch', function () {
 
 // Tasks
 
-gulp.task('local', ['images', 'fonts', 'dropin', 'dropin:watch', 'sass', 'images:watch', 'js-lib', 'js:watch', 'sass:watch']);
-gulp.task('build', ['images', 'fonts', 'dropin', 'js-lib', 'js', 'sass']);
+gulp.task('local', ['images', 'css-static', 'fonts', 'dropin', 'dropin:watch', 'sass', 'images:watch', 'js-lib', 'js:watch', 'sass:watch', 'css-static:watch']);
+gulp.task('build', ['images', 'css-static', 'fonts', 'dropin', 'js-lib', 'js', 'sass']);
 gulp.task('default', ['local']);

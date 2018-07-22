@@ -8,7 +8,8 @@
         "ko": true,
         "page": true,
         "moment": true,
-        "d3": true
+        "d3": true,
+        "hljs": true
     },
     "rules": {
         "indent": ["error", 4, {"SwitchCase": 1}],  "// personal preference": "",

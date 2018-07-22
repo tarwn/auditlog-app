@@ -120,8 +120,9 @@ tbody tr.aldi-row-selected{
     border-radius: 4px;
 }
 
-.icon-cancel{
+.icon-cancel-large{
     @extend .h3;
+    margin: 0;
     font-weight: normal;
     float: right;
     cursor: pointer;
