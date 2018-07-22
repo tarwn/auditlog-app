@@ -263,13 +263,14 @@ export default {
                             be treated as a specialized API key, usable to access saved Audit Log data but not make changes.
                         </div>
                         <div class="ala-form-row">
-                            <label class="ala-form-label-w2">View Id</label> 
+                            <label class="ala-form-label-w2">View Id</label> <br/>
                             <span class="ala-form-input-faux"  data-bind="text: view().id" /><br/>
                         </div>
                         <div class="ala-form-row">
                             <label class="ala-form-label-w2">Access Key</label> 
                             <span class="ala-form-input-faux"  data-bind="text: view().accessKey" /><br/>
                         </div>
+                        <br/>
                         <div class="ala-form-row">
                             <button class="ala-button" data-bind="click: resetViewKey">Generate New Access Key</button>
                         </div>

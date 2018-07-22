@@ -135,7 +135,7 @@ export default {
         }
 
         _loadEntries() {
-            const start = Date.now();
+            // const start = Date.now();
             const loadingDate = this.selectedDate();
             const { from, to } = loadingDate;
             return this._services.getEntries(this.selectedClientId(), from, to).then((rawData) => {
