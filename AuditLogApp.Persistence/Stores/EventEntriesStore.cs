@@ -42,12 +42,16 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 eventEntry.Target_Type,
                 eventEntry.Target_UUID,
                 eventEntry.Target_Label,
-                eventEntry.Target_URL
+                eventEntry.Target_URL,
+                eventEntry.TargetUser_UUID,
+                eventEntry.TargetUser_Name,
+                eventEntry.TargetUser_Email
             };
 
             // double @ is for variables delcared in the statement so PteaPoco won't try to provide them
 
             string sql = @";
+                -- Ensure Actor is in DB and up to date
                 DECLARE @@ActorId uniqueidentifier;
                 SELECT @@ActorId = Id 
                 FROM dbo.EventActors
@@ -66,9 +70,39 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                     SET Name = @Actor_Name,
                         Email = @Actor_Email
                     WHERE Id = @@ActorId
-                        AND IsForgotten = 0;
+                        AND IsForgotten = 0
+                        AND Name <> @Actor_Name
+                        AND Email <> @Actor_Email;
                 END
 
+                -- Ensure Target Actor is in DB and up to date (If Set)
+                DECLARE @@TargetActorId uniqueidentifier;
+                IF @TargetUser_UUID IS NOT NULL
+                BEGIN
+                    SELECT @@TargetActorId = Id 
+                    FROM dbo.EventActors
+                    WHERE CustomerId = @CustomerId
+                        AND UUID = @TargetUser_UUID;
+
+                    IF @@TargetActorId IS NULL
+                    BEGIN
+                        SET @@TargetActorId = NewID();
+                        INSERT INTO dbo.EventActors(Id, CustomerId, UUID, Name, Email, IsForgotten)
+                        VALUES(@@TargetActorId, @CustomerId, @TargetUser_UUID, @TargetUser_Name, @TargetUser_Email, 0);
+                    END
+                    ELSE
+                    BEGIN
+                        UPDATE dbo.EventActors
+                        SET Name = @TargetUser_Name,
+                            Email = @TargetUser_Email
+                        WHERE Id = @@TargetActorId
+                            AND IsForgotten = 0
+                            AND Name <> @TargetUser_Name
+                            AND Email <> @TargetUser_Email;
+                    END
+                END
+
+                -- Ensure Client is in DB and up to date
                 DECLARE @@ClientId uniqueidentifier;
                 SELECT @@ClientId = Id 
                 FROM dbo.EventClients
@@ -89,8 +123,8 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                 END
 
                 DECLARE @@Id uniqueidentifier = NewId();
-                INSERT INTO dbo.EventEntries(Id, CustomerId, ReceptionTime, UUID, EventClientId, EventTime, Action, Description, URL, EventActorId, Context_Client_IP, Context_Client_BrowserAgent, Context_Server_ServerId, Context_Server_Version, Target_Type, Target_UUID, Target_Label, Target_URL)
-                VALUES(                    @@Id,@CustomerId,@ReceptionTime,@UUID,    @@ClientId,@EventTime,@Action,@Description,@URL,    @@ActorId,@Context_Client_IP,@Context_Client_BrowserAgent,@Context_Server_ServerId,@Context_Server_Version,@Target_Type,@Target_UUID,@Target_Label,@Target_URL);
+                INSERT INTO dbo.EventEntries(Id, CustomerId, ReceptionTime, UUID, EventClientId, EventTime, Action, Description, URL, EventActorId, Context_Client_IP, Context_Client_BrowserAgent, Context_Server_ServerId, Context_Server_Version, Target_Type, Target_UUID, Target_Label, Target_URL, TargetEventActorId)
+                VALUES(                    @@Id,@CustomerId,@ReceptionTime,@UUID,    @@ClientId,@EventTime,@Action,@Description,@URL,    @@ActorId,@Context_Client_IP,@Context_Client_BrowserAgent,@Context_Server_ServerId,@Context_Server_Version,@Target_Type,@Target_UUID,@Target_Label,@Target_URL,    @@TargetActorId);
 
                 SELECT @@Id as Id;
             ";
@@ -132,10 +166,15 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                        EE.Target_Type, 
                        EE.Target_UUID, 
                        EE.Target_Label, 
-                       EE.Target_URL
+                       EE.Target_URL,
+                       EE.TargetEventActorId AS TargetUser_Id,
+                       TEA.UUID AS TargetUser_UUID,
+                       TEA.Name AS TargetUser_Name,
+                       TEA.Email AS TargetUser_Email
                 FROM dbo.EventEntries EE   
                     INNER JOIN dbo.EventActors EA ON EA.Id = EE.EventActorId
                     INNER JOIN dbo.EventClients EC ON EC.Id = EE.EventClientId
+                    LEFT JOIN dbo.EventActors TEA ON TEA.Id = EE.TargetEventActorId
                 WHERE EE.CustomerId = @CustomerId
                     AND EE.Id = @Id;
             ";
@@ -199,10 +238,15 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
                        EE.Target_Type, 
                        EE.Target_UUID, 
                        EE.Target_Label, 
-                       EE.Target_URL
+                       EE.Target_URL,
+                       EE.TargetEventActorId AS TargetUser_Id,
+                       TEA.UUID AS TargetUser_UUID,
+                       TEA.Name AS TargetUser_Name,
+                       TEA.Email AS TargetUser_Email
                 FROM dbo.EventEntries EE   
                     INNER JOIN dbo.EventActors EA ON EA.Id = EE.EventActorId
                     INNER JOIN dbo.EventClients EC ON EC.Id = EE.EventClientId
+                    LEFT JOIN dbo.EventActors TEA ON TEA.Id = EE.TargetEventActorId
                 WHERE EE.CustomerId = @CustomerId
                     " + String.Join("\n", whereClauses) + @";
             ";
@@ -312,7 +356,7 @@ namespace AuditLogApp.Persistence.SQLServer.Stores
         #endregion
 
         #region Clients
-        
+
         public async Task<List<EventClientDTO>> GetAllClientsAsync(CustomerId customerId)
         {
             var sqlParams = new

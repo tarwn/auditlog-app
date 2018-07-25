@@ -50,11 +50,10 @@
                 "version": "20180325-01"
             }
         },
-        "target": {
-            "type": "user",
+        "targetUser": {
             "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
-            "label": "Salman Randall",
-            "url": "http://blah.example.com/95c102ae-5930-413f-b794-8f0934fdb136"
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
         }
     },
     {
@@ -82,11 +81,10 @@
                 "version": "20180325-01"
             }
         },
-        "target": {
-            "type": "user",
+        "targetUser": {
             "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
-            "label": "Salman Randall",
-            "url": null
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
         }
     },
     {
@@ -114,11 +112,10 @@
                 "version": "20180325-01"
             }
         },
-        "target": {
-            "type": "user",
+        "targetUser": {
             "uuid": "95c102ae-5930-413f-b794-8f0934fdb136",
-            "label": "Salman Randall",
-            "url": null
+            "name": "Salman Randall",
+            "email": "srandall@great-client.test"
         }
     },
     {

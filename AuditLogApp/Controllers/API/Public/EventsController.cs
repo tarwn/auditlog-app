@@ -53,26 +53,30 @@ namespace AuditLogApp.Controllers.API.Public
             foreach (var entry in entries)
             {
                 var dto = new EventEntryDTO(null, customerId, DateTime.UtcNow,
-                entry.UUID,
-                null,
-                entry.Client.UUID,
-                entry.Client.Name,
-                entry.Time.Value,   // nullable - ModelBinding should catch this, as it's annotated as Required - convert to UTC
-                entry.Action,
-                entry.Description,
-                entry.URL,
-                null,
-                entry.Actor.UUID,
-                entry.Actor.Name,
-                entry.Actor.Email,
-                entry.Context.Client.IPAddress,
-                entry.Context.Client.BrowserAgent,
-                entry.Context.Server.ServerId,
-                entry.Context.Server.Version,
-                entry.Target.Type,
-                entry.Target.UUID,
-                entry.Target.Label,
-                entry.Target.URL);
+                    entry.UUID,
+                    null,
+                    entry.Client.UUID,
+                    entry.Client.Name,
+                    entry.Time.Value,   // nullable - ModelBinding should catch this, as it's annotated as Required - convert to UTC
+                    entry.Action,
+                    entry.Description,
+                    entry.URL,
+                    null,
+                    entry.Actor.UUID,
+                    entry.Actor.Name,
+                    entry.Actor.Email,
+                    entry.Context.Client.IPAddress,
+                    entry.Context.Client.BrowserAgent,
+                    entry.Context.Server.ServerId,
+                    entry.Context.Server.Version,
+                    entry.Target.Type,
+                    entry.Target.UUID,
+                    entry.Target.Label,
+                    entry.Target.URL,
+                    null,
+                    entry.TargetUser.UUID,
+                    entry.TargetUser.Name,
+                    entry.TargetUser.Email);
 
                 EventEntryId id = await _persistence.EventEntries.CreateAsync(dto);
                 results.ReceivedEvents.Add(new ReceivedEventEntryId(id, entry.UUID));
@@ -160,6 +164,10 @@ namespace AuditLogApp.Controllers.API.Public
             if (entry.Target == null)
             {
                 entry.Target = new EventEntryTarget();
+            }
+            if (entry.TargetUser == null)
+            {
+                entry.TargetUser = new EventEntryTargetUser();
             }
         }
     }

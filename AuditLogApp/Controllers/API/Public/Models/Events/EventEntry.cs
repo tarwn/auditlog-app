@@ -70,9 +70,14 @@ namespace AuditLogApp.Controllers.API.Public.Models.Events
         public EventEntryContext Context { get; set; }
 
         /// <summary>
-        /// The Target that the Actor performed the Action against.
+        /// The Target that the Actor performed the Action against. Send a `TargetUser` if it is a User/Actor instead.
         /// </summary>
         public EventEntryTarget Target { get; set; }
+        
+        /// <summary>
+        /// The Target User that the Actor performed the Action against. Send a `Target` if it is not a User/Actor instead.
+        /// </summary>
+        public EventEntryTargetUser TargetUser { get; set; }
 
     }
 }

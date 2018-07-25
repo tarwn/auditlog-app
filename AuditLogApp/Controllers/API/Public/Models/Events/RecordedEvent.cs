@@ -24,7 +24,15 @@ namespace AuditLogApp.Controllers.API.Public.Models.Events
             URL = entry.URL;
             Actor = new EventEntryActor(entry.Actor_UUID, entry.Actor_Name, entry.Actor_Email);
             Context = new EventEntryContext(entry.Context_Client_IP, entry.Context_Client_BrowserAgent, entry.Context_Server_ServerId, entry.Context_Server_Version);
-            Target = new EventEntryTarget(entry.Target_Type, entry.Target_UUID, entry.Target_Label, entry.Target_URL);
+
+            if (entry.TargetUser_Id != null)
+            {
+                Target = new EventEntryTarget("User", entry.TargetUser_UUID, entry.TargetUser_Name, null);
+            }
+            else
+            {
+                Target = new EventEntryTarget(entry.Target_Type, entry.Target_UUID, entry.Target_Label, entry.Target_URL);
+            }
         }
 
         [JsonProperty(PropertyName = "_links")]

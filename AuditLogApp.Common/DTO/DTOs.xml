@@ -81,6 +81,10 @@
     <Property Name="Target_UUID" Type="string" />
     <Property Name="Target_Label" Type="string" />
     <Property Name="Target_URL" Type="string" />
+    <Property Name="TargetUser_Id" Type="EventActorId" />
+    <Property Name="TargetUser_UUID" Type="string" />
+    <Property Name="TargetUser_Name" Type="string" />
+    <Property Name="TargetUser_Email" Type="string" />
   </DTO>
 
   <DTO Name="EventActorDTO">

@@ -214,7 +214,7 @@ namespace AuditLogApp.Common.DTO
 		[Obsolete("Serialization use only", true)]
 		public EventEntryDTO() { }
 
-		public EventEntryDTO(EventEntryId id, CustomerId customerid, DateTime receptiontime, string uuid, EventClientId client_id, string client_uuid, string client_name, DateTime eventtime, string action, string description, string url, EventActorId actor_id, string actor_uuid, string actor_name, string actor_email, string context_client_ip, string context_client_browseragent, string context_server_serverid, string context_server_version, string target_type, string target_uuid, string target_label, string target_url)
+		public EventEntryDTO(EventEntryId id, CustomerId customerid, DateTime receptiontime, string uuid, EventClientId client_id, string client_uuid, string client_name, DateTime eventtime, string action, string description, string url, EventActorId actor_id, string actor_uuid, string actor_name, string actor_email, string context_client_ip, string context_client_browseragent, string context_server_serverid, string context_server_version, string target_type, string target_uuid, string target_label, string target_url, EventActorId targetuser_id, string targetuser_uuid, string targetuser_name, string targetuser_email)
 		{
 		
 			Id = id;
@@ -240,6 +240,10 @@ namespace AuditLogApp.Common.DTO
 			Target_UUID = target_uuid;
 			Target_Label = target_label;
 			Target_URL = target_url;
+			TargetUser_Id = targetuser_id;
+			TargetUser_UUID = targetuser_uuid;
+			TargetUser_Name = targetuser_name;
+			TargetUser_Email = targetuser_email;
 		}
 
 		
@@ -288,6 +292,14 @@ namespace AuditLogApp.Common.DTO
 		public string Target_Label { get; set; }
 			
 		public string Target_URL { get; set; }
+			
+		public EventActorId TargetUser_Id { get; set; }
+			
+		public string TargetUser_UUID { get; set; }
+			
+		public string TargetUser_Name { get; set; }
+			
+		public string TargetUser_Email { get; set; }
 			
 		
 	}
