@@ -4,37 +4,37 @@
     Layout = "~/Views/Shared/StandaloneLayout.cshtml";
 }
 
-<div class="box">
-    <h2>Create Account</h2>
+<div class="ala-standalone-form">
+    <div class="ala-standalone-form-row ala-align-center">
+        <a asp-action="RegisterWithTwitter" class="ala-button"><i class="icon-twitter"></i>Continue with Twitter</a>
+    </div>
 
-    <a asp-action="RegisterWithTwitter" class="btn-white">Continue with Twitter</a>
-
-    <div class="horizantal-line"><span>or</span></div>
+    <div class="ala-standalone-form-divider"><span>or</span></div>
 
     <form asp-action="Register" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
+        <div class="ala-standalone-form-row">
             <label asp-for="UserName" class="control-label"></label>
             <input asp-for="UserName" class="form-control" />
             <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="ala-standalone-form-row">
             <label asp-for="Password" class="control-label"></label>
             <input asp-for="Password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="ala-standalone-form-row">
             <label asp-for="Email" class="control-label"></label>
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="ala-standalone-form-row">
             <label asp-for="CompanyName" class="control-label"></label>
             <input asp-for="CompanyName" class="form-control" />
             <span asp-validation-for="CompanyName" class="text-danger"></span>
         </div>
-        <div class="form-group">
-            <input type="submit" value="Register" class="btn btn-default" />
+        <div class="ala-standalone-form-row">
+            <input type="submit" value="Register" class="ala-button" />
         </div>
     </form>
 </div>

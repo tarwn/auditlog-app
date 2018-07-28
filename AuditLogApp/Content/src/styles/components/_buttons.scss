@@ -9,9 +9,9 @@
     // display: inline-block;
     // cursor: pointer;
     display: inline-block;
-        border-radius: 2px;
+        border-radius: .25em;
         border: 1px solid transparent;
-        padding: 6px 14px 6px 10px;
+        padding: 0.5em .75em 0.5em .75em;
         margin: 0px;
         cursor: pointer;
         overflow: hidden;
@@ -36,6 +36,7 @@
     & > [class^="icon-"]:before, 
     & > [class*=" icon-"]:before {
         color: $textColor;
+        padding-right: .25em;
     }
 
     &:hover{

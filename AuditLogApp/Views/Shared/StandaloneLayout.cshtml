@@ -32,7 +32,27 @@
     <meta name="theme-color" content="#ffffff">
 </head>
 <body>
-    @RenderBody()
+    <header class="ala-standalone-header">
+        <img src="/images/logo56.png" class="ala-standalone-logo" />
+        <span class="ala-standalone-title">auditlog</span>
+    </header>
+    <section class="ala-standalone-body">
+        @RenderBody()
+    </section>
+    <footer class="ala-standalone-footer">
+        <div class="ala-standalone-links-1">
+            <ul>
+                <li><a href="https://www.auditlog.co">Home</a></li>
+                <li><a href="https://www.auditlog.co/privacy">Privacy</a></li>
+                <li><a href="https://www.auditlog.co/legal">Terms</a></li>
+                <li><a href="https://www.auditlog.co/security">Security</a></li>
+                <li><a href="mailto://hello@auditlog.co">Contact</a></li>
+            </ul>
+        </div>
+        <div class="ala-standalone-copyright">
+            &copy; 2018 LaunchReady Software, LLC
+        </div>
+    </footer>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     @if (hostingEnv.EnvironmentName.Equals("Production"))

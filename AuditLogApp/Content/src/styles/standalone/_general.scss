@@ -1,0 +1,78 @@
+@import "../variables";
+
+.ala-standalone-body{
+    
+    .ala-button,
+    input{
+        font-size: 18px;
+    }
+
+    .ala-label{
+        font-size: 16px;
+    }
+}
+
+.ala-standalone-link{
+    margin: 0 .5em;
+}
+
+.ala-standalone-header{
+    height: 56px;
+    text-align: center;
+
+    padding-top: 10%;
+    margin-bottom: 1.5em;
+}
+.ala-standalone-logo{
+    vertical-align: top;
+}
+.ala-standalone-title{
+    display: inline-block;
+    height: 56px;
+    line-height: 56px;
+    font-size: 40px;
+    vertical-align: middle;
+    margin-left: .25em;
+}
+
+.ala-standalone-body{
+    background-color: $ws_lightgrey;
+    padding: 1em 0;
+    margin-top: 1em;
+}
+
+.ala-standalone-page{
+    width: 370px;
+    margin: 0 auto;
+    padding: 2em 0.25em;
+}
+
+.ala-standalone-username{
+    color: $color-accent-1;
+}
+
+.ala-standalone-footer{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    padding: 1em 0;
+
+    ul{
+        margin: 0;
+        padding: 0 0 0.5em 0;
+    }
+
+    li{
+        display: inline-block;
+    }
+
+    a{
+        margin: 0 0.5em;
+    }
+
+    .ala-standalone-copyright{
+        color: $text-color-light;
+    }
+}
