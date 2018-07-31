@@ -229,7 +229,7 @@ namespace AuditLogApp
             {
                 options.AddPolicy(CORS_DROPIN, builder => {
                     builder.AllowAnyOrigin()
-                        .WithMethods("GET")
+                        .WithMethods(new[] { "GET", "POST" })
                         .WithHeaders("accept", "content-type", "origin", "X-VIEW-KEY");
                 });
             });

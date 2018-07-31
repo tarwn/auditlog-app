@@ -10,8 +10,10 @@ namespace AuditLogApp.Models.Error
         public DescriptiveError(string message)
         {
             Message = message;
+            AdditionalDetails = new Dictionary<string, string>();
         }
 
         public string Message { get; set; }
+        public Dictionary<string, string> AdditionalDetails { get; set; }
     }
 }

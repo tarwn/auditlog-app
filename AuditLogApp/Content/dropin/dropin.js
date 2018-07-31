@@ -56,7 +56,7 @@ function mountApp(options) {
         return;
     }
 
-    if(!options.mode || options.mode === 'production') {
+    if (!options.mode || options.mode === 'production') {
         var app = new window.App(options);
         app.mount('targetElement');
     }
@@ -94,7 +94,21 @@ function showError() {
 
 function getContent() {
     return `
-        <div class="aldi-initializing" data-bind="visible: isInitializing">Loading...</div>
+        <div class="aldi-initializing" data-bind="visible: isInitializing() && !isUnableToLoad()">Loading...</div>
+        <!-- ko if: isUnableToLoad() -->
+        <div id="aldi-error" data-bind="visible: isUnableToLoad()" style="display: none">
+            <div id="aldi-error-area">
+                <div id="aldi-error-constraint">
+                    <h2>We're sorry, an error occurred</h2>
+                    <div class="aldi-error-message" data-bind="text: unableToLoadMessage"></div>
+                    <div>We've been notified of the error and will correct it</div>
+                </div>
+            </div>
+            <div id="aldi-error-constraint">
+                <div id="aldi-banner">Powered by <a href="https://www.auditlog.co">AuditLog.co</a></div>
+            </div>
+        </div>
+        <!-- /ko -->
         <!-- ko if: !isInitializing() -->
         <div id="aldi-header-container" data-bind="visible: !isInitializing()" style="display: none">
             <ko-header params="customization: customization"></ko-header>

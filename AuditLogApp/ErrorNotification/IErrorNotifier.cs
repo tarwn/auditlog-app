@@ -10,5 +10,6 @@ namespace AuditLogApp.ErrorNotification
     public interface IErrorNotifier
     {
         Task NotifyAsync(DescriptiveError descriptiveError, Exception exc, string path, ClaimsPrincipal user = null);
+        Task NotifyAsync(DescriptiveError descriptiveError, bool isClientSide, ClaimsPrincipal user = null);
     }
 }

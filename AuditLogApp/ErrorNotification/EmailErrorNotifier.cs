@@ -25,11 +25,36 @@ namespace AuditLogApp.ErrorNotification
         public async Task NotifyAsync(DescriptiveError descriptiveError, Exception unhandledException, string path, ClaimsPrincipal user = null)
         {
             var details = new Dictionary<string, string>() {
+                { "IsClientSide", "false" },
                 { "Path", path },
                 { "Descriptive.Message", descriptiveError.Message },
                 { "Time", DateTime.UtcNow.ToString("g") }
             };
 
+            await AppendUserAsync(user, details);
+            AppendAdditionalDetails(descriptiveError, details);
+
+            await ReportAsync(details, ExceptionToHandle.FromException(unhandledException));
+        }
+
+
+        public async Task NotifyAsync(DescriptiveError descriptiveError, bool isClientSide, ClaimsPrincipal user = null)
+        {
+            var details = new Dictionary<string, string>() {
+                { "IsClientSide", isClientSide.ToString() },
+                { "Descriptive.Message", descriptiveError.Message },
+                { "Time", DateTime.UtcNow.ToString("g") }
+            };
+
+            await AppendUserAsync(user, details);
+            AppendAdditionalDetails(descriptiveError, details);
+
+
+            await ReportAsync(details);
+        }
+
+        private async Task AppendUserAsync(ClaimsPrincipal user, Dictionary<string, string> details)
+        {
             if (user != null)
             {
                 try
@@ -51,8 +76,18 @@ namespace AuditLogApp.ErrorNotification
                     }
                 }
             }
+        }
 
-            await ReportAsync(details, ExceptionToHandle.FromException(unhandledException));
+
+        private void AppendAdditionalDetails(DescriptiveError descriptiveError, Dictionary<string, string> details)
+        {
+            if (descriptiveError.AdditionalDetails != null)
+            {
+                foreach (var kvp in descriptiveError.AdditionalDetails)
+                {
+                    details.Add(kvp.Key, kvp.Value);
+                }
+            }
         }
 
         private async Task ReportAsync(Dictionary<string, string> details, ExceptionToHandle exc = null)
@@ -95,5 +130,6 @@ namespace AuditLogApp.ErrorNotification
             html += "</table>\n";
             return html;
         }
+
     }
 }
