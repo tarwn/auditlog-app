@@ -20,6 +20,11 @@
     <Folder Include="Content\build\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
+  
+  <!-- Manual addition to ensure assets are published -->
+  <ItemGroup>
+    <Content Include="Content\Build\**" CopyToPublishDirectory="Always" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Core" Version="1.4.0" />
