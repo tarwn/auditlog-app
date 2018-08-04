@@ -24,6 +24,7 @@
   <!-- Manual addition to ensure assets are published -->
   <ItemGroup>
     <Content Include="Content\Build\**" CopyToPublishDirectory="Always" />
+    <Content Include="Content\Dropin\**" CopyToPublishDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
