@@ -27,3 +27,19 @@ Azure Deploy
 * Build server will:
     * `az login` w/ service principal options
     * `az webapp deployment source config-zip -n auditlog-app -g auditlog-app --src AuditLogApp.zip` per [random blog](https://markheath.net/post/four-ways-to-deploy-aspnet-core-website-in-azure)
+
+
+Debugging Production
+=============================
+
+Ugh.
+
+Flip all the switches on, try checking the log stream.
+
+Nuclear option, add Application Settings `ASPNETCORE_ENVIRONMENT` w/ value of `Development`.
+
+Ensuring XML Docs are in Production
+=====================================
+
+Modified csproj a few times: https://github.com/dotnet/sdk/issues/795
+
