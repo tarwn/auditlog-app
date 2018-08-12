@@ -113,7 +113,7 @@ namespace AuditLogApp.Controllers.API.Application
         {
             var customer = await _persistence.Customers.GetAsync(customerId);
             var accessKey = ConfigurationController.GenerateAPIKey();
-            var newView = new ViewDTO(null, customerId, accessKey, new ViewCustomizationDTO("", "/images/logo56.png", customer.DisplayName, new List<ViewCustomizationHeaderLinkDTO>(), ""), CreateDefaultColumnLayout());
+            var newView = new ViewDTO(null, customerId, accessKey, new ViewCustomizationDTO("", "https://app.auditlog.co/images/logo56.png", customer.DisplayName, new List<ViewCustomizationHeaderLinkDTO>(), ""), CreateDefaultColumnLayout());
             return await _persistence.Views.CreateNewAsync(newView);
         }
 
