@@ -15,14 +15,16 @@ namespace AuditLogApp.Controllers
     [Route("account")]
     public class AccountController : Controller
     {
+        private static string[] ACCEPTABLE_CODES = new string[] {
+            "SUMMER2018"
+        };
+
         private IUserMembership _membership;
 
         public AccountController(IUserMembership membership)
         {
             _membership = membership;
         }
-
-
 
         [HttpGet("register")]
         [AllowAnonymous]
@@ -36,6 +38,12 @@ namespace AuditLogApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterPostAsync(RegisterModel model)
         {
+            //TEMPORARY - restrict registration to pilot code holders
+            if (!IsValidPilotCode(model.PilotCode))
+            {
+                ModelState.AddModelError("PilotCode", "AuditLog is currently in closed pilot. Email support@auditlog.co if you don't have one!");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View("Register");
@@ -111,6 +119,12 @@ namespace AuditLogApp.Controllers
         [HttpPost("register/twitter/continue")]
         public async Task<IActionResult> RegisterWithTwitterContinueAsync(RegisterWithTwitterModel model)
         {
+            //TEMPORARY - restrict registration to pilot code holders
+            if (!IsValidPilotCode(model.PilotCode))
+            {
+                ModelState.AddModelError("PilotCode", "AuditLog is currently in closed pilot. Email support@auditlog.co if you don't have one!");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View("RegisterWithTwitterContinue", model);
@@ -126,6 +140,15 @@ namespace AuditLogApp.Controllers
             await HttpContext.SignOutAsync("ExternalProvidersCookie");
 
             return LocalRedirect(_membership.Options.DefaultPathAfterLogin);
+        }
+
+        private bool IsValidPilotCode(string pilotCode)
+        {
+            if (String.IsNullOrEmpty(pilotCode)) {
+                return false;
+            }
+
+            return ACCEPTABLE_CODES.Any(a => a.Equals(pilotCode, StringComparison.InvariantCultureIgnoreCase));
         }
 
         [HttpGet("login")]

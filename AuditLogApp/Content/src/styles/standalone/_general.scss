@@ -1,5 +1,26 @@
 @import "../variables";
 
+
+// Sticky footer: https://css-tricks.com/couple-takes-sticky-footer/#article-header-id-3
+html, body{
+    height: 100%;
+}
+body{
+    display: flex;
+    flex-direction: column;
+}
+.ala-standalone-header{
+    flex: 0 0 auto;
+}
+.ala-standalone-body{
+    flex: 1 0 auto;
+}
+.ala-standalone-footer{
+    flex-shrink: 0;
+}
+// ---
+
+
 .ala-standalone-body{
     
     .ala-button,
@@ -21,7 +42,7 @@
     text-align: center;
 
     padding-top: 10%;
-    margin-bottom: 1.5em;
+    padding-bottom: 1.5em;
 }
 .ala-standalone-logo{
     vertical-align: top;
@@ -38,7 +59,6 @@
 .ala-standalone-body{
     background-color: $ws_lightgrey;
     padding: 1em 0;
-    margin-top: 1em;
 }
 
 .ala-standalone-page{
@@ -52,10 +72,6 @@
 }
 
 .ala-standalone-footer{
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
     text-align: center;
     padding: 1em 0;
 

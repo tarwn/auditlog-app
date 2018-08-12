@@ -23,6 +23,11 @@ namespace AuditLogApp.Models.Account
 
         [Required]
         [StringLength(80)]
+        [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
+
+        [StringLength(80)]
+        [Display(Name = "Pilot Code")]
+        public string PilotCode { get; set; }
     }
 }

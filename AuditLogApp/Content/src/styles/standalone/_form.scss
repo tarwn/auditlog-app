@@ -6,10 +6,24 @@
     padding: 0.5em 0.25em;
 
     input[type=text],
+    input[type=password],
     input[type=email]{
         border: 1px solid #ddd;
         padding: .25em;
         width: 100%;
+
+        &.input-validation-error{
+            background-color: #FFEEEE;
+            border: 1px solid #880000;
+        }
+    }
+
+    .text-danger{
+        display: block;
+        font-size: 90%;
+        color: #880000;
+        padding: .5em 0;
+        margin-bottom: .5em;
     }
 
 }
@@ -22,3 +36,13 @@
 .ala-standalone-form-row{
     margin: 0.5em 0;
 }
+
+
+.ala-pilot-label {
+    font-size: 90%;
+}
+
+.ala-standalone-form-row.ala-pilot-label{
+    padding: 2em 0;
+}
+

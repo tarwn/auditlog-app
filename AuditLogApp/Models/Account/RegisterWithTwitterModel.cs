@@ -19,6 +19,9 @@ namespace AuditLogApp.Models.Account
         [Required]
         [StringLength(80)]
         public string CompanyName { get; set; }
+        
+        [StringLength(80)]
+        public string PilotCode { get; set; }
 
         // Below are set from twitter SSO and should not be modified by user
 

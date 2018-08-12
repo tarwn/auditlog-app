@@ -7,6 +7,11 @@
 <div class="ala-standalone-form">
     <form asp-action="RegisterWithTwitterContinueAsync" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="ala-standalone-form-row">
+            <label asp-for="PilotCode" class="control-label"></label>
+            <input asp-for="PilotCode" class="form-control" />
+            <span asp-validation-for="PilotCode" class="text-danger"></span>
+        </div>
         <div class="ala-standalone-form-row ala-align-center">
             <h3>Welcome <span class="ala-standalone-username">@@@Model.TwitterUsername</span>!</h3>
         </div>
