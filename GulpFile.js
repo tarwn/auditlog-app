@@ -36,7 +36,9 @@ var configs = {
     fontsInput: './AuditLogApp/Content/src/font/*',
     fontsOutput: './AuditLogApp/Content/build/font',
     dropinInput: '../auditlog-dropin/build/*',
-    dropinOutput: './AuditLogApp/Content/dropin'
+    dropinOutput: './AuditLogApp/Content/dropin',
+    miscInput: './AuditLogApp/Content/src/misc/*',
+    miscOutput: './AuditLogApp/Content/build/'
 };
 
 function applyMinPath(path) {
@@ -186,8 +188,14 @@ gulp.task('dropin:watch', function () {
         });
 });
 
+// Misc
+gulp.task('misc', function () { 
+    return gulp.src(configs.miscInput)
+        .pipe(gulp.dest(configs.miscOutput));
+});
+
 // Tasks
 
-gulp.task('local', ['images', 'css-static', 'fonts', 'dropin', 'dropin:watch', 'sass', 'images:watch', 'js-lib', 'js:watch', 'sass:watch', 'css-static:watch']);
-gulp.task('build', ['images', 'css-static', 'fonts', 'dropin', 'js-lib', 'js', 'sass']);
+gulp.task('local', ['misc', 'images', 'css-static', 'fonts', 'dropin', 'dropin:watch', 'sass', 'images:watch', 'js-lib', 'js:watch', 'sass:watch', 'css-static:watch']);
+gulp.task('build', ['misc', 'images', 'css-static', 'fonts', 'dropin', 'js-lib', 'js', 'sass']);
 gulp.task('default', ['local']);
