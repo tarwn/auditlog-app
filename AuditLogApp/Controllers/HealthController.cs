@@ -26,37 +26,37 @@ namespace AuditLogApp.Controllers
         {
             var status = new StatusModel()
             {
-                WebServer = new StatusModelDetail(StatusEnum.Good, "Ok")
+                WebServer = GetWebServerStatus(),
+                SQLServer = await GetSQLServerStatusAsync()
             };
 
+            return StatusCode(status.IsGood ? 200 : 500, status);
+        }
+
+        private StatusModelDetail GetWebServerStatus()
+        {
+            return new StatusModelDetail(StatusEnum.Good, "Ok");
+        }
+
+        private async Task<StatusModelDetail> GetSQLServerStatusAsync()
+        {
             try
             {
                 var sqlServerCheck = await _persistence.Server.GetLatestVersionAsync();
                 if (sqlServerCheck != null)
                 {
-                    status.SQLServer = new StatusModelDetail(StatusEnum.Good, "Ok");
+                    return new StatusModelDetail(StatusEnum.Good, "Ok");
                 }
                 else
                 {
-                    status.SQLServer = new StatusModelDetail(StatusEnum.Degraded, "No server version available");
+                    return new StatusModelDetail(StatusEnum.Degraded, "No server version available");
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
-                status.SQLServer = new StatusModelDetail(StatusEnum.Unreachable, $"SQL Server Error: [{exc.GetType().Name}] {exc.Message}");
-            }
-
-
-            if (status.IsGood)
-            {
-                return Ok(status);
-            }
-            else
-            {
-                return StatusCode(500, status);
+                return new StatusModelDetail(StatusEnum.Unreachable, $"SQL Server Error: [{exc.GetType().Name}] {exc.Message}");
             }
         }
-
 
     }
 }
